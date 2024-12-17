@@ -328,7 +328,7 @@
                             </div>
                         </form>
                         <div>
-                            <a href="#" id="back-to-login" class="btn_login">Quay lại Đăng nhập</a>
+                            <a href="#" id="back-to-login" class="btn_login">Quay lại dăng nhập</a>
                         </div>
                     </div>
                 </div>

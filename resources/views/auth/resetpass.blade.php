@@ -238,64 +238,39 @@
                                 alt="logo-sgo-media"></a>
                     </figure>
 
-                    <div class="login_form" id="login_form" style="display: block">
-                        <form method="post" accept-charset="utf-8" id="form-login"  action="">
+                    <div class="login_form" id="reset_pass" >
+
+                        <form method="post" action="{{ route('submit.resetpass') }}" id="form-login-pass">
                             @csrf
 
                             <div class="form_group" style="display: block;">
                                 <div class="list_group">
-                                    <input type="text" name="username" autocomplete="off" required=""
-                                        placeholder="username" id="username" value="{{ old('username') }}">
-                                    <figure class="feild_icon"><img
-                                            src="{{ asset('auth/images/login_user_icon.png') }}"></figure>
-                                    @error('username')
+                                    <input type="text" name="email" placeholder="Địa chỉ Email" id="email" value="{{ old('email') }}">
+                                    <figure class="feild_icon">
+                                        <i style="color: #bfb9b9" class="fas fa-envelope"></i>
+                                    </figure>
+                                    @error('email')
                                     <small class="text-danger mb-2">{{ $message }}</small>
                                     @enderror
                                 </div>
-
-                                <div class="list_group">
-                                    <input type="password" name="password" autocomplete="off" required=""
-                                        placeholder="Password" id="password" value="{{ old('password') }}">
-                                    <figure class="feild_icon"><img
-                                            src="{{ asset('auth/images/login_padlock_icon.png') }}"></figure>
-                                    @error('password')
-                                    <small class="text-danger mb-2">{{ $message }}</small>
+                                <div>
+                                    {!! NoCaptcha::renderJs() !!}
+                                    {!! NoCaptcha::display(['callback' => 'recaptchaVerified']) !!}
+                                    @error('g-recaptcha-response')
+                                    <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
-
-                                <div class="form-group">
-                                    <div class="form-check my-3">
-                                        <input class="form-check-input" name="remember" type="checkbox" id="remember">
-                                        <label class="form-check-label" for="remember">
-                                            Lưu mật khẩu
-                                        </label>
-                                    </div>
-                                </div>
-
-
-                                {!! NoCaptcha::renderJs() !!}
-                                {!! NoCaptcha::display() !!}
-
-                                @error('g-recaptcha-response')
-                                <small class="text-danger">{{ $message }}</small>
-                                @enderror
 
                                 <div class="btn">
                                     <button type="submit" name="button"
                                         class="loginButton loginButtonGg remove-msg before-login disabled_button"
-                                        id="submitBtn">Đăng nhập</button>
+                                        id="submitBtnResetpass">Cấp lại mật khẩu</button>
                                 </div>
                             </div>
-
                         </form>
-                        <div class="create_forget_acc" style="display: flex; justify-content: space-between;">
-                            <a href="{{ route('resetpass') }}" class="btn_login remove-msg forgot-pass" style="margin-bottom: 15px;"
-                                id="forgot-password">Quên mật khẩu?</a>
-                            <a href="{{ route('register') }}" target="_blank" class="btn_login" style="margin-bottom: 15px;"
-                                id="create-account">Tạo tài khoản</a>
-
+                        <div>
+                            <a href="{{ route('login') }}" id="back-to-login" class="btn_login">Quay lại dăng nhập</a>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -306,61 +281,4 @@
 
 </body>
 
-
-
-
 </html>
-
-{{-- <script type="text/javascript">
-    $(document).ready(function() {
-        $(document).on('click', '.remove-msg', function(e) {
-            $('.message').text('');
-        });
-        $(document).on('click', '.forgot-pass', function(e) {
-            $('#form-forgot-pass').find('.form_group').removeAttr('style');
-            if ($('#form-forgot-pass').find('.form_group').hasClass('active')) {
-                $('#form-forgot-pass').find('.form_group').removeClass('active');
-            }
-            $('#form-login').addClass('hidden');
-            $('.create_forget_acc').addClass('hidden');
-            $('.other_login').addClass('hidden');
-        });
-        $(document).on('click', '.btn-back-login', function(e) {
-            $('#form-forgot-pass').find('.form_group').addClass('active');
-            $('#form-login').removeClass('hidden');
-            $('.create_forget_acc').removeClass('hidden');
-            $('.other_login').removeClass('hidden');
-        });
-        if (window.location.pathname == "/forgot-password-navi") {
-            $(document).on('click', '.btn-back-login', function(e) {
-                $('#form-login').find('.form_group').removeAttr('style');
-                $('#form-forgot-pass').find('.form_group').removeAttr('style');
-                $('#form-forgot-pass').find('.form_group').addClass('active');
-                $('#form-login').removeClass('hidden');
-                $('.create_forget_acc').removeAttr('style');
-                $('.other_login').removeAttr('style');
-            });
-        }
-
-        $(document).on('click', '.loginButtonGg', function(e) {
-            e.preventDefault();
-            jQuery(this).attr('disabled', true);
-            jQuery(this).addClass('disabled_button');
-            var form = document.getElementById('form-login');
-            form.submit();
-        });
-
-        $(document).on('click', '.forgotPasswordButton', function(e) {
-            e.preventDefault();
-            jQuery('.loginButton').attr('disabled', true);
-            jQuery('.loginButton').addClass('disabled_button');
-            var form = document.getElementById('form-forgot-pass');
-            form.submit();
-        });
-    });
-
-    function onTurnstileLoad() {
-        jQuery('.loginButton').removeClass('disabled_button');
-        jQuery('.loginButton').attr('disabled', false);
-    }
-</script> --}}

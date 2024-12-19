@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Auth;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class LoginUserRequest extends FormRequest
+class ResetPasswordRequest extends FormRequest
 {
-
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -23,8 +22,7 @@ class LoginUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username'          => 'required|exists:users,username',
-            'password'       => 'required|min:6|max:20',
+            'email'          => 'required|exists:users,email',
             'g-recaptcha-response' => 'required'
         ];
     }
@@ -33,8 +31,7 @@ class LoginUserRequest extends FormRequest
     public function attributes()
     {
         return [
-            'username' => 'Username',
-            'password' => 'Mật khẩu',
+            'email' => 'Email',
             'g-recaptcha-response' => 'reCaptcha',
         ];
     }
@@ -44,12 +41,4 @@ class LoginUserRequest extends FormRequest
         return __('request.messages');
     }
 
-    // public function failedValidation($validator)
-    // {
-
-    //     throw new HttpResponseException(response()->json([
-    //         'status' => false,
-    //         'errors' => $validator->errors()
-    //     ]));
-    // }
 }

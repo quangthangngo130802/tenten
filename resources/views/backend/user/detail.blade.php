@@ -1,401 +1,293 @@
 @extends('backend.layouts.master')
 
+{{-- @section('title', $title) --}}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.default.min.css" rel="stylesheet">
 @section('content')
-    <style>
-        .breadcrumbs {
-            background: #fff;
-            padding: 0.75rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
 
-        .breadcrumbs a {
-            color: #007bff;
-            text-decoration: none;
-            font-weight: 500;
-        }
+<div class="card">
+    <div class="card-body">
+        <form
+    action="{{ isset($user) ? route('user.update', $user->id) : route('user.store') }}"
+    method="POST" enctype="multipart/form-data">
+    @csrf
 
-        .breadcrumbs i {
-            color: #6c757d;
-        }
-
-        .card {
-            border-radius: 15px;
-            overflow: hidden;
-        }
-
-        .card-header {
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
-            background: linear-gradient(135deg, #6f42c1, #007bff);
-        }
-
-        .card-body {
-            padding: 2rem;
-            background-color: #f8f9fa;
-        }
-
-        .table th,
-        .table td {
-            vertical-align: middle;
-            padding: 1rem;
-            font-size: 1rem;
-        }
-
-        .table th {
-            background-color: #e9ecef;
-            font-weight: bold;
-            color: #495057;
-        }
-
-        .table-hover tbody tr:hover {
-            background-color: #dee2e6;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #0056b3;
-            transform: translateY(-2px);
-        }
-
-        .text-primary {
-            color: #007bff !important;
-        }
-
-        .nowrap {
-            white-space: nowrap;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        /* Custom styles for form decoration */
-        .form-group {
-            position: relative !important;
-            margin-bottom: 1.5rem !important;
-        }
-
-        .form-control {
-            border-radius: 10px !important;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1) !important;
-            padding: 10px 15px !important;
-            transition: all 0.3s ease-in-out !important;
-        }
-
-        .form-control:focus {
-            box-shadow: 0 0 5px rgba(81, 203, 238, 1) !important;
-            border-color: rgba(81, 203, 238, 1) !important;
-        }
-
-        .form-label {
-            font-weight: bold !important;
-            color: #333 !important;
-            margin-bottom: 0.5rem !important;
-        }
-
-        .custom-file-input {
-            display: none !important;
-        }
-
-        .custom-file-label {
-            border-radius: 10px !important;
-            background: #f8f9fa !important;
-            padding: 10px 15px !important;
-            cursor: pointer !important;
-            transition: all 0.3s ease-in-out !important;
-        }
-
-        .custom-file-label:hover {
-            background: #e2e6ea !important;
-        }
-
-        .btn-primary {
-            background-color: #007bff !important;
-            border-color: #007bff !important;
-            border-radius: 10px !important;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
-            transition: all 0.3s ease-in-out !important;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3 !important;
-            border-color: #004085 !important;
-            transform: translateY(-2px) !important;
-        }
-
-        .avatar {
-            width: 75px !important;
-            height: 75px !important;
-            border-radius: 50% !important;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
-        }
-
-        /* Custom styles for modals */
-        .modal-content {
-            border-radius: 15px !important;
-            overflow: hidden !important;
-        }
-
-        .modal-header {
-            background-color: #007bff !important;
-            color: white !important;
-        }
-
-        .modal-header .btn-close {
-            color: white !important;
-        }
-
-        .modal-body {
-            padding: 2rem !important;
-        }
-
-        /* Success and error message styling */
-        .alert {
-            transition: all 0.3s ease-in-out !important;
-            margin-top: 1rem !important;
-        }
-    </style>
-    <div class="page-inner">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title text-center" style="color:white">Thông tin Admin</h4>
-                    </div>
-                    <div class="card-body">
-                        <form action="{{ route('admin.updateUserInfor', ['id' => $user->id]) }}" method="POST"
-                            enctype="multipart/form-data">
-                            @csrf
-                            <div class="row">
-                                <!-- First Column -->
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label for="name" class="form-label">Tên</label>
-                                        <input id="name" class="form-control @error('name') is-invalid @enderror"
-                                            name="name" type="text" value="{{ old('name', $user->name) }}" required>
-                                        @error('name')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="phone" class="form-label">Số điện thoại</label>
-                                        <input id="phone" class="form-control @error('phone') is-invalid @enderror"
-                                            name="phone" type="text" value="{{ old('phone', $user->phone) }}" required>
-                                        @error('phone')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <!-- Second Column -->
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label for="email" class="form-label">Email</label>
-                                        <input id="email" class="form-control @error('email') is-invalid @enderror"
-                                            name="email" type="email" value="{{ old('email', $user->email) }}" required>
-                                        @error('email')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="image" class="form-label">Ảnh đại diện</label>
-                                        <div class="custom-file">
-                                            <input id="image"
-                                                class="custom-file-input @error('image') is-invalid @enderror"
-                                                type="file" name="image" accept="image/*">
-                                            <label class="custom-file-label" for="image">Chọn ảnh</label>
-                                        </div>
-                                        @error('image')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group">
-                                        <img id="profileImage"
-                                            src="{{ isset($user->image) ? asset('storage/' . $user->image) : asset('images/avatar2.jpg') }}"
-                                            alt="image profile" class="avatar">
-                                    </div>
-                                </div>
-                                <!-- Buttons Row -->
-                                <div class="col-lg-12 d-flex justify-content-between">
-                                    <div>
-                                        <button type="submit" class="btn btn-primary w-md">
-                                            <i class="fas fa-check-circle"></i> Xác nhận
-                                        </button>
-                                        <button type="button" class="btn btn-primary w-md ms-2" data-bs-toggle="modal"
-                                            data-bs-target="#changePasswordModal">
-                                            <i class="fas fa-key"></i> Đổi mật khẩu
-                                        </button>
-                                    </div>
-                                    <div>
-                                        <form id="logoutForm" action="{{ route('admin.logout') }}" method="POST"
-                                            style="display: none;">
-                                            @csrf
-                                        </form>
-                                        <button class="btn btn-danger w-md"
-                                            onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">
-                                            <i class="fas fa-sign-out-alt"></i> Đăng xuất
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Change Password Modal -->
-    <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="changePasswordModalLabel">Đổi mật khẩu</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="changePasswordForm" action="{{ route('admin.changePassword') }}" method="POST">
-                        @csrf
-                        <div class="form-group">
-                            <label for="current-password" class="form-label">Mật khẩu hiện tại</label>
-                            <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                id="current-password" name="password" required>
-                            @error('password')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="new-password" class="form-label">Mật khẩu mới</label>
-                            <input type="password" class="form-control @error('newPassword') is-invalid @enderror"
-                                id="new-password" name="newPassword" required>
-                            @error('newPassword')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="confirm-password" class="form-label">Xác nhận mật khẩu</label>
-                            <input type="password" class="form-control @error('confirmPassword') is-invalid @enderror"
-                                id="confirm-password" name="confirmPassword" required>
-                            @error('confirmPassword')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <button type="submit" class="btn btn-primary mt-3"><i class="fas fa-check-circle"></i> Xác
-                            nhận</button>
-                    </form>
-                    <!-- Display Server-Side Messages -->
-                    <div id="changePasswordMessage"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Include jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <!-- SweetAlert2 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        $(document).ready(function() {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-            $('#changePasswordForm').submit(function(event) {
-                event.preventDefault(); // Prevent default form submission
-
-                var formData = $(this).serialize(); // Serialize form data
-
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: 'POST',
-                    data: formData,
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            $('#changePasswordModal').find('input').val('');
-                            $('#changePasswordModal').modal('hide'); // Ẩn modal khi thành công
-                            Swal.fire({
-                                icon: "success",
-                                title: response.message
-                            });
-                        } else {
-                            $('#changePasswordMessage').html(
-                                '<div class="alert alert-danger mt-3">' + response.message +
-                                '</div>'
-                            );
-                        }
-                    },
-                    error: function(xhr) {
-                        console.log(xhr);
-                        $('#changePasswordMessage').html(
-                            '<div class="alert alert-danger mt-3">Đã xảy ra lỗi trong quá trình xử lý. Vui lòng thử lại sau.</div>'
-                        );
-                    },
-                    complete: function() {
-                        // Không cần gọi show modal ở đây
-                    }
-                });
-
-            });
-
-            $('#image').change(function() {
-                var fileName = $(this).val().split('\\').pop();
-                $(this).next('.custom-file-label').addClass("selected").html(fileName);
-            });
-        });
-    </script>
-    @if (session('success'))
-        <script>
-            $(document).ready(function() {
-                $.notify({
-                    icon: 'icon-bell',
-                    title: 'Thông báo',
-                    message: '{{ session('success') }}',
-                }, {
-                    type: 'secondary',
-                    placement: {
-                        from: "bottom",
-                        align: "right"
-                    },
-                    time: 1000,
-                });
-            });
-        </script>
+    @if (isset($user))
+        @method('PUT')
     @endif
-    <script>
-        document.getElementById('image').addEventListener('change', function(event) {
-            const input = event.target;
+
+    <!-- Thông tin tài khoản -->
+    <h5 class="section-title">Thông tin tài khoản</h5>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="username" class="form-label">Tên đăng nhập</label>
+                <input type="text" class="form-control @error('username') is-invalid @enderror" id="username"
+                    name="username" placeholder="Nhập tên đăng nhập"
+                    value="{{ old('username', $user->username ?? '') }}" />
+                @error('username')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Mật khẩu</label>
+                <input type="password" class="form-control @error('password') is-invalid @enderror" id="password"
+                    name="password" placeholder="Nhập mật khẩu"
+                    value="" />
+                @error('password')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="full_name" class="form-label">Họ và tên</label>
+                <input type="text" class="form-control @error('full_name') is-invalid @enderror" id="full_name"
+                    name="full_name" placeholder="Nhập họ và tên"
+                    value="{{ old('full_name', $user->full_name ?? '') }}" />
+                @error('full_name')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="gender" class="form-label">Giới tính</label>
+                <select class="form-select @error('gender') is-invalid @enderror" id="gender" name="gender">
+                    <option value="">----- Chọn giới tính -----</option>
+                    <option value="male" {{ old('gender', $user->gender ?? '') == 'male' ? 'selected' : '' }}>Nam</option>
+                    <option value="female" {{ old('gender', $user->gender ?? '') == 'female' ? 'selected' : '' }}>Nữ</option>
+                </select>
+                @error('gender')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="birth_date" class="form-label">Ngày sinh</label>
+                <input type="date" class="form-control @error('birth_date') is-invalid @enderror" id="birth_date"
+                    name="birth_date" value="{{ old('birth_date', $user->birth_date ?? '') }}" />
+                @error('birth_date')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="identity_number" class="form-label">CMND/CCCD/Hộ chiếu</label>
+                <input type="text" class="form-control @error('identity_number') is-invalid @enderror" id="identity_number"
+                    name="identity_number" placeholder="Nhập số CMND/CCCD/Hộ chiếu"
+                    value="{{ old('identity_number', $user->identity_number ?? '') }}" />
+                @error('identity_number')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="tax_code" class="form-label">Mã số thuế</label>
+                <input type="text" class="form-control @error('tax_code') is-invalid @enderror" id="tax_code"
+                    name="tax_code" placeholder="Nhập mã số thuế"
+                    value="{{ old('tax_code', $user->tax_code ?? '') }}" />
+                @error('tax_code')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="phone_number" class="form-label">Số điện thoại</label>
+                <input type="text" class="form-control @error('phone_number') is-invalid @enderror" id="phone_number"
+                    name="phone_number" placeholder="Nhập số điện thoại"
+                    value="{{ old('phone_number', $user->phone_number ?? '') }}" />
+                @error('phone_number')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email"
+                    name="email" placeholder="Nhập email"
+                    value="{{ old('email', $user->email ?? '') }}" />
+                @error('email')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="role_id" class="form-label">Vai trò</label>
+                <select class="form-select @error('role_id') is-invalid @enderror" id="role_id" name="role_id">
+                    <option value="">----- Chọn vai trò -----</option>
+                    <option value="1" {{ old('role_id', $user->role_id ?? '') == '1' ? 'selected' : '' }}>admin</option>
+                    <option value="2" {{ old('role_id', $user->role_id ?? '') == '2' ? 'selected' : '' }}>user</option>
+                </select>
+                @error('role_id')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="d-flex justify-content-end">
+        <button type="submit" class="btn btn-success">{{ isset($user) ? 'Cập nhật' : 'Lưu' }}</button>
+    </div>
+</form>
+
+
+
+    </div>
+</div>
+
+
+@endsection
+
+@push('styles')
+
+<style>
+    .cke_notifications_area {
+        display: none;
+    }
+
+    .error {
+        color: red;
+    }
+
+    .selectize-control {
+        border: 0px !important;
+        padding: 0px !important;
+    }
+
+    .selectize-input {
+        padding: 10px 12px !important;
+        border: 2px solid #ebedf2 !important;
+        border-radius: 5px !important;
+        border-top: 1px solid #ebedf2 !important;
+    }
+
+    /* Phần danh mục */
+    .section-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        padding-top: 20px;
+        margin-bottom: 15px;
+        padding: 10px;
+        color: #fff;
+        text-align: center;
+    }
+
+    .section-title+.section-title {
+        color: #FF9800
+    }
+
+    .section-title:nth-of-type(1) {
+        background-color: #4CAF50;
+    }
+
+    /* Nền cam cho SEO */
+    .section-title:nth-of-type(2) {
+        margin-top: 20px;
+        background-color: #695aec;
+    }
+
+    .mb-3 {
+        margin-bottom: 15px;
+    }
+
+    .btn {
+        font-size: 1rem;
+        padding: 10px 20px;
+        border-radius: 5px;
+    }
+    #preview-frame {
+        width: 100%;
+        height: 300px;
+        border: 2px dashed #ddd;
+        display: flex;
+        border-radius: 10px;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        margin-top: 10px;
+    }
+
+    #preview-frame img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: cover;
+    }
+    label{
+        font-weight: 600;
+    }
+</style>
+
+@endpush
+
+@push('scripts')
+<script>
+    const BASE_URL = "{{ url('/') }}";
+</script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"></script>
+<script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
+
+<script src="{{ asset('ckfinder_php_3.7.0/ckfinder/ckfinder.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    const imageInput = document.getElementById('image');
+    const previewFrame = document.getElementById('preview-frame');
+
+    // Khi click vào khung preview, kích hoạt input file
+    previewFrame.addEventListener('click', () => {
+        imageInput.click();
+    });
+
+    // Khi chọn file, hiển thị ảnh
+    imageInput.addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (file) {
             const reader = new FileReader();
-
-            reader.onload = function(e) {
-                document.getElementById('profileImage').src = e.target.result;
+            reader.onload = function (e) {
+                previewFrame.innerHTML = `<img src="${e.target.result}" alt="Selected Image" style="max-width: 100%; height: auto;">`;
             };
+            reader.readAsDataURL(file);
+        } else {
+            previewFrame.innerHTML = '<p class="text-muted">Click here to select an image</p>';
+        }
+    });
 
-            if (input.files && input.files[0]) {
-                reader.readAsDataURL(input.files[0]);
+    // Nếu có ảnh được chọn sẵn (ví dụ: từ trước khi tải lại trang), hiển thị ảnh
+    const currentImageSrc = '{{ old("image", asset("storage/" . ($category->logo ?? ""))) }}'; // Thay đổi này theo cách bạn lấy ảnh cũ từ server
+    if (currentImageSrc) {
+        previewFrame.innerHTML = `<img src="${currentImageSrc}" alt="Selected Image" style="max-width: 100%; height: auto;">`;
+    }
+});
+</script>
+<script>
+    var $jq = jQuery.noConflict();
+    $jq(document).ready(function() {
+        $jq('#keyword_seo').selectize({
+            delimiter: ',',
+            persist: false,
+            create: function(input) {
+                return {
+                    value: input,
+                    text: input
+                };
+            },
+            plugins: ['remove_button'],
+            onKeyDown: function(e) {
+                if (e.key === ' ') {
+                    e.preventDefault();
+                    var value = this.$control_input.val().trim();
+                    if (value) {
+                        this.addItem(value);
+                        this.$control_input.val('');
+                    }
+                }
             }
         });
-    </script>
-@endsection
+
+
+    });
+</script>
+
+@endpush

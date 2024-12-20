@@ -16,6 +16,6 @@ class CheckAdmin
             return $next($request);
         }
 
-        return redirect()->route('customer.dashboard');  // Giả sử customer có route 'customer.index'
+        return redirect()->route('dashboard');  // Giả sử customer có route 'customer.index'
     }
 }

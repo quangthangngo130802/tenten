@@ -6,6 +6,9 @@ use App\Http\Controllers\Admin\HostingController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Customer\CloudController as CustomerCloudController;
+use App\Http\Controllers\Customer\HostingController as CustomerHostingController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,15 +28,27 @@ route::middleware('guest')->group(function () {
     route::post('dang-ky-tai-khoan', [AuthController::class, 'submitregister'])->name('submit.register');
     route::get('reset-password', [AuthController::class, 'resetpass'])->name('resetpass');
     route::post('reset-password', [AuthController::class, 'sendResetPassword'])->name('submit.resetpass');
+    Route::get('/activate-account/{token}', [AuthController::class, 'activateAccount'])->name('activate.account');
+
 });
 
 Route::middleware('auth')->group(function () {
     route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
+    Route::get('dashboard', function () {
+        return view('backend.dashboard');
+    })->name('dashboard');
+
+    Route::prefix('payment')->name('payment.')->group(function () {
+        route::get('', [PaymentController::class, 'recharge'])->name('recharge');
+        route::post('', [PaymentController::class, 'createPayment'])->name('recharge.add');
+        route::get('cancel', [PaymentController::class, 'cancelUrl'])->name('recharge.cancel');
+        route::get('return', [PaymentController::class, 'returnUrl'])->name('recharge.return');
+
+    });
+
     Route::prefix('admin')->middleware('check.admin')->group(function () {
-        Route::get('dashboard', function () {
-            return view('backend.dashboard');
-        })->name('dashboard');
+
 
         Route::prefix('user')->name('user.')->group(function () {
             route::get('', [UserController::class, 'index'])->name('index');
@@ -68,7 +83,7 @@ Route::middleware('auth')->group(function () {
             route::post('{id}', [HostingController::class, 'delete'])->name('delete');
         });
         Route::prefix('cloud')->name('cloud.')->group(function () {
-            route::get('', [CloudController::class, 'index'])->name('index');
+            route::get('{type_id?}', [CloudController::class, 'index'])->name('index');
             route::get('create', [CloudController::class, 'create'])->name('create');
             route::post('', [CloudController::class,'store'])->name('store');
             route::get('{id}/edit', [CloudController::class, 'edit'])->name('edit');
@@ -77,10 +92,15 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-    Route::prefix('customer')->group(function () {
-        Route::get('dashboard', function () {
-            return view('backend.dashboard');
-        })->name('customer.dashboard');
+    Route::prefix('customer')->name('customer.')->group(function () {
+
+        Route::prefix('hosting')->name('hosting.')->group(function () {
+            route::get('', [CustomerHostingController::class, 'index'])->name('index');
+        });
+
+        Route::prefix('cloud')->name('cloud.')->group(function () {
+            route::get('{type_id?}', [CustomerCloudController::class, 'index'])->name('index');
+        });
     });
 
 });

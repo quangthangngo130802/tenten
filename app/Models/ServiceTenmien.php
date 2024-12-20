@@ -10,4 +10,5 @@ class ServiceTenmien extends Model
     use HasFactory;
     protected $table = 'servicrtenmien';
     protected $guarded = [];
+    
 }

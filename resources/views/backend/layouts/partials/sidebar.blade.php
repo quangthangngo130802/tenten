@@ -3,7 +3,7 @@
         <!-- Logo Header -->
         <div class="logo-header" data-background-color="white">
             <a target="_blank"  href="https://sgomedia.vn/" class="logo">
-                <img src="{{ asset('backend/SGO VIET NAM (1000 x 375 px).png') }}" alt="navbar brand"
+                <img style="width: 80%;" src="{{ asset('backend/SGO VIET NAM (1000 x 375 px).png') }}" alt="navbar brand"
                     class="navbar-brand img-fluid" />
             </a>
             <div class="nav-toggle">
@@ -25,7 +25,7 @@
         <div class="sidebar-content">
             <ul class="nav nav-secondary">
                 <li class="nav-item active">
-                    <a href="" class="collapsed">
+                    <a href="{{ route('dashboard') }}" class="collapsed">
                         <i class="fas fa-home"></i>
                         <p>Dashboard</p>
                     </a>
@@ -122,7 +122,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="">
+                                <a href="{{ route('customer.hosting.index') }}">
                                     <span class="sub-item">Hosting</span>
                                 </a>
                             </li>
@@ -132,7 +132,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="">
+                                <a href="{{ route('customer.cloud.index') }}">
                                     <span class="sub-item">Cloud</span>
                                 </a>
                             </li>

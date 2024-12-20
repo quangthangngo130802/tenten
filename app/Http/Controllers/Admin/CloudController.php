@@ -11,13 +11,18 @@ use Yajra\DataTables\DataTables;
 
 class CloudController extends Controller
 {
-    public function index(Request $request, $status = null)
+    public function index(Request $request, $type_id = 1)
     {
-        $title = "Hosting";
+        $title = "Cloud";
         if ($request->ajax()) {
-            $data = Cloud::select('*');
+            $data = Cloud::where('type_id',$type_id)->select('*');
             return DataTables::of($data)
-
+            ->editColumn('price', function ($row) {
+                return number_format($row->price);
+            })
+            ->editColumn('total_cost', function ($row) {
+                return number_format($row->total_cost);
+            })
                 ->addColumn('action', function ($row) {
                     return '<div style="display: flex;">
                                 <a href="' . route('cloud.edit', $row->id) . '" class="btn btn-primary btn-sm edit">
@@ -35,7 +40,7 @@ class CloudController extends Controller
                 })->rawColumns(['action'])
                 ->make(true);
         }
-        $page = 'Hosting';
+        $page = 'Cloud';
         return view('backend.cloud.index', compact('title', 'page'));
     }
 

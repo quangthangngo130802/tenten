@@ -8,28 +8,26 @@
 
             <div class="row justify-content-center">
                 <div class="col-auto">
-                    <a href="{{ route('cloud.index', ['type_id' => 1]) }}"
+                    <a href="{{ route('customer.cloud.index', ['type_id' => 1]) }}"
                         class="btn btn-sm {{ request()->type_id == 1 ? 'btn-info' : 'btn-outline-primary' }}">
                         Cloud Server Linux
                     </a>
                 </div>
                 <div class="col-auto">
-                    <a href="{{ route('cloud.index', ['type_id' => 2]) }}"
+                    <a href="{{ route('customer.cloud.index', ['type_id' => 2]) }}"
                         class="btn btn-sm {{ request()->type_id == 2 ? 'btn-info' : 'btn-outline-primary' }}">
                         Cloud Server Windows
                     </a>
                 </div>
                 <div class="col-auto">
-                    <a href="{{ route('cloud.index', ['type_id' => 3]) }}"
+                    <a href="{{ route('customer.cloud.index', ['type_id' => 3]) }}"
                         class="btn btn-sm {{ request()->type_id == 3 ? 'btn-info' : 'btn-outline-primary' }}">
                         Turbo Cloud Server
                     </a>
                 </div>
             </div>
 
-            <div class="text-center mx-4">
-                <a href="{{ route('cloud.create') }}" class="btn btn-success btn-sm">Thêm mới (+)</a>
-            </div>
+
         </div>
 
         <table class="table table-striped table-hover" id="categoryTable">
@@ -90,7 +88,7 @@
             $('#categoryTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route('cloud.index', ['type_id' => request()->type_id]) }}',
+                ajax: '{{ route('customer.cloud.index', ['type_id' => request()->type_id]) }}',
                 columns: [
                     {
                         data: 'package_name',
@@ -137,16 +135,16 @@
                         targets: 1
                     },
                     {
-                        width: '12%',
+                        width: '10%',
                         targets: 2
                     },
                     {
-                        width: '12%',
+                        width: '10%',
                         targets: 3
                     },
 
                     {
-                        width: '15%',
+                        width: '10%',
                         targets: 4
                     },
                     {
@@ -158,7 +156,7 @@
                         targets: 6
                     },
                     {
-                        width: '15%',
+                        width: '25%',
                         targets: 7
                     },
 

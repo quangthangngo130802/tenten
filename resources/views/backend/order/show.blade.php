@@ -18,7 +18,13 @@
                     </li>
                     <li class="col-md-3 col-12"><span>Trạng thái:</span>
                         <p>
+                            @if ($order->status == 'payment')
                             Đã thanh toán
+                            @elseif ($order->status == 'nopayment')
+                            Chưa thanh toán
+                            @else
+                            Chờ kích hoạt
+                            @endif
                         </p>
                     </li>
                 </ul>
@@ -36,25 +42,69 @@
                                 <td>Thời hạn</td>
                                 <td>Số tiền</td>
                             </tr>
+                            @forelse ($order->orderDetail as $index => $item )
                             <tr>
-                                <td>1</td>
+                                <td>{{ $index + 1 }}</td>
                                 <td>
+                                    @if(\Carbon\Carbon::parse($item->created_at)->greaterThanOrEqualTo(now()->subMonth()))
                                     Đăng ký mới
+                                    @else
+                                    Đăng ký cũ
+                                    @endif
                                 </td>
                                 <td>
-                                    .vn
+                                    {{ $item->service_name }}
                                 </td>
                                 <td>
-                                    <span class="using">Đã xử lý</span>
+
+                                    <div class="status-badge">
+                                        @if ($order->status == 'payment')
+                                        <i class="status-icon payment"></i> Đã xử lý
+                                        @elseif ($order->status == 'nopayment')
+                                        <i class="status-icon nopayment"></i> Chờ xử lý
+                                        @else
+                                        <i class="status-icon pending"></i> Chưa duyệt
+                                        @endif
+                                    </div>
+
                                 </td>
                                 <td>
-                                    aicfo.vn
+                                    {{ $item->domain }}
                                 </td>
                                 <td>
-                                    1 năm
+
+                                    @if($order->active_at)
+                                        @php
+                                            $createdAt = \Carbon\Carbon::parse($order->active_at);
+                                            $deadline = \Carbon\Carbon::parse($item->deadline);
+
+                                            $diffYears = $createdAt->diffInYears($deadline);
+                                            $diffMonths = $createdAt->diffInMonths($deadline) % 12; // Lấy số tháng lẻ sau năm
+                                            $diffDays = $createdAt->diffInDays($deadline) % 30; // Lấy số ngày lẻ sau tháng
+                                        @endphp
+
+                                        @if ($deadline->isPast())
+                                            Hết hạn
+                                        @elseif ($diffYears > 0)
+                                            {{ $diffYears }} năm {{ $diffMonths }} tháng
+                                        @elseif ($diffMonths > 0)
+                                            {{ $diffMonths }} tháng
+                                        @else
+                                            {{ $diffDays }} ngày
+                                        @endif
+
+                                    @endif
+
+
+
                                 </td>
-                                <td><label style="text-decoration: inherit;">450.000 đ</label></td>
+                                <td><label style="text-decoration: inherit;">{{ number_format($item->amount) }}
+                                        đ</label></td>
                             </tr>
+                            @empty
+
+                            @endforelse
+
                         </tbody>
                     </table>
                 </div>
@@ -82,7 +132,6 @@
 
 @push('styles')
 <style>
-
     .qb_order_has_been_paid_page {
         background-color: #fff;
         border-radius: 8px;
@@ -176,19 +225,122 @@
         color: #999;
 
     }
-    .detail{
+
+    .detail {
         display: flex;
     }
+
     p {
         font-size: 12px;
         color: #999;
         margin: 0px !important;
         line-height: normal;
     }
-    .order_detailds p{
+
+    .order_detailds p {
         font-weight: bold !important;
         color: #000000;
     }
+
+    /* Cấu trúc chung */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 5px;
+        padding: 5px 10px;
+        font-size: 14px;
+        font-weight: 500;
+        border: 1px solid;
+    }
+
+    .status-icon {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        margin-right: 5px;
+        display: inline-block;
+        position: relative;
+    }
+
+    /* Đã xử lý */
+    .status-badge.payment {
+        background-color: #e6f4ea;
+        /* Màu nền */
+        color: #28a745;
+        /* Màu chữ */
+        border: 1px solid #c3e6cb;
+        /* Viền */
+    }
+
+    .status-icon.payment {
+        background-color: #28a745;
+        /* Màu biểu tượng */
+    }
+
+    .status-icon.payment::after {
+        content: "";
+        width: 6px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+        position: absolute;
+        top: 1px;
+        left: 4px;
+        display: block;
+    }
+
+    /* Chờ xử lý */
+    .status-badge.nopayment {
+        background-color: #fff4e6;
+        /* Màu nền */
+        color: #ffc107;
+        /* Màu chữ */
+        border: 1px solid #ffeeba;
+        /* Viền */
+    }
+
+    .status-icon.nopayment {
+        background-color: #ffc107;
+        /* Màu biểu tượng */
+    }
+
+    .status-icon.nopayment::after {
+        content: "";
+        width: 8px;
+        height: 8px;
+        background-color: white;
+        border-radius: 50%;
+        position: absolute;
+        top: 3px;
+        left: 3px;
+    }
+
+    /* Chưa duyệt */
+    .status-badge.pending {
+        background-color: #f8d7da;
+        /* Màu nền */
+        color: #dc3545;
+        /* Màu chữ */
+        border: 1px solid #f5c6cb;
+        /* Viền */
+    }
+
+    .status-icon.pending {
+        background-color: #dc3545;
+        /* Màu biểu tượng */
+    }
+
+    .status-icon.pending::after {
+        content: "!";
+        font-size: 10px;
+        color: white;
+        position: absolute;
+        top: -1px;
+        left: 4px;
+    }
+
+
 </style>
 
 @endpush

@@ -2,7 +2,7 @@
     <div class="sidebar-logo">
         <!-- Logo Header -->
         <div class="logo-header" data-background-color="white">
-            <a target="_blank" style="width: 90%;" href="https://sgomedia.vn/" class="logo">
+            <a target="_blank"  href="https://sgomedia.vn/" class="logo">
                 <img src="{{ asset('backend/SGO VIET NAM (1000 x 375 px).png') }}" alt="navbar brand"
                     class="navbar-brand img-fluid" />
             </a>
@@ -64,7 +64,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="">
+                                    <a href="{{ route('hosting.index') }}">
                                         <span class="sub-item">Hosting</span>
                                     </a>
                                 </li>
@@ -74,7 +74,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="">
+                                    <a href="{{ route('cloud.index') }}">
                                         <span class="sub-item">Cloud</span>
                                     </a>
                                 </li>
@@ -108,37 +108,37 @@
                         </div>
                     </li>
                 @else
-                    <li class="nav-item">
-                        <a data-bs-toggle="collapse" href="#product">
-                            <i class="fas fa-pen-square"></i>
-                            <p>Sản phẩm</p>
-                            <span class="caret"></span>
-                        </a>
-                        <div class="collapse" id="product">
-                            <ul class="nav nav-collapse">
-                                <li>
-                                    <a href="">
-                                        <span class="sub-item">Danh sách sản phẩm</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="">
-                                        <span class="sub-item">Danh mục sản phẩm</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="">
-                                        <span class="sub-item">Xuất xứ</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="">
-                                        <span class="sub-item">Nhiên liệu</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
+                <li class="nav-item">
+                    <a data-bs-toggle="collapse" href="#service_dk">
+                        <i class="fas fa-pen-square"></i>
+                        <p>Đăng ký dịch vụ</p>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="collapse" id="service_dk">
+                        <ul class="nav nav-collapse">
+                            <li>
+                                <a href="">
+                                    <span class="sub-item">Tên miền</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="">
+                                    <span class="sub-item">Hosting</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="">
+                                    <span class="sub-item">Email Server</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="">
+                                    <span class="sub-item">Cloud</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
                 @endif
             </ul>
         </div>

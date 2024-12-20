@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\ClientController;
+use App\Http\Controllers\Admin\CloudController;
+use App\Http\Controllers\Admin\HostingController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
@@ -55,6 +57,23 @@ Route::middleware('auth')->group(function () {
             route::get('{status?}', [OrderController::class, 'index'])->name('index');
             route::get('{id}/show', [OrderController::class, 'show'])->name('show');
             route::post('{id}', [OrderController::class, 'delete'])->name('delete');
+        });
+
+        Route::prefix('hosting')->name('hosting.')->group(function () {
+            route::get('', [HostingController::class, 'index'])->name('index');
+            route::get('create', [HostingController::class, 'create'])->name('create');
+            route::post('', [HostingController::class,'store'])->name('store');
+            route::get('{id}/edit', [HostingController::class, 'edit'])->name('edit');
+            route::put('{id}/edit', [HostingController::class, 'update'])->name('update');
+            route::post('{id}', [HostingController::class, 'delete'])->name('delete');
+        });
+        Route::prefix('cloud')->name('cloud.')->group(function () {
+            route::get('', [CloudController::class, 'index'])->name('index');
+            route::get('create', [CloudController::class, 'create'])->name('create');
+            route::post('', [CloudController::class,'store'])->name('store');
+            route::get('{id}/edit', [CloudController::class, 'edit'])->name('edit');
+            route::put('{id}/edit', [CloudController::class, 'update'])->name('update');
+            route::post('{id}', [CloudController::class, 'delete'])->name('delete');
         });
     });
 

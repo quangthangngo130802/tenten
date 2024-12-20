@@ -72,7 +72,6 @@ class AuthController extends Controller
 
     public function submitregister(RegisterRequest $request)
     {
-
         $credentials = $request->validated();
         $credentials = Arr::except($credentials, ['g-recaptcha-response']);
         $credentials['password'] = bcrypt($credentials['password']);

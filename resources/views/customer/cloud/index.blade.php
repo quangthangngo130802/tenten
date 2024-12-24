@@ -4,22 +4,22 @@
 <div class="content">
     <!-- Bảng danh sách danh mục -->
     <div class="category-list">
-        <div class="card-tools mb-3" id="add-category-btn">
+        <div class="card-tools mb-3">
 
-            <div class="row justify-content-center">
-                <div class="col-auto">
+            <div class="row">
+                <div class="col-md-2 col-6 mb-2">
                     <a href="{{ route('customer.cloud.index', ['type_id' => 1]) }}"
                         class="btn btn-sm {{ request()->type_id == 1 ? 'btn-info' : 'btn-outline-primary' }}">
                         Cloud Server Linux
                     </a>
                 </div>
-                <div class="col-auto">
+                <div class="col-md-2 col-6 mb-2">
                     <a href="{{ route('customer.cloud.index', ['type_id' => 2]) }}"
                         class="btn btn-sm {{ request()->type_id == 2 ? 'btn-info' : 'btn-outline-primary' }}">
                         Cloud Server Windows
                     </a>
                 </div>
-                <div class="col-auto">
+                <div class="col-md-2 col-6 mb-2">
                     <a href="{{ route('customer.cloud.index', ['type_id' => 3]) }}"
                         class="btn btn-sm {{ request()->type_id == 3 ? 'btn-info' : 'btn-outline-primary' }}">
                         Turbo Cloud Server
@@ -50,6 +50,9 @@
 
 @push('styles')
 <style>
+    /* .dataTables_scrollBody thead tr {
+        display: none;
+    } */
     #add-category-btn {
         display: flex;
         justify-content: flex-end;
@@ -82,7 +85,7 @@
 @endpush
 
 @push('scripts')
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="text/javascript">
     $(document).ready(function() {
             $('#categoryTable').DataTable({
@@ -161,6 +164,7 @@
                     },
 
                 ],
+                // scrollX: true,
                 pagingType: "full_numbers", // Kiểu phân trang
                 language: {
                     paginate: {
@@ -175,6 +179,46 @@
                 },
                 dom: '<"row"<"col-md-6"l><"col-md-6"f>>t<"row"<"col-md-6"i><"col-md-6"p>>',
                 lengthMenu: [10, 25, 50, 100],
+            });
+
+            $(document).on("click", ".buy-now-btn", function (event) {
+                event.preventDefault();
+
+                const itemId = $(this).data("id");
+                const type = $(this).data("type");
+
+                Swal.fire({
+                    title: 'Bạn có muốn thêm vào giỏ hàng không?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Có',
+                    cancelButtonText: 'Không'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '{{ route('addToCart') }}',
+                            type: 'POST',
+                            data: {
+                                item_id: itemId,
+                                type: type,
+                                _token: $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function (response) {
+                                if (response.success) {
+                                    Swal.fire('Thành công!', 'Sản phẩm đã được thêm vào giỏ hàng.', 'success');
+                                    $('.notification').text(response.count);
+                                } else {
+                                    Swal.fire('Thất bại!', response.message || 'Có lỗi xảy ra.', 'error');
+                                }
+                            },
+                            error: function () {
+                                Swal.fire('Thất bại!', 'Không thể thêm vào giỏ hàng. Vui lòng thử lại.', 'error');
+                            }
+                        });
+                    } else {
+                        Swal.fire('Đã hủy', 'Sản phẩm không được thêm vào giỏ hàng.', 'info');
+                    }
+                });
             });
         });
 </script>

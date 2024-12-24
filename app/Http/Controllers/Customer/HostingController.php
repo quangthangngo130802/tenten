@@ -20,10 +20,9 @@ class HostingController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     return '<div style="display: flex;">
-                                <a href="' . route('hosting.edit', $row->id) . '" class="btn btn-primary btn-sm edit">
+                                <a  data-id = '.$row->id.' data-type = "hosting" class="btn btn-primary btn-sm edit buy-now-btn">
                                     Mua ngay
                                 </a>
-
                             </div>';
                 })->rawColumns(['action'])
                 ->make(true);

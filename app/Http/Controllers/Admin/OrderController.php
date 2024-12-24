@@ -23,6 +23,13 @@ class OrderController extends Controller
                 ->editColumn('amount', function ($row) {
                     return number_format($row->amount);
                 })
+                ->editColumn('status', function ($row) {
+                    return $row->status == 'payment'
+                    ? '<span style="color: green;">Đã thanh toán</span>'
+                    : ($row->status == 'pending'
+                        ? '<span style="color: orange;">Chờ duyệt</span>'
+                        : '<span style="color: red;">Chưa thanh toán</span>');
+                })
                 ->editColumn('payment', function ($row) {
                     return number_format($row->payment);
                 })
@@ -40,7 +47,7 @@ class OrderController extends Controller
 
                                 </form>
                             </div>';
-                })->rawColumns(['action', 'detail'])
+                })->rawColumns(['action', 'detail', 'status'])
                 ->make(true);
         }
         $page = 'Đơn hàng';

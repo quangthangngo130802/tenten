@@ -23,7 +23,7 @@ class CloudController extends Controller
             })
                 ->addColumn('action', function ($row) {
                     return '<div style="display: flex;">
-                                <a href="' . route('cloud.edit', $row->id) . '" class="btn btn-primary btn-sm edit">
+                                <a data-id = '.$row->id.' data-type = "cloud"  class="btn btn-primary btn-sm edit buy-now-btn">
                                     Mua ngay
                                 </a>
 

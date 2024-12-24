@@ -4,10 +4,13 @@ use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\CloudController;
 use App\Http\Controllers\Admin\HostingController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\TransactionHistoryController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\Customer\CloudController as CustomerCloudController;
 use App\Http\Controllers\Customer\HostingController as CustomerHostingController;
+use App\Http\Controllers\Customer\OrderController as CustomerOrderController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
@@ -43,7 +46,7 @@ Route::middleware('auth')->group(function () {
         route::get('', [PaymentController::class, 'recharge'])->name('recharge');
         route::post('', [PaymentController::class, 'createPayment'])->name('recharge.add');
         route::get('cancel', [PaymentController::class, 'cancelUrl'])->name('recharge.cancel');
-        route::get('return', [PaymentController::class, 'returnUrl'])->name('recharge.return');
+        route::get('return/{amount}', [PaymentController::class, 'returnUrl'])->name('recharge.return');
 
     });
 
@@ -90,6 +93,12 @@ Route::middleware('auth')->group(function () {
             route::put('{id}/edit', [CloudController::class, 'update'])->name('update');
             route::post('{id}', [CloudController::class, 'delete'])->name('delete');
         });
+
+        // Route::prefix('history')->name('history.')->group(function () {
+        //     route::get('{status?}', [TransactionHistoryController::class, 'index'])->name('index');
+        //     route::get('{id}/show', [TransactionHistoryController::class, 'show'])->name('show');
+        //     route::post('{id}', [TransactionHistoryController::class, 'delete'])->name('delete');
+        // });
     });
 
     Route::prefix('customer')->name('customer.')->group(function () {
@@ -101,6 +110,16 @@ Route::middleware('auth')->group(function () {
         Route::prefix('cloud')->name('cloud.')->group(function () {
             route::get('{type_id?}', [CustomerCloudController::class, 'index'])->name('index');
         });
+
+        Route::prefix('order')->name('order.')->group(function () {
+            route::get('{status?}', [CustomerOrderController::class, 'index'])->name('index');
+            route::get('{id}/show', [CustomerOrderController::class, 'show'])->name('show');
+        });
+        Route::prefix('cart')->name('cart.')->group(function () {
+            route::get('', [CartController::class, 'listcart'])->name('listcart');
+        });
+
+
     });
 
 });
@@ -109,3 +128,14 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/get-districts', [AuthController::class, 'getDistricts']);
 Route::get('/get-wards', [AuthController::class, 'getWards']);
+Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('addToCart');
+Route::post('/update-quantity', [CartController::class, 'updateQuantity'])->name('update.quantity');
+Route::post('/delete-item', [CartController::class, 'deleteItem'])->name('delete.item');
+
+Route::prefix('history')->name('history.')->group(function () {
+    route::get('{status?}', [TransactionHistoryController::class, 'index'])->name('index');
+    route::get('{id}/show', [TransactionHistoryController::class, 'show'])->name('show');
+    route::post('{id}', [TransactionHistoryController::class, 'delete'])->name('delete');
+});
+
+

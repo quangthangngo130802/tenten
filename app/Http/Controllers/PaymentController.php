@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class PaymentController extends Controller
@@ -43,7 +44,7 @@ class PaymentController extends Controller
             "amount" => intval( $amount),
             "description" => "VQRIO123",
             "cancelUrl" => route('payment.recharge.cancel'),
-            "returnUrl" => route('payment.recharge.return'),
+            "returnUrl" => route('payment.recharge.return', ['amount' => $amount]),
             "expiredAt" => time() + 3600,
         ];
 
@@ -92,7 +93,11 @@ class PaymentController extends Controller
         toastr()->error('Đã hủy giao dịch.');
         return redirect()->route('payment.recharge');
     }
-    public function returnUrl(){
+    public function returnUrl($amount){
+        $user = Auth::user();
+        $user->update([
+            'wallet' => $amount + $user->amount
+        ]);
         toastr()->success('Giao dịch thành công.');
         return redirect()->route('payment.recharge');
     }

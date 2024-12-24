@@ -1,62 +1,67 @@
 @extends('backend.layouts.master')
 
 @section('content')
-    <div class="content">
-        <!-- Bảng danh sách danh mục -->
-        <div class="category-list">
-            <table class="table table-striped table-hover" id="categoryTable">
-                <thead>
-                    <tr>
-                        <th>Tên gói</th>
-                        <th>Dung lượng</th>
-                        <th>Băng thông</th>
-                        <th>Gới hạn website</th>
-                        <th>Giá/năm</th>
-                        <th>Hỗ trợ backup</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
+<div class="content">
+    <!-- Bảng danh sách danh mục -->
+    <div class="category-list">
+        <table class="table table-striped table-hover" id="categoryTable">
+            <thead>
+                <tr>
+                    <th>Tên gói</th>
+                    <th>Dung lượng</th>
+                    <th>Băng thông</th>
+                    <th>Gới hạn website</th>
+                    <th>Giá/năm</th>
+                    <th>Hỗ trợ backup</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+        </table>
     </div>
+</div>
 @endsection
 
 @push('styles')
-    <style>
-        #add-category-btn {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center; */
-            /* text-align: end; */
-            padding: 10px;
-            margin-right: 100px;
-        }
+<style>
+    #add-category-btn {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        */
+        /* text-align: end; */
+        padding: 10px;
+        margin-right: 100px;
+    }
 
 
-        td a {
-            padding: 8px 11px !important;
-            border-radius: 5px;
-            color: white;
-            display: inline-block;
-        }
+    td a {
+        padding: 8px 11px !important;
+        border-radius: 5px;
+        color: white;
+        display: inline-block;
+    }
 
-        .edit {
-            background: #ffc107;
-            margin: 0px 15px;
-        }
+    .edit {
+        background: #ffc107;
+        margin: 0px 15px;
+    }
 
-        .delete {
-            background: #dc3545;
-            padding: 8px 12px !important;
-        }
-    </style>
+    .delete {
+        background: #dc3545;
+        padding: 8px 12px !important;
+    }
+
+    .dataTables_scrollBody thead tr {
+        display: none;
+    }
+</style>
 
 @endpush
 
 @push('scripts')
-
-    <script type="text/javascript">
-        $(document).ready(function() {
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
             $('#categoryTable').DataTable({
                 processing: true,
                 serverSide: true,
@@ -121,6 +126,7 @@
                     },
 
                 ],
+                // scrollX: true,
                 pagingType: "full_numbers", // Kiểu phân trang
                 language: {
                     paginate: {
@@ -136,6 +142,48 @@
                 dom: '<"row"<"col-md-6"l><"col-md-6"f>>t<"row"<"col-md-6"i><"col-md-6"p>>',
                 lengthMenu: [10, 25, 50, 100],
             });
-        });
-    </script>
+
+            $(document).on("click", ".buy-now-btn", function (event) {
+                event.preventDefault();
+
+                const itemId = $(this).data("id");
+                const type = $(this).data("type");
+
+                Swal.fire({
+                    title: 'Bạn có muốn thêm vào giỏ hàng không?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Có',
+                    cancelButtonText: 'Không'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '{{ route('addToCart') }}',
+                            type: 'POST',
+                            data: {
+                                item_id: itemId,
+                                type: type,
+                                _token: $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function (response) {
+                                if (response.success) {
+                                    Swal.fire('Thành công!', 'Sản phẩm đã được thêm vào giỏ hàng.', 'success');
+                                    $('.notification').text(response.count);
+                                } else {
+                                    Swal.fire('Thất bại!', response.message || 'Có lỗi xảy ra.', 'error');
+                                }
+                            },
+                            error: function () {
+                                Swal.fire('Thất bại!', 'Không thể thêm vào giỏ hàng. Vui lòng thử lại.', 'error');
+                            }
+                        });
+                    } else {
+                        Swal.fire('Đã hủy', 'Sản phẩm không được thêm vào giỏ hàng.', 'info');
+                    }
+                });
+            });
+
+
+    });
+</script>
 @endpush

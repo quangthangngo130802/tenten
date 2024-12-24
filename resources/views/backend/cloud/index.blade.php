@@ -4,34 +4,36 @@
 <div class="content">
     <!-- Bảng danh sách danh mục -->
     <div class="category-list">
-        <div class="card-tools mb-3" id="add-category-btn">
+        <div class="card-tools mb-3">
 
-            <div class="row justify-content-center">
-                <div class="col-auto">
+            <div class="row justify-content-end">
+                <div class="col-md-2 col-6 mb-2">
                     <a href="{{ route('cloud.index', ['type_id' => 1]) }}"
                         class="btn btn-sm {{ request()->type_id == 1 ? 'btn-info' : 'btn-outline-primary' }}">
                         Cloud Server Linux
                     </a>
                 </div>
-                <div class="col-auto">
+                <div class="col-md-2 col-6 mb-2">
                     <a href="{{ route('cloud.index', ['type_id' => 2]) }}"
                         class="btn btn-sm {{ request()->type_id == 2 ? 'btn-info' : 'btn-outline-primary' }}">
                         Cloud Server Windows
                     </a>
                 </div>
-                <div class="col-auto">
+                <div class="col-md-2 col-6 mb-2">
                     <a href="{{ route('cloud.index', ['type_id' => 3]) }}"
                         class="btn btn-sm {{ request()->type_id == 3 ? 'btn-info' : 'btn-outline-primary' }}">
                         Turbo Cloud Server
                     </a>
                 </div>
+
+                <div class="col-md-2 col-6 mb-2">
+                    <a href="{{ route('cloud.create') }}" class="btn btn-success btn-sm">Thêm mới (+)</a>
+                </div>
             </div>
 
-            <div class="text-center mx-4">
-                <a href="{{ route('cloud.create') }}" class="btn btn-success btn-sm">Thêm mới (+)</a>
-            </div>
+
         </div>
-
+        <div style="overflow-x: auto;">
         <table class="table table-striped table-hover" id="categoryTable">
             <thead>
                 <tr>
@@ -47,11 +49,16 @@
             </thead>
         </table>
     </div>
+    </div>
 </div>
 @endsection
 
 @push('styles')
 <style>
+    .dataTables_scrollBody thead tr {
+        display: none;
+    }
+
     #add-category-btn {
         display: flex;
         justify-content: flex-end;
@@ -163,6 +170,8 @@
                     },
 
                 ],
+                // fixedHeader: true, // Giữ cố định tiêu đề và phần tìm kiếm
+                // scrollX: true,
                 pagingType: "full_numbers", // Kiểu phân trang
                 language: {
                     paginate: {

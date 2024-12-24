@@ -4,20 +4,20 @@
 <style>
     .total_ticket {
     display: inline-block;
-    background-color: red; /* Background color for the badge */
-    color: white; /* Text color */
-    border-radius: 50%; /* Make it circular */
-    width: 20px; /* Fixed width */
-    height: 20px; /* Fixed height */
-    text-align: center; /* Center text */
-    line-height: 20px; /* Center text vertically */
-    font-size: 14px; /* Font size */
-    position: relative; /* Position for any additional styling */
-    top: -10px; /* Adjust position */
-    left: 5px; /* Adjust position */
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    font-size: 14px;
+    position: relative;
+    top: -10px;
+    left: 5px;
 }
 </style>
-<div class="container mt-4">
+<div class=" mt-4">
     <h2 class="text-center bg-primary text-white py-2">Hiện trạng tài khoản của bạn</h2>
 
     <div class="row text-center">

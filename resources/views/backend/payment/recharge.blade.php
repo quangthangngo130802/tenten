@@ -10,7 +10,8 @@
                 <div class="row align-items-center">
                     <label for="amount" class="col-md-3 fw-bold">Số tiền cần nạp</label>
                     <div class="col-md-8">
-                        <input type="number" id="amount" name="price" class="form-control" step="0.01" required>
+                        <input type="text" id="amount" class="form-control">
+                        <input type="hidden" id="amount_price" name="price" class="form-control">
                         <small class="note">Lưu ý: Số tiền tối thiểu là 100.000đ và tối đa là 20.000.000.000đ</small>
                     </div>
                 </div>
@@ -21,7 +22,7 @@
                 <div class="row align-items-center">
                     <label class="col-md-3 fw-bold">Số dư tài khoản chính</label>
                     <div class="col-md-8">
-                        <p class="mb-0">0 đ</p>
+                        <p class="mb-0">{{ number_format(Auth::user()->wallet, 0, ',', '.') }} đ</p>
                     </div>
                 </div>
             </div>
@@ -31,7 +32,7 @@
                 <div class="row align-items-center">
                     <label class="col-md-3 fw-bold">Tổng tiền sau khi nạp</label>
                     <div class="col-md-8">
-                        <p class="total-amount mb-0">100.000 đ</p>
+                        <p class="total-amount mb-0">0 đ</p>
                     </div>
                 </div>
             </div>
@@ -62,4 +63,53 @@
     }
 </style>
 @endpush
+@push('scripts')
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+    const amountInput = document.getElementById("amount");
+    const amountPriceInput = document.getElementById("amount_price");
+    const totalAmountDisplay = document.querySelector(".total-amount");
+    const note = document.querySelector(".note");
+    const submitButton = document.querySelector(".btn-submit");
 
+    const formatCurrency = (value) => {
+        if (!value) return "0";
+        return Number(value.replace(/\D/g, "")).toLocaleString("vi-VN");
+    };
+
+    const updateTotalAmount = () => {
+        const wallet = {{ Auth::user()->wallet }};
+        const inputValue = amountInput.value.replace(/\D/g, "");
+        const newBalance = wallet + (parseInt(inputValue) || 0);
+        totalAmountDisplay.textContent = formatCurrency(newBalance.toString()) + ' đ';
+    };
+
+    const validateAmount = () => {
+        const rawValue = parseInt(amountPriceInput.value) || 0;
+        if (rawValue < 100000 || rawValue > 20000000000) {
+            note.style.color = "red";
+            submitButton.disabled = true;
+        } else {
+            note.style.color = "black";
+            submitButton.disabled = false;
+        }
+    };
+
+    amountInput.addEventListener("input", (e) => {
+        const rawValue = e.target.value.replace(/\D/g, ""); // Lấy giá trị chỉ có số
+        e.target.value = formatCurrency(rawValue); // Hiển thị lại với định dạng tiền tệ
+        amountPriceInput.value = rawValue; // Lưu giá trị gốc vào input ẩn
+        updateTotalAmount(); // Cập nhật tổng số dư
+        validateAmount(); // Kiểm tra hợp lệ
+    });
+
+    document.querySelector("form").addEventListener("submit", (e) => {
+        if (submitButton.disabled) {
+            e.preventDefault(); // Ngăn form gửi nếu không hợp lệ
+        }
+    });
+});
+
+
+</script>
+@endpush

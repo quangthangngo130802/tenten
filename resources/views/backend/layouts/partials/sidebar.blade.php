@@ -107,6 +107,13 @@
                             </ul>
                         </div>
                     </li>
+                    {{-- <li class="nav-item">
+                        <a href="{{ route('history.index') }}">
+                            <i class="fas fa-pen-square"></i>
+                            <p>Lịch sử giao dịch</p>
+
+                        </a>
+                    </li> --}}
                 @else
                 <li class="nav-item">
                     <a data-bs-toggle="collapse" href="#service_dk">
@@ -139,7 +146,41 @@
                         </ul>
                     </div>
                 </li>
+                <li class="nav-item">
+                    <a data-bs-toggle="collapse" href="#order">
+                        <i class="fas fa-pen-square"></i>
+                        <p>Quản lý đơn hàng</p>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="collapse" id="order">
+                        <ul class="nav nav-collapse">
+                            <li>
+                                <a href="{{ route('customer.order.index', ['status' => 'payment']) }}">
+                                    <span class="sub-item">Đơn hàng đã thanh toán</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('customer.order.index', ['status' => 'nopayment']) }}">
+                                    <span class="sub-item">Đơn hàng chưa thanh toán</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('customer.order.index', ['status' => 'unactive']) }}">
+                                    <span class="sub-item">Đơn hàng chờ kích hoạt</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
                 @endif
+
+                <li class="nav-item">
+                    <a href="{{ route('history.index') }}">
+                        <i class="fas fa-pen-square"></i>
+                        <p>Lịch sử giao dịch</p>
+
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

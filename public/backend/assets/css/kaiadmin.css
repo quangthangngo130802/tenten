@@ -2997,7 +2997,7 @@ label.error {
   border-bottom-width: 1px;
   font-weight: 600; }
 .table td, .table th {
-  font-size: 1rem;
+  /* font-size: 1rem; */
   border-top-width: 0px;
   border-bottom: 1px solid;
   border-color: #ebedf2 !important;

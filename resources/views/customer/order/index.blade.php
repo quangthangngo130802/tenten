@@ -4,34 +4,27 @@
 <div class="content">
     <!-- Bảng danh sách danh mục -->
     <div class="category-list">
-        <div class="card-tools mb-3" id="add-category-btn">
-            <a href="{{ route('cloud.create') }}" class="btn btn-primary btn-sm">Thêm mới (+)</a>
-        </div>
-        <div style="overflow-x: auto;">
-            <table class=" table table-striped table-hover" id="categoryTable">
+        <table class="table table-striped table-hover" id="categoryTable">
             <thead>
                 <tr>
-                    <th>Tên gói</th>
-                    <th>Dung lượng</th>
-                    <th>Băng thông</th>
-                    <th>Gới hạn website</th>
-                    <th>Giá/năm</th>
-                    <th>Hỗ trợ backup</th>
-                    <th>Action</th>
+                    <th>Mã đơn hàng</th>
+                    <th>Chi tiết</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái thanh toán</th>
+                    <th>Ngày đặt hàng</th>
+                    <th>Thanh toán</th>
                 </tr>
             </thead>
-            </table>
-        </div>
+        </table>
     </div>
 </div>
 @endsection
 
 @push('styles')
 <style>
-    /* .dataTables_scrollBody thead tr {
+    .dataTables_scrollBody thead tr {
         display: none;
-    } */
-
+    }
 
     #add-category-btn {
         display: flex;
@@ -71,39 +64,34 @@
             $('#categoryTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route('hosting.index') }}',
+                ajax: '{{ route('customer.order.index', ['status' => request()->status]) }}',
                 columns: [
                     {
-                        data: 'package_name',
-                        name: 'package_name'
+                        data: 'code',
+                        name: 'code'
                     },
                     {
-                        data: 'storage',
-                        name: 'storage'
+                        data: 'detail',
+                        name: 'detail'
                     },
                     {
-                        data: 'bandwidth',
-                        name: 'bandwidth'
+                        data: 'amount',
+                        name: 'amount'
                     },
 
                     {
-                        data: 'website_limit',
-                        name: 'website_limit'
+                        data: 'status',
+                        name: 'status'
                     },
                     {
-                        data: 'price',
-                        name: 'price'
+                        data: 'created_at',
+                        name: 'created_at'
                     },
                     {
-                        data: 'backup_frequency',
-                        name: 'backup_frequency'
+                        data: 'payment',
+                        name: 'payment'
                     },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false
-                    }
+
                 ],
                 columnDefs: [{
                         width: '16%',
@@ -115,25 +103,23 @@
                     },
                     {
                         width: '15%',
-                        targets: 2
+                        targets: 1
                     },
                     {
                         width: '15%',
-                        targets: 3
+                        targets: 1
                     },
 
                     {
                         width: '20%',
-                        targets: 4
-                    },
-                    {
-                        width: '15%',
-                        targets: 5
+                        targets: 1
                     },
 
+
                 ],
+            //   fixedHeader: true, // Giữ cố định tiêu đề và phần tìm kiếm
+            //     scrollX: true,
                 pagingType: "full_numbers", // Kiểu phân trang
-                // scrollX: true,
                 language: {
                     paginate: {
                         previous: '&laquo;', // Nút trước
@@ -147,8 +133,6 @@
                 },
                 dom: '<"row"<"col-md-6"l><"col-md-6"f>>t<"row"<"col-md-6"i><"col-md-6"p>>',
                 lengthMenu: [10, 25, 50, 100],
-                // fixedHeader: true, // Giữ cố định tiêu đề và phần tìm kiếm
-                // scrollX: true
             });
         });
 </script>

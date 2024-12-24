@@ -38,7 +38,7 @@
                                 <td>Loại đơn hàng</td>
                                 <td>Dịch vụ</td>
                                 <td>Thao tác</td>
-                                <td>Tên miền</td>
+                               
                                 <td>Thời hạn</td>
                                 <td>Số tiền</td>
                             </tr>
@@ -68,9 +68,7 @@
                                     </div>
 
                                 </td>
-                                <td>
-                                    {{ $item->domain }}
-                                </td>
+
                                 <td>
 
                                     @if($order->active_at)
@@ -171,7 +169,7 @@
     }
 
     .order_price_detailds {
-        border-top: 1px solid #ddd;
+        /* border-top: 1px solid #ddd; */
         padding-top: 20px;
     }
 

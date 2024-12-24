@@ -69,4 +69,13 @@ class CloudController extends Controller
         toastr()->success('Thêm thành công.');
         return redirect()->route('cloud.index');
     }
+
+     public function delete($id)
+    {
+        $cloud = Cloud::find($id);
+        $cloud->delete();
+        toastr()->success('Xóa thành công công.');
+        return redirect()->route('cloud.index');
+    }
+
 }

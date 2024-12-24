@@ -36,7 +36,7 @@
                             <td>
                                 <div class="quantity-container">
                                     <span class="decrease">-</span>
-                                    <input type="number" value="{{ $item->quantity }}" data-id= '{{ $item->id }}' min="1" class="form-control quantity">
+                                    <input type="number" value="{{ $item->quantity }}" data-id= {{ $item->id }} min="1" class="form-control quantity">
                                     <span class="increase">+</span>
                                 </div>
                             </td>

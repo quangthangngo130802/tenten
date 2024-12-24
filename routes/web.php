@@ -59,7 +59,7 @@ Route::middleware('auth')->group(function () {
             route::post('', [UserController::class,'store'])->name('store');
             route::get('{id}/edit', [UserController::class, 'edit'])->name('edit');
             route::put('{id}/edit', [UserController::class, 'update'])->name('update');
-            route::post('{id}', [UserController::class, 'delete'])->name('delete');
+            route::post('{id}', [ClientController::class, 'delete'])->name('delete');
         });
 
         Route::prefix('client')->name('client.')->group(function () {
@@ -83,11 +83,11 @@ Route::middleware('auth')->group(function () {
             route::post('', [HostingController::class,'store'])->name('store');
             route::get('{id}/edit', [HostingController::class, 'edit'])->name('edit');
             route::put('{id}/edit', [HostingController::class, 'update'])->name('update');
-            route::post('{id}', [HostingController::class, 'delete'])->name('delete');
+            route::post('delete-{id}', [HostingController::class, 'delete'])->name('delete');
         });
         Route::prefix('cloud')->name('cloud.')->group(function () {
+            route::get('add', [CloudController::class, 'create'])->name('create');
             route::get('{type_id?}', [CloudController::class, 'index'])->name('index');
-            route::get('create', [CloudController::class, 'create'])->name('create');
             route::post('', [CloudController::class,'store'])->name('store');
             route::get('{id}/edit', [CloudController::class, 'edit'])->name('edit');
             route::put('{id}/edit', [CloudController::class, 'update'])->name('update');

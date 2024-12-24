@@ -83,4 +83,13 @@ class ClientController extends Controller
         toastr()->success('Thêm thành công.');
         return redirect()->route('user.index');
     }
+
+    public function delete($id)
+    {
+        $user = User::find($id);
+        $user->delete();
+        toastr()->success('Xóa thành công.');
+        return redirect()->back();
+    }
+}
 }

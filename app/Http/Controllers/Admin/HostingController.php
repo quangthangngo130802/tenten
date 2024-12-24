@@ -63,4 +63,13 @@ class HostingController extends Controller
         toastr()->success('Thêm thành công.');
         return redirect()->route('hosting.index');
     }
+
+
+    public function delete($id)
+    {
+        $hosting = Hosting::find($id);
+        $hosting->delete();
+        toastr()->success('Xóa thành công.');
+        return redirect()->route('cloud.index');
+    }
 }

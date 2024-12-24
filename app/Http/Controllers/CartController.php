@@ -89,11 +89,11 @@ class CartController extends Controller
     public function updateQuantity(Request $request)
     {
 
-        $detail = DetailCart::find($request->id);
-        $detail->quantity = $request->quantity;
+        $details = DetailCart::find($request->id);
+        $details->quantity = $request->quantity;
 
-        $detail->save();
-        $cart = Cart::find($detail->cart_id);
+        $details->save();
+        $cart = Cart::find($details->cart_id);
         $cart->total_price = $cart->details->sum(function ($detail) {
             return $detail->price * $detail->quantity;
         });
@@ -101,7 +101,7 @@ class CartController extends Controller
 
         return response()->json([
             'message' => 'Cập nhật số lượng thành công!',
-            'price' => number_format($detail->price * $detail->quantity, 0, ',', '.'). ' đ',
+            'price' => number_format($details->price * $details->quantity, 0, ',', '.'). ' đ',
             'total_price' => number_format($cart->total_price, 0, ',', '.'). ' đ',
         ]);
     }

@@ -11,5 +11,6 @@ class DetailCart extends Model
     use HasFactory;
     protected $table = 'detail_cart';
     protected $guarded = [];
+    
 
 }

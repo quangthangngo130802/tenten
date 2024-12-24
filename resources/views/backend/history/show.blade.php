@@ -171,7 +171,7 @@
     }
 
     .order_price_detailds {
-        border-top: 1px solid #ddd;
+        /* border-top: 1px solid #ddd; */
         padding-top: 20px;
     }
 

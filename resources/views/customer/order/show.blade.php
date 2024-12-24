@@ -53,7 +53,7 @@
                                     @endif
                                 </td>
                                 <td>
-                                    {{ $item->service_name }}
+                                    <strong>{{ $item->service_name }}</strong> ({{ $item->type }})
                                 </td>
                                 <td>
 

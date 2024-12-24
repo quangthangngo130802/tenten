@@ -14,7 +14,7 @@ class OrderController extends Controller
     public function index(Request $request, $status = null)
     {
         $title = "Đơn hàng";
-
+        
         if ($request->ajax()) {
             $data = Order::where('status', $status)->where('email', Auth::user()->email)->select('*');
             return DataTables::of($data)

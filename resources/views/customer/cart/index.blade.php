@@ -17,31 +17,32 @@
                 </thead>
                 <tbody>
                     @forelse ($cart->details as $item )
-                        <tr>
-                            <td><span class="close" data-id="{{ $item->id }}" style="color:red">x</span></td>
-                            <td>
-                                @php
-                                    $product = '';
-                                    if($item->type == 'hosting'){
-                                        $product = \App\Models\Hosting::find($item->product_id);
-                                        echo $product->package_name . ' ( ' . 'Hosting' . ' )';
-                                    }else if ($item->type == 'cloud') {
-                                        $product = \App\Models\Cloud::find($item->product_id);
-                                        echo $product->package_name . ' ( ' . 'Cloud' . ' )';
-                                    }
+                    <tr>
+                        <td><span class="close" data-id="{{ $item->id }}" style="color:red">x</span></td>
+                        <td>
+                            @php
+                            $product = '';
+                            if($item->type == 'hosting'){
+                            $product = \App\Models\Hosting::find($item->product_id);
+                            echo $product->package_name . ' ( ' . 'Hosting' . ' )';
+                            }else if ($item->type == 'cloud') {
+                            $product = \App\Models\Cloud::find($item->product_id);
+                            echo $product->package_name . ' ( ' . 'Cloud' . ' )';
+                            }
 
-                                @endphp
-                            </td>
-                            <td>{{ number_format($item->price, 0, ',', '.') }}</td>
-                            <td>
-                                <div class="quantity-container">
-                                    <span class="decrease">-</span>
-                                    <input type="number" value="{{ $item->quantity }}" data-id="{{ $item->id }}"  min="1" class="form-control quantity">
-                                    <span class="increase">+</span>
-                                </div>
-                            </td>
-                            <td class="price_new">{{ number_format($item->price * $item->quantity, 0, ',', '.') }} ₫</td>
-                        </tr>
+                            @endphp
+                        </td>
+                        <td>{{ number_format($item->price, 0, ',', '.') }}</td>
+                        <td>
+                            <div class="quantity-container">
+                                <span class="decrease">-</span>
+                                <input type="number" value="{{ $item->quantity }}" data-id="{{ $item->id }}" min="1"
+                                    class="form-control quantity">
+                                <span class="increase">+</span>
+                            </div>
+                        </td>
+                        <td class="price_new">{{ number_format($item->price * $item->quantity, 0, ',', '.') }} ₫</td>
+                    </tr>
                     @empty
 
                     @endforelse
@@ -63,7 +64,7 @@
                     </tr>
                     <tr>
                         <td colspan="2">
-                            <a href="#" class="btn checkout-button btn-block">Tiến hành thanh toán</a>
+                            <a class="btn checkout-button btn-block" id="checkout_cart">Tiến hành thanh toán</a>
                         </td>
                     </tr>
                 </tbody>
@@ -75,11 +76,6 @@
 
 @push('styles')
 <style>
-    body {
-        background-color: #f9f9f9;
-        padding: 20px;
-    }
-
     .cart-container {
         background: white;
         border-radius: 8px;
@@ -150,7 +146,9 @@
         box-shadow: none;
     }
 
-    .increase, .decrease, .close{
+    .increase,
+    .decrease,
+    .close {
         cursor: pointer;
         font-size: 23px;
     }
@@ -236,6 +234,68 @@
             }
         });
     })
+
+    $('#checkout_cart').on('click', function() {
+        Swal.fire({
+            title: 'Xác nhận đặt hàng',
+            text: 'Bạn có chắc chắn muốn đặt hàng không?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Đặt hàng',
+            cancelButtonText: 'Hủy bỏ'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Nếu người dùng xác nhận đặt hàng, tiến hành gửi yêu cầu Ajax
+                $.ajax({
+                    url: `{{ route('checkout.item') }}`,
+                    type: 'POST',
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            title: 'Đặt hàng thành công!',
+                            text: 'Bạn sẽ được chuyển đến trang Dashboard.',
+                            icon: 'warning',
+                            confirmButtonText: 'OK'
+                        }).then(function() {
+                            window.location.href = '{{ route('dashboard') }}'; // Thay đổi route theo URL của dashboard
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.status === 400) {
+                            Swal.fire({
+                                title: 'Không đủ số dư. Vui lòng nạp thêm tiền vào tài khoản!',
+                                text: xhr.responseJSON.message,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            }).then(function() {
+                                window.location.href = '{{ route('payment.recharge') }}';
+                            });
+                        } else {
+                            console.error(xhr.responseText);
+                            Swal.fire({
+                                title: 'Lỗi!',
+                                text: 'Có lỗi xảy ra, vui lòng thử lại.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    }
+                });
+            } else {
+                // Nếu người dùng hủy bỏ, có thể hiển thị một thông báo hủy bỏ
+                Swal.fire({
+                    title: 'Đặt hàng đã bị hủy!',
+                    text: 'Bạn đã hủy bỏ việc đặt hàng.',
+                    icon: 'info',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    });
+
+
 });
 
 </script>

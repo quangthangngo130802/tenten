@@ -131,6 +131,7 @@ Route::get('/get-wards', [AuthController::class, 'getWards']);
 Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('addToCart');
 Route::post('/update-quantity', [CartController::class, 'updateQuantity'])->name('update.quantity');
 Route::post('/delete-item', [CartController::class, 'deleteItem'])->name('delete.item');
+Route::post('/checkout', [CartController::class, 'checkout'])->name('checkout.item');
 
 Route::prefix('history')->name('history.')->group(function () {
     route::get('{status?}', [TransactionHistoryController::class, 'index'])->name('index');

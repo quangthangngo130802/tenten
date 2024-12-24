@@ -45,11 +45,11 @@
                             <i class="fas fa-coins"></i> Nạp tiền
                         </a>
                     </li>
-                    <li>
+                    {{-- <li>
                         <a href="#" class="dropdown-title d-flex justify-content-between align-items-center">
                             <i class="fas fa-history"></i> Lịch sử giao dịch
                         </a>
-                    </li>
+                    </li> --}}
                 </ul>
             </li>
             <li class="nav-item topbar-icon dropdown hidden-caret">

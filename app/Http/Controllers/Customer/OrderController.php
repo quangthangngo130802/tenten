@@ -64,6 +64,7 @@ class OrderController extends Controller
          */
         $user = Auth::user();
         $order = Order::find($request->id);
+
         if ($user->wallet < $order->amount) {
             return response()->json([
                 'error' => 'Tài khoản không đủ để thanh toán!',
@@ -72,12 +73,12 @@ class OrderController extends Controller
         $user->update([
             'wallet' => $user->wallet - $order->amount,
         ]);
-
+        $order->orderDetail()->update(['active' => 'payment']);
         $order->status = 'payment';
         $order->save();
 
         TransactionHistory::create([
-            'code' => Str::random(10),
+            'code' => $order->code,
             'user_id' => $user->id,
             'type' => 'Thanh toán',
             'amount' => $order->amount,

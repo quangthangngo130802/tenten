@@ -37,8 +37,8 @@
                                 <td>STT</td>
                                 <td>Loại đơn hàng</td>
                                 <td>Dịch vụ</td>
+                                <td>Số lượng</td>
                                 <td>Thao tác</td>
-
                                 <td>Thời hạn</td>
                                 <td>Số tiền</td>
                             </tr>
@@ -53,7 +53,10 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <strong>{{ $item->service_name }}</strong> ({{ $item->type }})
+                                    <strong>{{ $item->service_name }} </strong> ({{ $item->type }})
+                                </td>
+                                <td>
+                                    <b>{{ $item->quantity }}  </b>
                                 </td>
                                 <td>
 

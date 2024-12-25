@@ -255,11 +255,11 @@
                     success: function(response) {
                         Swal.fire({
                             title: 'Đặt hàng thành công!',
-                            text: 'Bạn sẽ được chuyển đến trang Dashboard.',
+                            text: 'Bạn sẽ được chuyển đến trang đơn hàng.',
                             icon: 'warning',
                             confirmButtonText: 'OK'
                         }).then(function() {
-                            window.location.href = '{{ route('dashboard') }}'; // Thay đổi route theo URL của dashboard
+                            window.location.href = '{{ route('customer.order.index', ['status' => 'nopayment']) }}'; // Thay đổi route theo URL của dashboard
                         });
                     },
                     error: function(xhr, status, error) {

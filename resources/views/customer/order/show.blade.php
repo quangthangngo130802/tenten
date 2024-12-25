@@ -38,7 +38,7 @@
                                 <td>Loại đơn hàng</td>
                                 <td>Dịch vụ</td>
                                 <td>Thao tác</td>
-                              
+
                                 <td>Thời hạn</td>
                                 <td>Số tiền</td>
                             </tr>
@@ -61,7 +61,7 @@
                                         @if ($order->status == 'payment')
                                         <i class="status-icon payment"></i> Đã xử lý
                                         @elseif ($order->status == 'nopayment')
-                                        <i class="status-icon nopayment"></i> Chờ xử lý
+                                        <i class="status-icon nopayment"></i> Chưa thanh toán
                                         @else
                                         <i class="status-icon pending"></i> Chưa duyệt
                                         @endif

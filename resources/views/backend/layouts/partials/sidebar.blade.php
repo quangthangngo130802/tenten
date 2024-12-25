@@ -90,15 +90,17 @@
                         <div class="collapse" id="order">
                             <ul class="nav nav-collapse">
                                 <li>
-                                    <a href="{{ route('order.index', ['status' => 'payment']) }}">
-                                        <span class="sub-item">Đơn hàng đã thanh toán</span>
-                                    </a>
-                                </li>
-                                <li>
                                     <a href="{{ route('order.index', ['status' => 'nopayment']) }}">
                                         <span class="sub-item">Đơn hàng chưa thanh toán</span>
                                     </a>
                                 </li>
+
+                                <li>
+                                    <a href="{{ route('order.index', ['status' => 'payment']) }}">
+                                        <span class="sub-item">Đơn hàng đã thanh toán</span>
+                                    </a>
+                                </li>
+
                                 <li>
                                     <a href="{{ route('order.index', ['status' => 'unactive']) }}">
                                         <span class="sub-item">Đơn hàng chờ kích hoạt</span>
@@ -155,15 +157,17 @@
                     <div class="collapse" id="order">
                         <ul class="nav nav-collapse">
                             <li>
-                                <a href="{{ route('customer.order.index', ['status' => 'payment']) }}">
-                                    <span class="sub-item">Đơn hàng đã thanh toán</span>
-                                </a>
-                            </li>
-                            <li>
                                 <a href="{{ route('customer.order.index', ['status' => 'nopayment']) }}">
                                     <span class="sub-item">Đơn hàng chưa thanh toán</span>
                                 </a>
                             </li>
+
+                            <li>
+                                <a href="{{ route('customer.order.index', ['status' => 'payment']) }}">
+                                    <span class="sub-item">Đơn hàng đã thanh toán</span>
+                                </a>
+                            </li>
+
                             <li>
                                 <a href="{{ route('customer.order.index', ['status' => 'unactive']) }}">
                                     <span class="sub-item">Đơn hàng chờ kích hoạt</span>

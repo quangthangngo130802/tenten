@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TransactionHistory;
+use App\Models\User;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -95,8 +97,20 @@ class PaymentController extends Controller
     }
     public function returnUrl($amount){
         $user = Auth::user();
+        /**
+         * @var User $user
+         */
         $user->update([
             'wallet' => $amount + $user->amount
+        ]);
+        TransactionHistory::create([
+            'code' => Str::random(10),
+            'user_id' => $user->id,
+            'type' => 'Nạp tiền',
+            'amount' => $amount,
+            'status' => 1,
+            'type' => 2, /// 1 chưa, 2 thanh toán, 3 duỵet
+            'description' => 'Nạp tiền vào tài khoản',
         ]);
         toastr()->success('Giao dịch thành công.');
         return redirect()->route('payment.recharge');

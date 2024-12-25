@@ -33,8 +33,8 @@ class ClientController extends Controller
                                 <a href="' . route('client.edit', $row->id) . '" class="btn btn-primary btn-sm edit">
                                     <i class="fas fa-edit btn-edit" title="Sửa"></i>
                                 </a>
-                                <a href="#" class="btn btn-danger btn-sm delete"
-                                    onclick="event.preventDefault(); document.getElementById(\'delete-form-' . $row->id . '\').submit();">
+                                <a class="btn btn-danger btn-sm delete"
+                                onclick="confirmDelete(event, ' . $row->id . ')">
                                     <i class="fas fa-trash btn-delete" title="Xóa"></i>
                                 </a>
                                 <form id="delete-form-' . $row->id . '" action="' . route('client.delete', $row->id) . '" method="POST" style="display:none;">
@@ -91,5 +91,5 @@ class ClientController extends Controller
         toastr()->success('Xóa thành công.');
         return redirect()->back();
     }
-}
+
 }

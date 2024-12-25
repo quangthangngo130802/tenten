@@ -24,19 +24,19 @@ class CloudController extends Controller
                 return number_format($row->total_cost);
             })
                 ->addColumn('action', function ($row) {
-                    return '<div style="display: flex;">
+                                return '<div style="display: flex;">
                                 <a href="' . route('cloud.edit', $row->id) . '" class="btn btn-primary btn-sm edit">
                                     <i class="fas fa-edit btn-edit" title="Sửa"></i>
                                 </a>
                                 <a href="#" class="btn btn-danger btn-sm delete"
-                                    onclick="event.preventDefault(); document.getElementById(\'delete-form-' . $row->id . '\').submit();">
+                                onclick="confirmDelete(event, ' . $row->id . ')">
                                     <i class="fas fa-trash btn-delete" title="Xóa"></i>
                                 </a>
                                 <form id="delete-form-' . $row->id . '" action="' . route('cloud.delete', $row->id) . '" method="POST" style="display:none;">
                                     ' . csrf_field() . '
-
                                 </form>
                             </div>';
+
                 })->rawColumns(['action'])
                 ->make(true);
         }

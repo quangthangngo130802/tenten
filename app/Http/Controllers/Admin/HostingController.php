@@ -23,7 +23,7 @@ class HostingController extends Controller
                                     <i class="fas fa-edit btn-edit" title="Sửa"></i>
                                 </a>
                                 <a href="#" class="btn btn-danger btn-sm delete"
-                                    onclick="event.preventDefault(); document.getElementById(\'delete-form-' . $row->id . '\').submit();">
+                                onclick="confirmDelete(event, ' . $row->id . ')">
                                     <i class="fas fa-trash btn-delete" title="Xóa"></i>
                                 </a>
                                 <form id="delete-form-' . $row->id . '" action="' . route('hosting.delete', $row->id) . '" method="POST" style="display:none;">

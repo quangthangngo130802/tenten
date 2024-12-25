@@ -132,11 +132,11 @@ class CartController extends Controller
         $cart = Cart::where('user_id', $user->id)->first();
 
         // Kiểm tra nếu số dư nhỏ hơn tổng giá trị giỏ hàng
-        if ($user->wallet < $cart->total_price) {
-            return response()->json([
-                'message' => 'Tài khoản không đủ để thanh toán!',
-            ], 400);
-        }
+        // if ($user->wallet < $cart->total_price) {
+        //     return response()->json([
+        //         'message' => 'Tài khoản không đủ để thanh toán!',
+        //     ], 400);
+        // }
 
         // Tạo đơn hàng
         $order = Order::create([
@@ -144,7 +144,7 @@ class CartController extends Controller
             'email' => $user->email,
             'fullname' => $user->full_name,
             'amount' => $cart->total_price,
-            'status' => 'payment',
+            'status' => 'nopayment',
             'payment' => 0,
         ]);
 
@@ -162,25 +162,25 @@ class CartController extends Controller
                 'quantity'     => $detail->quantity,
                 'type'         => $detail->type,
                 'amount'       => $product->price * $detail->quantity,
-                'active'       => 'payment'
+                'active'       => 'nopayment'
             ]);
             $detail->delete();
         });
 
         $cart->delete();
 
-        $user->update([
-            'wallet' => $user->wallet - $cart->total_price,
-        ]);
+        // $user->update([
+        //     'wallet' => $user->wallet - $cart->total_price,
+        // ]);
 
-        TransactionHistory::create([
-            'code' => Str::random(10),
-            'user_id' => $user->id,
-            'type' => 'Thanh toán',
-            'amount' => $cart->total_price,
-            'type' => 2,
-            'description' => 'Thanh toán đơn hàng #' . $order->code,
-        ]);
+        // TransactionHistory::create([
+        //     'code' => Str::random(10),
+        //     'user_id' => $user->id,
+        //     'type' => 'Thanh toán',
+        //     'amount' => $cart->total_price,
+        //     'type' => 2,
+        //     'description' => 'Thanh toán đơn hàng #' . $order->code,
+        // ]);
 
         return response()->json([
             'message' => 'Thanh toán thành công!',

@@ -61,10 +61,10 @@ class TransactionHistoryController extends Controller
                     // Nếu là admin, hiển thị hành động xóa
                     return '<div style="display: flex;">
                             <a href="#" class="btn btn-danger btn-sm delete"
-                               onclick="event.preventDefault(); document.getElementById(\'delete-form-' . $row->id . '\').submit();">
+                            onclick="confirmDelete(event, ' . $row->id . ')">
                                <i class="fas fa-trash btn-delete" title="Xóa"></i>
                             </a>
-                            <form id="delete-form-' . $row->id . '" action="' . route('order.delete', $row->id) . '" method="POST" style="display:none;">
+                            <form id="delete-form-' . $row->id . '" action="' . route('history.delete', $row->id) . '" method="POST" style="display:none;">
                                 ' . csrf_field() . '
                             </form>
                         </div>';
@@ -75,5 +75,10 @@ class TransactionHistoryController extends Controller
 
         $page = 'Lịch sử giao dịch';
         return view('backend.history.index', compact('title', 'page'));
+    }
+    public function delete($id){
+        $order = TransactionHistory::find($id);
+        $order->delete();
+        return redirect()->back()->with('success', 'Đơn hàng đã xóa thành công');
     }
 }

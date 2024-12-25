@@ -74,7 +74,7 @@ Route::middleware('auth')->group(function () {
         Route::prefix('order')->name('order.')->group(function () {
             route::get('{status?}', [OrderController::class, 'index'])->name('index');
             route::get('{id}/show', [OrderController::class, 'show'])->name('show');
-            route::post('{id}', [OrderController::class, 'delete'])->name('delete');
+            route::post('delete-{id}', [OrderController::class, 'delete'])->name('delete');
         });
 
         Route::prefix('hosting')->name('hosting.')->group(function () {
@@ -93,6 +93,8 @@ Route::middleware('auth')->group(function () {
             route::put('{id}/edit', [CloudController::class, 'update'])->name('update');
             route::post('{id}', [CloudController::class, 'delete'])->name('delete');
         });
+
+        route::post('delete-{id}', [TransactionHistoryController::class, 'delete'])->name('history.delete');
 
         // Route::prefix('history')->name('history.')->group(function () {
         //     route::get('{status?}', [TransactionHistoryController::class, 'index'])->name('index');
@@ -114,6 +116,7 @@ Route::middleware('auth')->group(function () {
         Route::prefix('order')->name('order.')->group(function () {
             route::get('{status?}', [CustomerOrderController::class, 'index'])->name('index');
             route::get('{id}/show', [CustomerOrderController::class, 'show'])->name('show');
+            route::post('payment', [CustomerOrderController::class, 'payment'])->name('payment');
         });
         Route::prefix('cart')->name('cart.')->group(function () {
             route::get('', [CartController::class, 'listcart'])->name('listcart');
@@ -136,7 +139,6 @@ Route::post('/checkout', [CartController::class, 'checkout'])->name('checkout.it
 Route::prefix('history')->name('history.')->group(function () {
     route::get('{status?}', [TransactionHistoryController::class, 'index'])->name('index');
     route::get('{id}/show', [TransactionHistoryController::class, 'show'])->name('show');
-    route::post('{id}', [TransactionHistoryController::class, 'delete'])->name('delete');
 });
 
 

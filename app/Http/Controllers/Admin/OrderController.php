@@ -37,16 +37,21 @@ class OrderController extends Controller
                     return '<a href="' . route('order.show', $row->id) . '" class="btn btn-primary btn-sm edit"> Chi tiết </a>';
                 })->rawColumns(['detail'])
                 ->addColumn('action', function ($row) {
-                    return '<div style="display: flex;">
+                    return $row->status == 'payment'
+                    ? '<span style="color: green;">Đã thanh toán</span>'
+                    : ($row->status == 'pending'
+                        ? '<span style="color: orange;">Chờ duyệt</span>'
+                        : '<div style="display: flex;">
                                 <a href="#" class="btn btn-danger btn-sm delete"
-                                    onclick="event.preventDefault(); document.getElementById(\'delete-form-' . $row->id . '\').submit();">
+                                    onclick="confirmDelete(event, ' . $row->id . ')">
                                     <i class="fas fa-trash btn-delete" title="Xóa"></i>
                                 </a>
                                 <form id="delete-form-' . $row->id . '" action="' . route('order.delete', $row->id) . '" method="POST" style="display:none;">
                                     ' . csrf_field() . '
-
                                 </form>
-                            </div>';
+                            </div>');
+
+
                 })->rawColumns(['action', 'detail', 'status'])
                 ->make(true);
         }
@@ -58,5 +63,12 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($id);
         return view('backend.order.show', compact('order'));
+    }
+
+    public function delete($id){
+        $order = Order::find($id);
+        $order->orderDetail()->delete();
+        $order->delete();
+        return redirect()->back()->with('success', 'Đơn hàng đã xóa thành công');
     }
 }

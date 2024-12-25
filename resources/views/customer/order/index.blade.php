@@ -58,6 +58,7 @@
 @endpush
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script type="text/javascript">
     $(document).ready(function() {
@@ -72,7 +73,7 @@
                     },
                     {
                         data: 'detail',
-                        name: 'detail'
+                        name: 'id'
                     },
                     {
                         data: 'amount',
@@ -89,7 +90,9 @@
                     },
                     {
                         data: 'payment',
-                        name: 'payment'
+                        name: 'payment',
+                        orderable: false,
+                        searchable: false
                     },
 
                 ],
@@ -98,27 +101,30 @@
                         targets: 0
                     },
                     {
-                        width: '16%',
-                        targets: 1
-                    },
-                    {
                         width: '15%',
                         targets: 1
                     },
                     {
                         width: '15%',
-                        targets: 1
+                        targets: 2
+                    },
+                    {
+                        width: '20%',
+                        targets: 3
                     },
 
                     {
                         width: '20%',
-                        targets: 1
+                        targets: 4
+                    },
+                    {
+                        width: '15%',
+                        targets: 5
                     },
 
 
                 ],
-            //   fixedHeader: true, // Giữ cố định tiêu đề và phần tìm kiếm
-            //     scrollX: true,
+
                 pagingType: "full_numbers", // Kiểu phân trang
                 language: {
                     paginate: {
@@ -134,6 +140,67 @@
                 dom: '<"row"<"col-md-6"l><"col-md-6"f>>t<"row"<"col-md-6"i><"col-md-6"p>>',
                 lengthMenu: [10, 25, 50, 100],
             });
+
+            $(document).on('click', '.clickpayment', function (e) {
+                e.preventDefault();
+
+                var id = $(this).data('id');
+                Swal.fire({
+                    title: 'Xác nhận thanh toán?',
+                    text: "Bạn có chắc muốn thanh toán đơn hàng này không?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Có, thanh toán!',
+                    cancelButtonText: 'Hủy',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        $.ajax({
+                            url: '{{ route('customer.order.payment') }}',
+                            type: 'POST',
+                            data: {
+                                id: id,
+                                _token: '{{ csrf_token() }}', // CSRF token
+                            },
+                            success: function (response) {
+                                if (response.success) {
+                                    Swal.fire(
+                                        'Thành công!',
+                                        'Đơn hàng đã được thanh toán.',
+                                        'success'
+                                    ).then(() => {
+                                        location.reload(); // Tải lại trang
+                                    });
+                                } else {
+                                    Swal.fire('Lỗi!', response.message, 'error');
+                                }
+                            },
+                            error: function (xhr) {
+                                // Kiểm tra lỗi trả về từ server
+                                if (xhr.status ===400 ) {
+                                    Swal.fire({
+                                        title: 'Không đủ tiền!',
+                                        text: 'Tài khoản của bạn không đủ tiền để thanh toán. Vui lòng nạp thêm tiền.',
+                                        icon: 'error',
+                                        confirmButtonText: 'Nạp tiền',
+                                    }).then(() => {
+                                        window.location.href = '{{ route('payment.recharge') }}'; // Đường dẫn đến trang nạp tiền
+                                    });
+                                } else {
+                                    Swal.fire(
+                                        'Lỗi!',
+                                        xhr.responseJSON?.error || 'Có lỗi xảy ra, vui lòng thử lại!',
+                                        'error'
+                                    );
+                                }
+                            },
+                        });
+                    }
+                });
+            });
+
         });
 </script>
 @endpush

@@ -85,9 +85,11 @@ class CartController extends Controller
 
     public function listcart()
     {
+        $title = "Danh sách giỏ hàng";
+        $page = "GIỏ hàng";
         $user = Auth::user();
         $cart = Cart::where('user_id', $user->id)->first();
-        return view('customer.cart.index', compact('cart'));
+        return view('customer.cart.index', compact('cart', 'title', 'page'));
     }
 
     public function updateQuantity(Request $request)

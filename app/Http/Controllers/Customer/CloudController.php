@@ -11,7 +11,7 @@ class CloudController extends Controller
 {
     public function index(Request $request, $type_id = 1)
     {
-        $title = "Cloud";
+        $title = "Danh sách Cloud";
         if ($request->ajax()) {
             $data = Cloud::where('type_id',$type_id)->select('*');
             return DataTables::of($data)
@@ -31,7 +31,7 @@ class CloudController extends Controller
                 })->rawColumns(['action'])
                 ->make(true);
         }
-        $page = 'Cloud';
+        $page = 'Cloud Server';
         return view('customer.cloud.index', compact('title', 'page'));
     }
 }

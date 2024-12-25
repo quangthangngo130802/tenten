@@ -40,7 +40,7 @@
                         style="max-width: 70px;">
                     <h3 class="total_order">0</h3>
                     <p>Đơn hàng chưa thanh toán</p>
-                    <a href="" class="btn btn-link">Chi tiết</a>
+                    <a href="{{ route('customer.order.index', ['status' => 'nopayment']) }}" class="btn btn-link">Chi tiết</a>
                 </div>
             </div>
         </div>

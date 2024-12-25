@@ -72,7 +72,7 @@
                         <span class="fw-bold">{{ Auth::user()->full_name }}</span>
                     </span>
                 </a>
-                <ul class="dropdown-menu dropdown-user animated fadeIn">
+                <ul class="dropdown-menu dropdown-user animated fadeIn" style="width: 287px">
                     <div class="dropdown-user-scroll scrollbar-outer">
                         <li>
                             <div class="user-box">

@@ -61,8 +61,10 @@ class OrderController extends Controller
 
     public function show($id)
     {
+        $title = "Chi tiết đơn hàng";
+        $page = "Đơn hàng";
         $order = Order::findOrFail($id);
-        return view('backend.order.show', compact('order'));
+        return view('backend.order.show', compact('order', 'title', 'page'));
     }
 
     public function delete($id){

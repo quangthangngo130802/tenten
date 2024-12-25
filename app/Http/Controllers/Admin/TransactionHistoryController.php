@@ -14,7 +14,7 @@ class TransactionHistoryController extends Controller
 {
     public function index(Request $request, $status = null)
     {
-        $title = "Lịch sử";
+        $title = "Danh sách lịch sử";
         $user = Auth::user(); // Lấy thông tin người dùng hiện tại
 
         if ($request->ajax()) {
@@ -73,7 +73,7 @@ class TransactionHistoryController extends Controller
                 ->make(true);
         }
 
-        $page = 'Lịch sử giao dịch';
+        $page = 'Lịch sử ';
         return view('backend.history.index', compact('title', 'page'));
     }
     public function delete($id){

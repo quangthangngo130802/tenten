@@ -39,7 +39,9 @@ Route::middleware('auth')->group(function () {
     route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::get('dashboard', function () {
-        return view('backend.dashboard');
+        $title = "Dashboard";
+        $page = "Dashboard";
+        return view('backend.dashboard', compact('title', 'page'));
     })->name('dashboard');
 
     Route::prefix('payment')->name('payment.')->group(function () {

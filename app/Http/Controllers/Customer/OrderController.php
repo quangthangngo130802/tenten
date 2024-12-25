@@ -16,7 +16,7 @@ class OrderController extends Controller
 {
     public function index(Request $request, $status = null)
     {
-        $title = "Đơn hàng";
+        $title = "Danh sách đơn hàng";
 
         if ($request->ajax()) {
             $data = Order::where('status', $status)->where('email', Auth::user()->email)->select('*');
@@ -53,8 +53,11 @@ class OrderController extends Controller
 
     public function show($id)
     {
+        $title = "Chi tiết đơn hàng";
+        $page = "Đơn hàng";
         $order = Order::findOrFail($id);
-        return view('customer.order.show', compact('order'));
+        return view('customer.order.show', compact('order','title', 'page'));
+
     }
 
     public function payment(Request $request)

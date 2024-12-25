@@ -11,7 +11,7 @@ class HostingController extends Controller
 {
     public function index(Request $request, $status = null)
     {
-        $title = "Hosting";
+        $title = "Danh sách Hosting";
         if ($request->ajax()) {
             $data = Hosting::select('*');
             return DataTables::of($data)

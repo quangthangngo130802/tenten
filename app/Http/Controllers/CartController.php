@@ -56,19 +56,20 @@ class CartController extends Controller
                 ->where('type', $type)
                 ->first();
 
-            if ($detailCart) {
-                $detailCart->quantity += $quantity;
-                $detailCart->save();
-            } else {
+            // if ($detailCart) {
+            //     $detailCart->quantity += $quantity;
+            //     $detailCart->save();
+            // } else {
 
                 DetailCart::create([
                     'cart_id' => $cart->id,
                     'product_id' => $itemId,
                     'quantity' => $quantity,
                     'type' => $type,
+                    'number' => 12,
                     'price' => $product->price
                 ]);
-            }
+            // }
 
             return response()->json([
                 'success' => true,
@@ -89,7 +90,7 @@ class CartController extends Controller
         $page = "GIỏ hàng";
         $user = Auth::user();
         $cart = Cart::where('user_id', $user->id)->first();
-        return view('customer.cart.index', compact('cart', 'title', 'page'));
+        return view('customer.cart.detail', compact('cart', 'title', 'page'));
     }
 
     public function updateQuantity(Request $request)
@@ -186,6 +187,38 @@ class CartController extends Controller
 
         return response()->json([
             'message' => 'Thanh toán thành công!',
+        ]);
+    }
+
+    public function updatetime(Request $request)
+    {
+
+        $details = DetailCart::find($request->id);
+        if($details->type == 'hosting'){
+            $details->price = $details->price  / ($details->number/12) * $request->quantity/12 ;
+        }else{
+            if($details->backup == '0'){
+                $details->price = $details->price/$details->number * $request->quantity;
+            }else{
+                $details->price = ($details->price-75000)/$details->number * $request->quantity + 75000;
+            }
+
+        }
+        $details->number = $request->quantity;
+
+
+        // $details->price = $request->price * ;
+        $details->save();
+        $cart = Cart::find($details->cart_id);
+        $cart->total_price = $cart->details->sum(function ($detail) {
+            return $detail->price;
+        });
+        $cart->save();
+
+        return response()->json([
+            'message' => 'Cập nhật số lượng thành công!',
+            'price' => number_format($details->price, 0, ',', '.') . ' đ',
+            'total_price' => number_format($cart->total_price, 0, ',', '.') . ' đ',
         ]);
     }
 }

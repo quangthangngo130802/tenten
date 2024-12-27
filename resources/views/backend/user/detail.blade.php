@@ -51,7 +51,7 @@
 
             <div class="mb-3">
                 <label for="gender" class="form-label">Giới tính</label>
-                <select class="form-select @error('gender') is-invalid @enderror" id="gender" name="gender">
+                <select class="form-control form-select @error('gender') is-invalid @enderror" id="gender" name="gender">
                     <option value="">----- Chọn giới tính -----</option>
                     <option value="male" {{ old('gender', $user->gender ?? '') == 'male' ? 'selected' : '' }}>Nam</option>
                     <option value="female" {{ old('gender', $user->gender ?? '') == 'female' ? 'selected' : '' }}>Nữ</option>
@@ -114,10 +114,10 @@
 
             <div class="mb-3">
                 <label for="role_id" class="form-label">Vai trò</label>
-                <select class="form-select @error('role_id') is-invalid @enderror" id="role_id" name="role_id">
+                <select class=" form-control form-select @error('role_id') is-invalid @enderror" id="role_id" name="role_id">
                     <option value="">----- Chọn vai trò -----</option>
-                    <option value="1" {{ old('role_id', $user->role_id ?? '') == '1' ? 'selected' : '' }}>admin</option>
-                    <option value="2" {{ old('role_id', $user->role_id ?? '') == '2' ? 'selected' : '' }}>user</option>
+                    <option value="1" {{ old('role_id', $user->role_id ?? '') == '1' ? 'selected' : '' }}>Admin</option>
+                    <option value="2" {{ old('role_id', $user->role_id ?? '') == '2' ? 'selected' : '' }}>Khách hàng</option>
                 </select>
                 @error('role_id')
                 <div class="invalid-feedback">{{ $message }}</div>

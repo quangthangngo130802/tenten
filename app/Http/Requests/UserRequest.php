@@ -20,8 +20,8 @@ class UserRequest extends FormRequest
             'username' => 'required|string|unique:users,username,' . $this->id,
             'password' => $this->isMethod('post') ? 'required|string|min:6' : 'nullable|string|min:6',
             'full_name' => 'required|string|max:255',
-            'gender' => 'nullable|in:male,female,other',
-            'birth_date' => 'nullable|date',
+            'gender' => 'required|in:male,female,other',
+            'birth_date' => 'required|date',
             'identity_number' => 'nullable|string|max:20|unique:users,identity_number,' . $this->id,
             'tax_code' => 'nullable|string|max:20|unique:users,tax_code,' . $this->id,
             'country' => 'nullable|string|max:255',
@@ -29,9 +29,9 @@ class UserRequest extends FormRequest
             'district' => 'nullable|string|max:255',
             'ward' => 'nullable|string|max:255',
             'address' => 'nullable|string|max:500',
-            'phone_number' => 'nullable|string|max:15|unique:users,phone_number,' . $this->id,
+            'phone_number' => 'required|string|max:15|unique:users,phone_number,' . $this->id,
             'email' => 'required|string|email|max:255|unique:users,email,' . $this->id,
-            'role_id' => 'nullable|integer',
+            'role_id' => 'required|integer',
         ];
     }
 

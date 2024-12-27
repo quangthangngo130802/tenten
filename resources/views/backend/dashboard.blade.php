@@ -18,7 +18,7 @@
 }
 </style>
 <div class=" mt-4">
-    <h2 class="text-center bg-primary text-white py-2">Hiện trạng tài khoản của bạn</h2>
+    <h2 class="text-center bg-primary text-white py-2 mb-4">Hiện trạng tài khoản của bạn</h2>
 
     <div class="row text-center">
         <div class="col-md-3">
@@ -38,7 +38,7 @@
                 <div class="card-body">
                     <img src="{{ asset('account_status_2.png') }}" class="img-fluid"
                         style="max-width: 70px;">
-                    <h3 class="total_order">0</h3>
+                    <h3 class="total_order">{{ count($nopayment) }}</h3>
                     <p>Đơn hàng chưa thanh toán</p>
                     <a href="{{ route('customer.order.index', ['status' => 'nopayment']) }}" class="btn btn-link">Chi tiết</a>
                 </div>

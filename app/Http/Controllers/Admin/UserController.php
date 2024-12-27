@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
+use App\Mail\CreateUserEmail;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Yajra\DataTables\DataTables;
 
 class UserController extends Controller
@@ -77,6 +79,12 @@ class UserController extends Controller
             $credentials['password'] = bcrypt($credentials['password']);
         }
         User::create($credentials);
+        $data = [
+            'name' => $credentials['full_name'],
+            'username' => $credentials['username'],
+        ];
+
+        Mail::to($credentials['email'])->send(new CreateUserEmail($data));
         toastr()->success('Thêm thành công.');
         return redirect()->route('user.index');
     }

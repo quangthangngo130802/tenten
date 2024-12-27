@@ -169,6 +169,7 @@
                                 if (response.success) {
                                     Swal.fire('Thành công!', 'Sản phẩm đã được thêm vào giỏ hàng.', 'success');
                                     $('.notification').text(response.count);
+                                    window.location.href = '{{ route("customer.cart.listcart") }}';
                                 } else {
                                     Swal.fire('Thất bại!', response.message || 'Có lỗi xảy ra.', 'error');
                                 }

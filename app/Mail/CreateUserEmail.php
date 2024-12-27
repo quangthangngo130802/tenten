@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class AccountActivation extends Mailable
+class CreateUserEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -32,10 +32,10 @@ class AccountActivation extends Mailable
      */
     public function build()
     {
-        return $this->view('email.acctionactive')
-                    ->subject('Thông báo tài khoản')
+        return $this->view('email.create') // Đường dẫn tới view email
+                    ->subject('Thông báo tài khoản') // Chủ đề email
                     ->with([
-                        'data' => $this->data,
+                        'data' => $this->data, // Dữ liệu truyền vào view
                     ]);
     }
 }

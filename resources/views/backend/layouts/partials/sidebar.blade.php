@@ -59,7 +59,43 @@
                         <div class="collapse" id="service">
                             <ul class="nav nav-collapse">
                                 <li>
+                                    <a href="{{ route('domain.price') }}">
+                                        <span class="sub-item">Tên miền</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('hosting.index') }}">
+                                        <span class="sub-item">Hosting</span>
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="">
+                                        <span class="sub-item">Email Server</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('cloud.index') }}">
+                                        <span class="sub-item">Cloud</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="">
+                                        <span class="sub-item">Website</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a data-bs-toggle="collapse" href="#service_active">
+                            <i class="fas fa-pen-square"></i>
+                            <p>Dịch vụ được đăng ký</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse" id="service_active">
+                            <ul class="nav nav-collapse">
+                                <li>
+                                    <a href="{{ route('domain.index') }}">
                                         <span class="sub-item">Tên miền</span>
                                     </a>
                                 </li>

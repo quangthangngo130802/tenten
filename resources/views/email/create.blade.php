@@ -94,10 +94,6 @@
                 <p>Chúng tôi đã tạo tài khoản mới cho bạn hoặc bạn đã yêu cầu đặt lại mật khẩu cho tài khoản của mình.</p>
                 <p><strong>Tài khoản đăng nhập:</strong> <span style="color: #4CAF50;">{{ $data['username'] }}</span></p>
                 <p><strong>Mật khẩu mới:</strong> <span style="color: #4CAF50;">{{ $data['password'] }}</span></p>
-                <p>Để thay đổi mật khẩu hoặc đăng nhập lần đầu, vui lòng nhấp vào nút bên dưới:</p>
-                <div style="text-align: center;">
-                    <a href="{{ $data['reset_link'] }}" class="btn">Đặt lại mật khẩu</a>
-                </div>
                 <p style="font-size: 14px; color: #666;">Nếu bạn không yêu cầu tạo tài khoản hoặc đặt lại mật khẩu, vui lòng bỏ qua email này.</p>
                 <p>Trân trọng,<br>Đội ngũ Your Application</p>
             </td>

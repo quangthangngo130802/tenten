@@ -124,7 +124,7 @@
     <form action="{{ route('customer.cloud.addtocart') }}" method="post">
         @csrf
         <input type="hidden" name="product_id" id="product_id" value="{{ $cloud->id }}">
-        <input type="hidden" name="numbertg" id="numbertg" value="1">
+        <input type="text" name="numbertg" id="numbertg" >
         <input type="hidden" name="time_type" id="time_type" value="month">
         <input type="hidden" name="totalprice" id="totalprice" value="{{ $cloud->price }}">
         <input type="hidden" name="issetbackup" id="issetbackup" value="0">

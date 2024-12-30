@@ -52,11 +52,11 @@ class CloudController extends Controller
 
     public function addToCart(Request $request)
     {
-        // dd($request->all());
+        //   dd($request->all());
         try {
             $itemId = $request->input('product_id');
             $type = 'cloud';
-            $quantity = $request->input('quantity', 1);
+            $quantity = $request->input('numbertg', 1);
 
             $user = Auth::user();
 
@@ -88,7 +88,8 @@ class CloudController extends Controller
                 'type' => $type,
                 'os_id' => $request->os_id,
                 'backup' => $request->issetbackup,
-                'price' => $request->totalprice
+                'price' => $request->totalprice,
+                'number' => $quantity
             ]);
 
            return redirect()->route('customer.cart.listcart');

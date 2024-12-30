@@ -90,6 +90,9 @@ class CartController extends Controller
         $page = "GIỏ hàng";
         $user = Auth::user();
         $cart = Cart::where('user_id', $user->id)->first();
+        if(!$cart){
+            return redirect()->back();
+        }
         return view('customer.cart.detail', compact('cart', 'title', 'page'));
     }
 
@@ -118,7 +121,7 @@ class CartController extends Controller
         $cart = Cart::find($detail->cart_id);
         $detail->delete();
         $cart->total_price = $cart->details ? $cart->details->sum(function ($detail) {
-            return $detail->price * $detail->quantity;
+            return $detail->price ;
         }) : 0;
         $cart->save();
 
@@ -221,4 +224,6 @@ class CartController extends Controller
             'total_price' => number_format($cart->total_price, 0, ',', '.') . ' đ',
         ]);
     }
+
+
 }

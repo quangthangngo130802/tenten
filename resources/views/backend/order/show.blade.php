@@ -38,7 +38,7 @@
                                 <td>Loại đơn hàng</td>
                                 <td>Dịch vụ</td>
                                 <td>Thao tác</td>
-                               
+
                                 <td>Thời hạn</td>
                                 <td>Số tiền</td>
                             </tr>

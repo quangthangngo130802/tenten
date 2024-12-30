@@ -37,7 +37,6 @@
                                 <td>STT</td>
                                 <td>Loại đơn hàng</td>
                                 <td>Dịch vụ</td>
-                                <td>Số lượng</td>
                                 <td>Thao tác</td>
                                 <td>Thời hạn</td>
                                 <td>Số tiền</td>
@@ -53,11 +52,16 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <strong>{{ $item->service_name }} </strong> ({{ $item->type }})
+                                    <?php
+                                        if($item->type == 'hosting'){
+                                            $product = \App\Models\Hosting::find($item->product_id);
+                                        }else {
+                                            $product = \App\Models\Cloud::find($item->product_id);
+                                        }
+                                        echo $product->package_name. ' ( '. $item->type. ')';
+                                    ?>
                                 </td>
-                                <td>
-                                    <b>{{ $item->quantity }}  </b>
-                                </td>
+
                                 <td>
 
                                     <div class="status-badge">
@@ -99,7 +103,7 @@
 
 
                                 </td>
-                                <td><label style="text-decoration: inherit;">{{ number_format($item->amount) }}
+                                <td><label style="text-decoration: inherit;">{{ number_format($item->price) }}
                                         đ</label></td>
                             </tr>
                             @empty
@@ -345,3 +349,36 @@
 </style>
 
 @endpush
+
+@push('scripts')
+@if(session()->has('pdfContent'))
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const pdfContent = "{{ session('pdfContent') }}";
+        const link = document.createElement('a');
+        link.href = pdfContent;
+        link.download = 'receipt_order.pdf';
+
+        // Tải file PDF
+        link.click();
+
+        // Gửi yêu cầu AJAX để xóa session
+        fetch("{{ route('clear.pdf.session') }}", {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Session đã được xóa!");
+        })
+        .catch(error => {
+            console.error("Có lỗi xảy ra khi xóa session:", error);
+        });
+    });
+</script>
+@endif
+@endpush
+
+

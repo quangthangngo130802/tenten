@@ -50,6 +50,7 @@ Route::middleware('auth')->group(function () {
 
     });
 
+
     Route::prefix('admin')->middleware('check.admin')->group(function () {
 
 
@@ -116,13 +117,18 @@ Route::middleware('auth')->group(function () {
         });
 
         Route::prefix('order')->name('order.')->group(function () {
+            route::get('show/{id?}', [CustomerOrderController::class, 'addorder'])->name('payment');
             route::get('{status?}', [CustomerOrderController::class, 'index'])->name('index');
             route::get('{id}/show', [CustomerOrderController::class, 'show'])->name('show');
-            route::post('payment', [CustomerOrderController::class, 'payment'])->name('payment');
+            route::post('thanh-toan/don-hang', [CustomerOrderController::class, 'thanhtoan'])->name('thanhtoan');
+            Route::get('vi/prcode/{id}/{xsd}', [CustomerOrderController::class, 'createPayment'])->name('create.payment');
+            route::get('return/{id}/{xsd}', [CustomerOrderController::class, 'returnUrl'])->name('return');
+
         });
         Route::prefix('cart')->name('cart.')->group(function () {
             // route::get('', [CartController::class, 'listcart'])->name('listcart');
             route::get('', [CartController::class, 'listcart'])->name('listcart');
+
         });
 
 
@@ -144,5 +150,7 @@ Route::prefix('history')->name('history.')->group(function () {
     route::get('{status?}', [TransactionHistoryController::class, 'index'])->name('index');
     route::get('{id}/show', [TransactionHistoryController::class, 'show'])->name('show');
 });
+
+Route::post('/clear-pdf-session', [CustomerOrderController::class, 'clearPdfSession'])->name('clear.pdf.session');
 
 

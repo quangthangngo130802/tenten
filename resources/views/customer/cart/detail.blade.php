@@ -85,10 +85,7 @@
                 </tbody>
             </table>
             <div class="text-center mt-4">
-                <form action="" method="post">
-                    @csrf
-                     <button class="btn btn-primary btn-lg">Tiếp tục</button>
-                </form>
+                <a href="{{ route('customer.order.payment') }}" class="btn btn-primary btn-lg">Tiếp tục</a>
              </div>
         </div>
 
@@ -237,7 +234,7 @@
                 $('.total').text(response.total_price);
                 btn.closest('tr').remove();
                 $('.notification').text(response.count);
-                $('.total-quantity').text(response.count);
+                // $('.total-quantity').text(response.count);
                 if (response.count === 0) {
                     Swal.fire({
                         title: 'Giỏ hàng trống!',

@@ -103,6 +103,8 @@ class OrderController extends Controller
 
     public function addorder($id = null)
     {
+        $page = 'Đơn hàng';
+        $title = 'Thanh toán đơn hàng';;
 
         if ($id == null) {
             $cart = Cart::first();
@@ -144,7 +146,7 @@ class OrderController extends Controller
             $order_new = Order::find($id);
         }
         // Trả về view với order_new
-        return view('customer.cart.payment', compact('order_new'));
+        return view('customer.cart.payment', compact('order_new', 'page', 'title'));
     }
 
 

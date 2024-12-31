@@ -40,10 +40,12 @@ class CloudController extends Controller
 
     public function vicloud($id)
     {
+        $page = 'Cloud Server';
+        $title = "Tạo đơn hàng";
         $cloud = Cloud::findOrFail($id);
         $cloudlist = Cloud::where('type_id', $cloud->type_id)->get();
         $os = Os::get();
-        return view('customer.payment.cloud', compact('cloud', 'os', 'cloudlist'));
+        return view('customer.payment.cloud', compact('cloud', 'os', 'cloudlist', 'page', 'title'));
     }
 
     // public function addtocart(Request $request){

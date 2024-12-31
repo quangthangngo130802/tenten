@@ -1,148 +1,128 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <head>
-        <!-- Link tới font từ Google Fonts -->
-        <link href="https://fonts.googleapis.com/css2?family=DejaVu+Sans&display=swap" rel="stylesheet">
-    </head>
-
-    <title>Hóa Đơn Thanh Toán</title>
+    <title>Phiếu Đề Xuất Mua Hàng</title>
     <style>
         @font-face {
             font-family: 'DejaVu Sans';
-            src: url('public/fonts/dejavu-sans/DejaVuSans.ttf') format('truetype');
+            src: url('DejaVuSans.ttf') format('truetype');
         }
 
         body {
             font-family: 'DejaVu Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            line-height: 1.45;
         }
 
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        .proposal {
+            margin: auto;
+            padding: 5mm;
+            background: #ffffff;
+
         }
 
-        .invoice-container {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            color: #333;
-            font-size: 14px;
-        }
-
-        .invoice-header {
-            display: flex;
-            justify-content: space-between;
+        .proposal-header {
+            text-align: center;
             margin-bottom: 20px;
         }
 
-        .company-info {
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .company-info h2 {
-            font-size: 24px;
-            color: #333;
-        }
-
-        .invoice-title h1 {
-            font-size: 28px;
-            color: #007bff;
-            text-align: right;
-        }
-
-        .invoice-title p {
-            font-size: 14px;
-            text-align: right;
-            color: #777;
-        }
-
-        .invoice-info {
-            text-align: right;
-            font-size: 12px;
-            color: #666;
-            margin-top: 10px;
-        }
-
-        .customer-info {
-            margin-bottom: 20px;
-        }
-
-        .customer-info h3 {
-            font-size: 20px;
-            color: #333;
+        .proposal-header img {
+            width: 150px;
             margin-bottom: 10px;
         }
 
-        .customer-info p {
-            font-size: 14px;
-            margin: 5px 0;
+        .proposal-header h2 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+            text-transform: uppercase;
         }
 
-        .items-table {
-            width: 100%;
-            border-collapse: collapse;
+        .proposal-header p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .proposal-info {
             margin-bottom: 20px;
         }
 
-        .items-table th,
-        .items-table td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: center;
-        }
-
-        .items-table th {
-            background-color: #007bff;
-            color: #fff;
-        }
-
-        .items-table td {
+        .proposal-info p {
             font-size: 14px;
+            margin: 8px 0;
         }
 
-        .total-label {
-            text-align: right;
+        .proposal-info p span {
             font-weight: bold;
         }
 
-        .total-amount {
-            font-weight: bold;
-            color: #28a745;
-        }
-
-        .footer {
-            text-align: center;
-            font-size: 14px;
-            color: #555;
-            margin-top: 20px;
-        }
-
-        .footer p {
+        .proposal-items table {
+            width: 100%;
+            border-collapse: collapse;
             margin-top: 10px;
         }
 
+        .proposal-items th,
+        .proposal-items td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .proposal-items th {
+            background: #ffffff;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .proposal-items td {
+            font-size: 14px;
+        }
+
+        .proposal-footer {
+            margin-top: 30px;
+        }
+
+        .proposal-footer .signatures {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+
+        /* Media Query for better print formatting */
         @media print {
             body {
+                margin: 0;
                 padding: 0;
             }
 
-            .invoice-container {
+            .proposal {
                 width: 100%;
+                height: auto;
                 margin: 0;
+                padding: 10mm;
                 box-shadow: none;
+                border: none;
             }
 
-            .footer {
+            .proposal-header h2 {
+                font-size: 26px;
+            }
+
+            .proposal-info p,
+            .proposal-items th,
+            .proposal-items td {
+                font-size: 12px;
+            }
+
+            .signature span {
                 font-size: 12px;
             }
         }
@@ -150,73 +130,85 @@
 </head>
 
 <body>
-    <div class="invoice-container">
-        <!-- Header: Company Info -->
-        <div class="invoice-header">
-            <div class="company-info">
-                <h2>MyCompany</h2>
-                <p>Địa chỉ: 123 Đường ABC, Thành phố XYZ</p>
-                <p>Điện thoại: (123) 456-7890</p>
-                <p>Mã số thuế: 123456789</p>
+    <div class="proposal">
+        <!-- Header Section -->
+        <div class="proposal-header">
+            <img src="logo-placeholder.png" alt="Logo">
+            <h2>Phiếu Mua Hàng</h2>
+            <h3>CÔNG TY CP CÔNG NGHỆ VÀ TRUYỀN THÔNG SGO VIỆT NAM</h3>
+            <p>Địa chỉ: Tầng 4 Số 30 Ngõ 168 Nguyễn Xiển - Thanh Xuân - Hà Nội</p>
+            <p>Điện thoại: 0246.29.27.089 / Hotline: 0912.399.322 | Email: info@sgomedia.vn</p>
+        </div>
+
+        <!-- Proposal Information Section -->
+        <div class="proposal-info">
+            <p><span>Ngày mua hàng :</span> 31/12/2024</p>
+            <p><span>Mã số thuế :</span>{{ $thongtin['ownerid'] }}</p>
+            <p><span>Tên tổ chức / Cá nhân :</span> {{ $thongtin['name'] }}</p>
+            <p><span>Địa chỉ xuất hóa đơn :</span> {{ $thongtin['address'] }}</p>
+            <p><span>Email nhận hóa đơn điện tử :</span> {{ $thongtin['email'] }}</p>
+            <p><span>Điện thoại :</span> {{ $thongtin['phone'] }}</p>
+        </div>
+
+        <!-- Product List Section -->
+        <div class="proposal-items">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Số thứ tự</th>
+                        <th>Tên gói</th>
+                        <th>Thời gian</th>
+                        <th>Đơn giá</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($order->orderDetail as $index =>  $item)
+                    <?php
+                        if($item->type == 'hosting'){
+                            $product = \App\Models\Hosting::find($item->product_id);
+                            $os = '';
+                            $backup = '';
+                        } else {
+                            $product = \App\Models\Cloud::find($item->product_id);
+                            $os = ' - '.$item->os->name;
+                            $backup =  $item->backup ? ' - Tự backup' : '';
+                        }
+                        $name =  $product->package_name.$os.$backup;
+                    ?>
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $name }}</td>
+                        <td>
+                            @if($item->number >= 12)
+                                @if($item->number % 12 == 0)
+                                    {{ $item->number / 12 }} năm
+                                @else
+                                    {{ floor($item->number / 12) }} năm {{ $item->number % 12 }} tháng
+                                @endif
+                            @else
+                                {{ $item->number }} tháng
+                            @endif
+                        </td>
+
+
+                        <td>{{ number_format($item->price, 0, ',', '.') }} VND</td>
+                    </tr>
+
+
+                    @empty
+                    <p>No order details available.</p>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        <div class="proposal-footer" style="text-align: end">
+            <div class="totals" style="text-align: end">
+                <p><strong>Tổng cộng:</strong> {{ number_format($price, 0, ',', '.') }}</p>
             </div>
-            <div class="invoice-title">
-                <h1>Hóa Đơn Thanh Toán</h1>
-                <p>Ngày: <span id="invoice-date"></span></p>
-            </div>
         </div>
 
-        <!-- Customer Info -->
-        <div class="customer-info">
-            <h3>Thông Tin Khách Hàng</h3>
-            <p>Tên khách hàng: <span id="customer-name">Nguyễn Văn A</span></p>
-            <p>Địa chỉ: <span id="customer-address">Số 10, Đường XYZ</span></p>
-            <p>Điện thoại: <span id="customer-phone">(098) 123-4567</span></p>
-        </div>
-
-        <!-- Product Info Table -->
-        <table class="items-table">
-            <thead>
-                <tr>
-                    <th>STT</th>
-                    <th>Mô Tả</th>
-                    <th>Số Lượng</th>
-                    <th>Đơn Giá</th>
-                    <th>Tổng</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Áo Thun Nam</td>
-                    <td>2</td>
-                    <td>200,000 VND</td>
-                    <td>400,000 VND</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Quần Jean</td>
-                    <td>1</td>
-                    <td>350,000 VND</td>
-                    <td>350,000 VND</td>
-                </tr>
-                <tr>
-                    <td colspan="4" class="total-label">Tổng Cộng</td>
-                    <td class="total-amount">750,000 VND</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- Footer -->
-        <div class="footer">
-            <p>Cảm ơn bạn đã mua hàng tại MyCompany. Chúc bạn một ngày tốt lành!</p>
-            <p>Website: <a href="https://mycompany.com" target="_blank">www.mycompany.com</a></p>
-        </div>
     </div>
-
-    <script>
-        // Đặt ngày hiện tại
-    document.getElementById('invoice-date').textContent = new Date().toLocaleDateString('vi-VN');
-    </script>
 </body>
 
 </html>

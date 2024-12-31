@@ -166,9 +166,18 @@ class OrderController extends Controller
             $user->update([
                 'wallet' => $user->wallet - $price,
             ]);
+            TransactionHistory::create([
+                'code' => Str::random(10),
+                'user_id' => $user->id,
+                'amount' => $amount,
+                'status' => 1,
+                'type' => 2,
+                'description' => 'Thanh toán đơn hàng ' . $order->code,
+            ]);
             if ($request->invoice == 'yes') {
+                $thongtin = $request->thongtin;
                 // Tạo PDF từ view
-                $pdf = PDF::loadView('pdf.receipt', compact('order', 'user', 'price'));
+                $pdf = PDF::loadView('pdf.receipt', compact('order', 'user', 'price', 'thongtin'));
 
                 // Thiết lập các tùy chọn
                 $pdf->setOption('encoding', 'UTF-8');

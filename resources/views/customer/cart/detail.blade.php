@@ -55,7 +55,7 @@
 
                         </td>
                         <td class="price_new"> {{ number_format($item->price, 0, ',', '.') }} đ</td>
-                        <td data-id="{{ $item->id }}" class="close"> <i class="fa-solid fa-trash"></i> </td>
+                        <td data-id="{{ $item->id }}" class="close" style="margin-top: 13px;"> <i class="fa-solid fa-trash"></i> </td>
                     </tr>
                     @endforeach
                     {{-- <tr>
@@ -257,7 +257,7 @@
     $('.time_type').on('change', function() {
 
         let quantity = $(this).val();
-        alert(quantity);
+        // alert(quantity);
         let id = $(this).data('id');
         let pricePerItem = $(this).closest('tr').find('.price_new');
         $.ajax({

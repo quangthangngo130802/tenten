@@ -110,16 +110,14 @@
                     <div class="mb-3">
                         <label for="bill-ownerid" class="form-label"><strong>*</strong> Mã số thuế:</label>
                         <div class="input-group">
-                            <input type="text" name="bill_ownerid" class="form-control" id="bill-ownerid"
-                                value="017038525">
+                            <input type="text" name="bill_ownerid" class="form-control" id="bill-ownerid" required>
                             <button class="btn btn-secondary">Kiểm tra</button>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="bill-name" class="form-label"><strong>*</strong> Tên Tổ chức/Cá nhân <span>(đầy đủ,
                                 có dấu):</span></label>
-                        <input type="text" name="bill_name" class="form-control" id="bill-name"
-                            value="Nguyễn Khắc Thuật">
+                        <input type="text" name="bill_name" class="form-control" id="bill-name" required>
                     </div>
                     <div class="mb-3">
                         <label for="bill-persion" class="form-label">Người đại diện <span>(Nếu là tổ chức) (đầy đủ, có
@@ -132,18 +130,16 @@
                     </div>
                     <div class="mb-3">
                         <label for="bill-address" class="form-label"><strong>*</strong> Địa chỉ xuất hóa đơn:</label>
-                        <input type="text" name="bill_address" class="form-control" id="bill-address"
-                            value="128 Nguyễn Xiển">
+                        <input type="text" name="bill_address" class="form-control" id="bill-address" required>
                     </div>
                     <div class="mb-3">
                         <label for="bill-email" class="form-label"><strong>*</strong> Email nhận hóa đơn điện
                             tử:</label>
-                        <input type="email" name="bill_email" class="form-control" id="bill-email"
-                            value="khacthuat.it@gmail.com">
+                        <input type="email" name="bill_email" class="form-control" id="bill-email" required>
                     </div>
                     <div class="mb-3">
                         <label for="bill-phone" class="form-label"><strong>*</strong> Số điện thoại liên hệ:</label>
-                        <input type="tel" name="bill_phone" class="form-control" id="bill-phone" value="0914379989">
+                        <input type="tel" name="bill_phone" class="form-control" id="bill-phone" required>
                     </div>
                     <div class="mb-3">
                         <label for="bill_area" class="form-label"><strong>*</strong> Giao dịch với văn phòng
@@ -323,23 +319,54 @@
         var formData = [];
         $('#confirmInvoice').on('click', function () {
             var myModal = bootstrap.Modal.getInstance(document.getElementById('invoiceModal'));
-            myModal.hide();
-            isConfirmed = true;
 
-            $('#yes-invoice').prop('checked', true);
-            $('#no-invoice').prop('checked', false);
-
-            formData = [
-                $('#bill-ownerid').val(), // Mã số thuế
-                $('#bill-name').val(), // Tên tổ chức/cá nhân
-                $('#bill-persion').val(), // Người đại diện
-                $('#bill-office').val(), // Chức vụ
-                $('#bill-address').val(), // Địa chỉ xuất hóa đơn
-                $('#bill-email').val(), // Email nhận hóa đơn
-                $('#bill-phone').val(), // Số điện thoại
-                $('#bill_area').val() // Giao dịch với văn phòng tại
+            // Kiểm tra các trường bắt buộc
+            var isValid = true;
+            var requiredFields = [
+                '#bill-ownerid',
+                '#bill-name',
+                '#bill-address',
+                '#bill-email',
+                '#bill-phone',
+                '#bill_area'
             ];
+
+            requiredFields.forEach(function(field) {
+                var $field = $(field);
+                if ($field.val() === '') {
+                    isValid = false;
+                    $field.addClass('is-invalid'); // Thêm class lỗi
+                    $field.siblings('.invalid-feedback').show(); // Hiển thị thông báo lỗi
+                } else {
+                    $field.removeClass('is-invalid'); // Loại bỏ class lỗi
+                    $field.siblings('.invalid-feedback').hide(); // Ẩn thông báo lỗi
+                }
+            });
+
+            // Nếu form hợp lệ, tiếp tục
+            if (isValid) {
+                myModal.hide(); // Ẩn modal
+                isConfirmed = true;
+
+                $('#yes-invoice').prop('checked', true);
+                $('#no-invoice').prop('checked', false);
+
+                formData = [
+                    $('#bill-ownerid').val(), // Mã số thuế
+                    $('#bill-name').val(), // Tên tổ chức/cá nhân
+                    $('#bill-persion').val(), // Người đại diện
+                    $('#bill-office').val(), // Chức vụ
+                    $('#bill-address').val(), // Địa chỉ xuất hóa đơn
+                    $('#bill-email').val(), // Email nhận hóa đơn
+                    $('#bill-phone').val(), // Số điện thoại
+                    $('#bill_area').val() // Giao dịch với văn phòng tại
+                ];
+            } else {
+                // Nếu form không hợp lệ, không làm gì cả
+                alert("Vui lòng điền đầy đủ thông tin bắt buộc!");
+            }
         });
+
 
         // Khi modal bị ẩn, kiểm tra nếu đã xác nhận thì không thay đổi trạng thái radio
         $('#invoiceModal').on('hidden.bs.modal', function () {

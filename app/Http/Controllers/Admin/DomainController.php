@@ -78,7 +78,7 @@ class DomainController extends Controller
                 throw new \Exception($responseBody['error']);
             }
 
-            dd($responseBody['data']);
+            // dd($responseBody['data']);
 
             return view('backend.domain.show', [
                 'domain' => $responseBody['data'] ?? [],

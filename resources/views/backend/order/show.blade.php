@@ -39,9 +39,10 @@
                                 <td>Dịch vụ</td>
                                 <td>Thao tác</td>
 
-                                <td>Thời hạn</td>
+
                                 <td>Số tiền</td>
                             </tr>
+                            {{-- @dd($order->orderDetail); --}}
                             @forelse ($order->orderDetail as $index => $item )
                             <tr>
                                 <td>{{ $index + 1 }}</td>
@@ -53,7 +54,19 @@
                                     @endif
                                 </td>
                                 <td>
-                                    {{ $item->service_name }}
+                                    <?php
+                                        if($item->type == 'hosting'){
+                                            $product = \App\Models\Hosting::find($item->product_id);
+                                            $os = '';
+                                            $backup = '';
+                                        } else {
+                                            $product = \App\Models\Cloud::find($item->product_id);
+                                            $os = ' - '.$item->os->name;
+                                            $backup =  $item->backup ? ' - Tự backup' : '';
+                                        }
+                                        $name =  $product->package_name.$os.$backup;
+                                    ?>
+                                    {{ $name }}
                                 </td>
                                 <td>
 
@@ -69,7 +82,7 @@
 
                                 </td>
 
-                                <td>
+                                {{-- <td>
 
                                     @if($order->active_at)
                                         @php
@@ -95,8 +108,8 @@
 
 
 
-                                </td>
-                                <td><label style="text-decoration: inherit;">{{ number_format($item->amount) }}
+                                </td> --}}
+                                <td><label style="text-decoration: inherit;">{{ number_format($item->price) }}
                                         đ</label></td>
                             </tr>
                             @empty

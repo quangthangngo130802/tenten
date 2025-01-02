@@ -109,9 +109,9 @@
                 <form method="post" accept-charset="utf-8" id="formBill" class="form-horizontal" autocomplete="off">
                     <div class="mb-3">
                         <label for="bill-ownerid" class="form-label"><strong>*</strong> Mã số thuế:</label>
-                        <div class="input-group">
+                        <div class="">
                             <input type="text" name="bill_ownerid" class="form-control" id="bill-ownerid" required>
-                            <button class="btn btn-secondary">Kiểm tra</button>
+                            {{-- <button class="btn btn-secondary">Kiểm tra</button> --}}
                         </div>
                     </div>
                     <div class="mb-3">
@@ -119,15 +119,15 @@
                                 có dấu):</span></label>
                         <input type="text" name="bill_name" class="form-control" id="bill-name" required>
                     </div>
-                    <div class="mb-3">
+                    {{-- <div class="mb-3">
                         <label for="bill-persion" class="form-label">Người đại diện <span>(Nếu là tổ chức) (đầy đủ, có
                                 dấu):</span></label>
                         <input type="text" name="bill_persion" class="form-control" id="bill-persion">
-                    </div>
-                    <div class="mb-3">
+                    </div> --}}
+                    {{-- <div class="mb-3">
                         <label for="bill-office" class="form-label">Chức vụ:</label>
                         <input type="text" name="bill_office" class="form-control" id="bill-office">
-                    </div>
+                    </div> --}}
                     <div class="mb-3">
                         <label for="bill-address" class="form-label"><strong>*</strong> Địa chỉ xuất hóa đơn:</label>
                         <input type="text" name="bill_address" class="form-control" id="bill-address" required>
@@ -141,14 +141,14 @@
                         <label for="bill-phone" class="form-label"><strong>*</strong> Số điện thoại liên hệ:</label>
                         <input type="tel" name="bill_phone" class="form-control" id="bill-phone" required>
                     </div>
-                    <div class="mb-3">
+                    {{-- <div class="mb-3">
                         <label for="bill_area" class="form-label"><strong>*</strong> Giao dịch với văn phòng
                             tại:</label>
                         <select name="bill_area" id="bill_area" class="form-select">
                             <option value="Hà Nội" selected>Hà Nội</option>
                             <option value="TP. Hồ Chí Minh">TP. HCM</option>
                         </select>
-                    </div>
+                    </div> --}}
                 </form>
 
                 <div class="mt-4">
@@ -157,14 +157,14 @@
                         <li>Quý khách cần nhập đầy đủ, chính xác và hoàn toàn chịu trách nhiệm về những thông tin xuất
                             hóa đơn đã cung cấp.</li>
                         <li>Chúng tôi sẽ không liên hệ với Quý khách để xác nhận lại các thông tin trên.</li>
-                        <li>Chúng tôi không hỗ trợ HỦY và/hoặc xuất lại hóa đơn VAT đối với đơn hàng này.</li>
+                        {{-- <li>Chúng tôi không hỗ trợ HỦY và/hoặc xuất lại hóa đơn VAT đối với đơn hàng này.</li>
                         <li>Chúng tôi từ chối xuất hóa đơn VAT đối với tên miền .VN, nếu chủ thể xuất hóa đơn không phải
                             là
                             chủ thể của tên miền.</li>
                         <li>Riêng sản phẩm SSL và Email Gsuite - Chúng tôi chỉ hỗ trợ xuất hoá đơn trong ngày đối với
                             đơn
                             hàng đăng ký trước ngày 26 hàng tháng. Những đơn hàng từ ngày 26 đến ngày 30/31 sẽ được
-                            chuyển sang xuất hoá đơn cho tháng kế tiếp khi Quý khách đăng ký có lấy hoá đơn.</li>
+                            chuyển sang xuất hoá đơn cho tháng kế tiếp khi Quý khách đăng ký có lấy hoá đơn.</li> --}}
                     </ul>
                 </div>
             </div>

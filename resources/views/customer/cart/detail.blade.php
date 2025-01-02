@@ -160,8 +160,11 @@
     .table td,
     .table th {
         vertical-align: middle;
-        font-size: 13px;
+        font-size: 11px !important;
         border: none !important;
+    }
+    select{
+        font-size: 11px !important;
     }
     tr{
         border: none !important;

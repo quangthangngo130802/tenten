@@ -40,7 +40,11 @@
                         style="max-width: 70px;">
                     <h3 class="total_order">{{ count($nopayment) }}</h3>
                     <p>Đơn hàng chưa thanh toán</p>
-                    <a href="{{ route('customer.order.index', ['status' => 'nopayment']) }}" class="btn btn-link">Chi tiết</a>
+                   @if (Auth::user()->role_id == 1)
+                   <a href="{{ route('order.index', ['status' => 'nopayment']) }}" class="btn btn-link">Chi tiết</a>
+                   @else
+                   <a href="{{ route('customer.order.index', ['status' => 'nopayment']) }}" class="btn btn-link">Chi tiết</a>
+                   @endif
                 </div>
             </div>
         </div>

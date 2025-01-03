@@ -5,16 +5,20 @@ use App\Http\Controllers\Admin\CloudController;
 use App\Http\Controllers\Admin\DomainController;
 use App\Http\Controllers\Admin\HostingController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\ServiceActiveController;
 use App\Http\Controllers\Admin\TransactionHistoryController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\Customer\CloudController as CustomerCloudController;
+use App\Http\Controllers\Customer\CustomerServiceController;
 use App\Http\Controllers\Customer\HostingController as CustomerHostingController;
 use App\Http\Controllers\Customer\OrderController as CustomerOrderController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpKernel\Profiler\Profile;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,6 +80,8 @@ Route::middleware('auth')->group(function () {
             route::get('{status?}', [OrderController::class, 'index'])->name('index');
             route::get('{id}/show', [OrderController::class, 'show'])->name('show');
             route::post('delete-{id}', [OrderController::class, 'delete'])->name('delete');
+            route::post('active-{id}', [OrderController::class, 'active'])->name('active');
+
         });
 
         Route::prefix('hosting')->name('hosting.')->group(function () {
@@ -101,6 +107,15 @@ Route::middleware('auth')->group(function () {
             Route::get('', [DomainController::class, 'index'])->name('index');
             Route::get('detail-{domain}', [DomainController::class, 'show'])->name('show');
             Route::get('price', [DomainController::class, 'tableprice'])->name('price');
+        });
+
+        Route::prefix('service')->name('service.')->group(function () {
+            Route::prefix('list-cloud')->name('cloud.')->group(function () {
+                Route::get('', [ServiceActiveController::class, 'listcloud'])->name('list.cloud');
+            });
+            Route::prefix('list-hosting')->name('hosting.')->group(function () {
+                Route::get('', [ServiceActiveController::class, 'listhosting'])->name('list.hosting');
+            });
         });
     });
 
@@ -131,8 +146,20 @@ Route::middleware('auth')->group(function () {
 
         });
 
+        Route::prefix('service')->name('service.')->group(function () {
+            Route::prefix('list-cloud')->name('cloud.')->group(function () {
+                Route::get('', [CustomerServiceController::class, 'listcloud'])->name('list.cloud');
+            });
+            Route::prefix('list-hosting')->name('hosting.')->group(function () {
+                Route::get('', [CustomerServiceController::class, 'listhosting'])->name('list.hosting');
+            });
+        });
+
 
     });
+
+    route::get('profile', [ProfileController::class, 'profile'])->name('profile');
+    route::post('profile', [ProfileController::class, 'updateprofile'])->name('profile.update');
 
 });
 

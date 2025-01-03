@@ -17,6 +17,9 @@ class OrderController extends Controller
         if ($request->ajax()) {
             $data = Order::where('status', $status)->select('*');
             return DataTables::of($data)
+                ->editColumn('code', function ($row) {
+                    return '<a href="' . route('order.show', $row->id) . '" class=" text-primary "> '. $row->code .'</a>';
+                })
                 ->editColumn('created_at', function ($row) {
                     return Carbon::parse($row->created_at)->format('Y-m-d H:i:s');
                 })
@@ -25,20 +28,28 @@ class OrderController extends Controller
                 })
                 ->editColumn('status', function ($row) {
                     return $row->status == 'payment'
-                    ? '<span style="color: green;">Đã thanh toán</span>'
-                    : ($row->status == 'pending'
-                        ? '<span style="color: orange;">Chờ duyệt</span>'
+                    ? '<span style="color: orange;">Đã thanh toán</span>'
+                    : ($row->status == 'active'
+                        ? '<span style="color: green;">Đã duyệt</span>'
                         : '<span style="color: red;">Chưa thanh toán</span>');
                 })
                 ->editColumn('payment', function ($row) {
                     return number_format($row->payment);
                 })
-                ->editColumn('detail', function ($row) {
-                    return '<a href="' . route('order.show', $row->id) . '" class="btn btn-primary btn-sm edit"> Chi tiết </a>';
-                })->rawColumns(['detail'])
+                // ->editColumn('detail', function ($row) {
+                //     return '<a href="' . route('order.show', $row->id) . '" class="btn btn-primary btn-sm edit"> Chi tiết </a>';
+                // })->rawColumns(['detail'])
                 ->addColumn('action', function ($row) {
                     return $row->status == 'payment'
-                    ? '<span style="color: green;">Đã thanh toán</span>'
+                    ? '<div style="display: flex;">
+                            <a href="#" class="btn btn-orange btn-sm delete"
+                                onclick="confirmActive(event, ' . $row->id . ')">
+                               Duyệt
+                            </a>
+                            <form id="active-form-' . $row->id . '" action="' . route('order.active', $row->id) . '" method="POST" style="display:none;">
+                                ' . csrf_field() . '
+                            </form>
+                        </div>'
                     : ($row->status == 'pending'
                         ? '<span style="color: orange;">Chờ duyệt</span>'
                         : '<div style="display: flex;">
@@ -52,7 +63,7 @@ class OrderController extends Controller
                             </div>');
 
 
-                })->rawColumns(['action', 'detail', 'status'])
+                })->rawColumns(['action', 'status', 'code'])
                 ->make(true);
         }
         $page = 'Đơn hàng';
@@ -72,5 +83,18 @@ class OrderController extends Controller
         $order->orderDetail()->delete();
         $order->delete();
         return redirect()->back()->with('success', 'Đơn hàng đã xóa thành công');
+    }
+
+    public function active($id){
+        $order = Order::find($id);
+        $order->update([
+            'status' => 'active',
+            'active_at' => now(),
+        ]);
+        $order->orderDetail()->update([
+            'status' => 'active',
+            'active_at' => now(),
+        ]);
+        return redirect()->route('order.show', ['id' => $id])->with('success', 'Đơn hàng đã được kích hoạt');
     }
 }

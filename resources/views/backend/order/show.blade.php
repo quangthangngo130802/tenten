@@ -13,9 +13,18 @@
                     <li class="col-md-3 col-12"><span>Mã đơn hàng:</span>
                         <p>{{ $order->code }}</p>
                     </li>
-                    <li class="col-md-3 col-12"><span>Ngày mua:</span>
-                        <p>{{ \Carbon\Carbon::parse($order->created_at)->format('Y-m-d H:i:s') }}</p>
+                    @if ($order->status == 'active')
+                    <li class="col-md-3 col-12"><span>Ngày kích hoạt:</span>
+                        <p>{{ \Carbon\Carbon::parse($order->active_at)->format('d/m/Y') }}</p>
                     </li>
+                    @else
+                    <li class="col-md-3 col-12"><span>Ngày mua:</span>
+                        <p>{{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y') }}</p>
+                    </li>
+                    @endif
+                    {{-- <li class="col-md-3 col-12"><span>Ngày mua:</span>
+                        <p>{{ \Carbon\Carbon::parse($order->created_at)->format('Y-m-d H:i:s') }}</p>
+                    </li> --}}
                     <li class="col-md-3 col-12"><span>Trạng thái:</span>
                         <p>
                             @if ($order->status == 'payment')
@@ -23,7 +32,7 @@
                             @elseif ($order->status == 'nopayment')
                             Chưa thanh toán
                             @else
-                            Chờ kích hoạt
+                            Đã kích hoạt
                             @endif
                         </p>
                     </li>
@@ -37,9 +46,8 @@
                                 <td>STT</td>
                                 <td>Loại đơn hàng</td>
                                 <td>Dịch vụ</td>
+                                <td>Thời gian</td>
                                 <td>Thao tác</td>
-
-
                                 <td>Số tiền</td>
                             </tr>
                             {{-- @dd($order->orderDetail); --}}
@@ -68,15 +76,25 @@
                                     ?>
                                     {{ $name }}
                                 </td>
+                                <td>@if ($item->number >= 12)
+                                    @if ($item->number % 12 == 0)
+                                    {{ intval($item->number / 12) }} năm
+                                    @else
+                                    {{ intval($item->number / 12) }} năm và {{ $item->number % 12 }} tháng
+                                    @endif
+                                    @else
+                                    {{ $item->number }} tháng
+                                    @endif
+                                </td>
                                 <td>
 
                                     <div class="status-badge">
                                         @if ($order->status == 'payment')
-                                        <i class="status-icon payment"></i> Đã xử lý
+                                        <i class="status-icon pending"></i> Đã thanh toán( Chờ duyệt )
                                         @elseif ($order->status == 'nopayment')
-                                        <i class="status-icon nopayment"></i> Chờ xử lý
+                                        <i class="status-icon nopayment"></i> Chưa thanh toán
                                         @else
-                                        <i class="status-icon pending"></i> Chưa duyệt
+                                        <i class="status-icon payment"></i> Đã kích hoạt
                                         @endif
                                     </div>
 
@@ -85,24 +103,24 @@
                                 {{-- <td>
 
                                     @if($order->active_at)
-                                        @php
-                                            $createdAt = \Carbon\Carbon::parse($order->active_at);
-                                            $deadline = \Carbon\Carbon::parse($item->deadline);
+                                    @php
+                                    $createdAt = \Carbon\Carbon::parse($order->active_at);
+                                    $deadline = \Carbon\Carbon::parse($item->deadline);
 
-                                            $diffYears = $createdAt->diffInYears($deadline);
-                                            $diffMonths = $createdAt->diffInMonths($deadline) % 12; // Lấy số tháng lẻ sau năm
-                                            $diffDays = $createdAt->diffInDays($deadline) % 30; // Lấy số ngày lẻ sau tháng
-                                        @endphp
+                                    $diffYears = $createdAt->diffInYears($deadline);
+                                    $diffMonths = $createdAt->diffInMonths($deadline) % 12; // Lấy số tháng lẻ sau năm
+                                    $diffDays = $createdAt->diffInDays($deadline) % 30; // Lấy số ngày lẻ sau tháng
+                                    @endphp
 
-                                        @if ($deadline->isPast())
-                                            Hết hạn
-                                        @elseif ($diffYears > 0)
-                                            {{ $diffYears }} năm {{ $diffMonths }} tháng
-                                        @elseif ($diffMonths > 0)
-                                            {{ $diffMonths }} tháng
-                                        @else
-                                            {{ $diffDays }} ngày
-                                        @endif
+                                    @if ($deadline->isPast())
+                                    Hết hạn
+                                    @elseif ($diffYears > 0)
+                                    {{ $diffYears }} năm {{ $diffMonths }} tháng
+                                    @elseif ($diffMonths > 0)
+                                    {{ $diffMonths }} tháng
+                                    @else
+                                    {{ $diffDays }} ngày
+                                    @endif
 
                                     @endif
 
@@ -331,14 +349,14 @@
     .status-badge.pending {
         background-color: #f8d7da;
         /* Màu nền */
-        color: #dc3545;
+        color: #f0bc5c;
         /* Màu chữ */
         border: 1px solid #f5c6cb;
         /* Viền */
     }
 
     .status-icon.pending {
-        background-color: #dc3545;
+        background-color: #f0bc5c;
         /* Màu biểu tượng */
     }
 
@@ -350,8 +368,6 @@
         top: -1px;
         left: 4px;
     }
-
-
 </style>
 
 @endpush

@@ -30,9 +30,9 @@ class OrderController extends Controller
                 })
                 ->editColumn('status', function ($row) {
                     return $row->status == 'payment'
-                        ? '<span style="color: green;">Đã thanh toán</span>'
-                        : ($row->status == 'pending'
-                            ? '<span style="color: orange;">Chờ duyệt</span>'
+                        ? '<span style="color: orange;">Đã thanh toán</span>'
+                        : ($row->status == 'active'
+                            ? '<span style="color: green;">Đã thanh toán</span>'
                             : '<span style="color: red;">Chưa thanh toán</span>');
                 })
                 ->editColumn('amount', function ($row) {
@@ -40,9 +40,9 @@ class OrderController extends Controller
                 })
                 ->editColumn('payment', function ($row) {
                     return $row->status == 'payment'
-                        ? '<span style="color: green;">Đã thanh toán</span>'
-                        : ($row->status == 'pending'
-                            ? '<span style="color: orange;">Chờ duyệt</span>'
+                        ? '<span style="color: orange;">Chưa kích hoạt</span>'
+                        : ($row->status == 'active'
+                            ? '<span style="color: green;">Đã kích hoạt</span>'
                             : '<a href="' . route('customer.order.payment', $row->id) . '" data-id=' . $row->id . ' class="btn btn-primary btn-sm "> Thanh toán</a>');
                 })
                 ->editColumn('detail', function ($row) {

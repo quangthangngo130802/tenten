@@ -14,9 +14,9 @@ class HostingController extends Controller
     {
         $title = "Hosting";
         if ($request->ajax()) {
-            $data = Hosting::select('*');
+            $data = Hosting::select('*')
+            ->orderBy('website_limit', 'asc');
             return DataTables::of($data)
-
                 ->addColumn('action', function ($row) {
                     return '<div style="display: flex;">
                                 <a href="' . route('hosting.edit', $row->id) . '" class="btn btn-primary btn-sm edit">

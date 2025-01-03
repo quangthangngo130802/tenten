@@ -12,7 +12,7 @@
                     <th>Tổng tiền</th>
                     <th>Trạng thái thanh toán</th>
                     <th>Ngày đặt hàng</th>
-                    <th>Thanh toán</th>
+                    <th>Trạng thái</th>
                 </tr>
             </thead>
         </table>

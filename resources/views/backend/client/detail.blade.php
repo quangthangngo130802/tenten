@@ -102,7 +102,7 @@
 
                     <div class="form-group row">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control @error('email') is-invalid @enderror" id="email"
+                        <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" disabled
                             name="email" placeholder="Nhập email" value="{{ old('email', $user->email ?? '') }}" />
                         @error('email')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -194,11 +194,11 @@
 <script>
     const BASE_URL = "{{ url('/') }}";
 </script>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+{{-- <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"></script>
 <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
 
-<script src="{{ asset('ckfinder_php_3.7.0/ckfinder/ckfinder.js') }}"></script>
+<script src="{{ asset('ckfinder_php_3.7.0/ckfinder/ckfinder.js') }}"></script> --}}
 <script>
     document.addEventListener("DOMContentLoaded", function() {
     const imageInput = document.getElementById('image');
@@ -230,7 +230,7 @@
     }
 });
 </script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
 <script>
 $(document).ready(function () {
     // Giá trị từ user đã được đổ ra từ backend

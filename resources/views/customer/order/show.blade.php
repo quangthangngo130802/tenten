@@ -33,7 +33,7 @@
                 <div class="mobile_configuration">
                     <table class="order_price_info tg_navi_2021">
                         <tbody>
-                            <tr>
+                            <tr class="order">
                                 <td>STT</td>
                                 <td>Loại đơn hàng</td>
                                 <td>Dịch vụ</td>
@@ -123,8 +123,8 @@
                                 <p>0 đ</p>
                             </li>
                             <li>
-                                <span class="vat_vn_doamin">Tổng tiền </span>
-                                <p>{{ number_format($order->amount) }} đ</p>
+                                <span class="vat_vn_doamin" >Tổng tiền </span>
+                                <p style=" font-weight: 900; !important; color:red">{{ number_format($order->amount) }} đ</p>
                             </li>
                         </ul>
                     </div>
@@ -137,6 +137,12 @@
 
 @push('styles')
 <style>
+    .order td{
+        font-weight: 900;
+    }
+    td, th{
+        text-align: center;
+    }
     .qb_order_has_been_paid_page {
         background-color: #fff;
         border-radius: 8px;
@@ -227,8 +233,6 @@
 
     .vat_vn_doamin p {
         font-size: 12px;
-        color: #999;
-
     }
 
     .detail {

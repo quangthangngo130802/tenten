@@ -88,7 +88,7 @@
                     </li>
                     <li class="nav-item">
                         <a data-bs-toggle="collapse" href="#service_active">
-                            <i class="fas fa-pen-square"></i>
+                            <i class="fas fa-check-circle "></i>
                             <p>Dịch vụ được đăng ký</p>
                             <span class="caret"></span>
                         </a>
@@ -100,7 +100,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('hosting.index') }}">
+                                    <a href="{{ route('service.hosting.list.hosting') }}">
                                         <span class="sub-item">Hosting</span>
                                     </a>
                                 </li>
@@ -110,7 +110,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('cloud.index') }}">
+                                    <a href="{{ route('service.cloud.list.cloud') }}">
                                         <span class="sub-item">Cloud</span>
                                     </a>
                                 </li>
@@ -119,7 +119,7 @@
                     </li>
                     <li class="nav-item">
                         <a data-bs-toggle="collapse" href="#order">
-                            <i class="fas fa-pen-square"></i>
+                            <i class="fa fa-box"></i>
                             <p>Quản lý đơn hàng</p>
                             <span class="caret"></span>
                         </a>
@@ -138,8 +138,8 @@
                                 </li>
 
                                 <li>
-                                    <a href="{{ route('order.index', ['status' => 'unactive']) }}">
-                                        <span class="sub-item">Đơn hàng chờ kích hoạt</span>
+                                    <a href="{{ route('order.index', ['status' => 'active']) }}">
+                                        <span class="sub-item">Đơn hàng đã kích hoạt</span>
                                     </a>
                                 </li>
                             </ul>
@@ -185,6 +185,37 @@
                     </div>
                 </li>
                 <li class="nav-item">
+                    <a data-bs-toggle="collapse" href="#service_active">
+                        <i class="fas fa-check-circle "></i>
+                        <p>Dịch vụ được đăng ký</p>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="collapse" id="service_active">
+                        <ul class="nav nav-collapse">
+                            <li>
+                                <a href="{{ route('domain.index') }}">
+                                    <span class="sub-item">Tên miền</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('customer.service.hosting.list.hosting') }}">
+                                    <span class="sub-item">Hosting</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="">
+                                    <span class="sub-item">Email Server</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('customer.service.cloud.list.cloud') }}">
+                                    <span class="sub-item">Cloud</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
                     <a data-bs-toggle="collapse" href="#order">
                         <i class="fas fa-pen-square"></i>
                         <p>Quản lý đơn hàng</p>
@@ -205,8 +236,8 @@
                             </li>
 
                             <li>
-                                <a href="{{ route('customer.order.index', ['status' => 'unactive']) }}">
-                                    <span class="sub-item">Đơn hàng chờ kích hoạt</span>
+                                <a href="{{ route('customer.order.index', ['status' => 'active']) }}">
+                                    <span class="sub-item">Đơn hàng đã kích hoạt</span>
                                 </a>
                             </li>
                         </ul>
@@ -216,7 +247,7 @@
 
                 <li class="nav-item">
                     <a href="{{ route('history.index') }}">
-                        <i class="fas fa-pen-square"></i>
+                        <i class="fa fa-eye"></i>
                         <p>Lịch sử giao dịch</p>
 
                     </a>

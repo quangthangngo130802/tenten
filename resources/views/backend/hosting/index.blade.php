@@ -68,107 +68,92 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-            $('#categoryTable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: '{{ route('hosting.index') }}',
-                columns: [
-                    {
-                        data: 'package_name',
-                        name: 'package_name'
-                    },
-                    {
-                        data: 'storage',
-                        name: 'storage'
-                    },
-                    {
-                        data: 'bandwidth',
-                        name: 'bandwidth'
-                    },
-
-                    {
-                        data: 'website_limit',
-                        name: 'website_limit'
-                    },
-                    {
-                        data: 'price',
-                        name: 'price'
-                    },
-                    {
-                        data: 'backup_frequency',
-                        name: 'backup_frequency'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false
-                    }
-                ],
-                columnDefs: [{
-                        width: '16%',
-                        targets: 0
-                    },
-                    {
-                        width: '16%',
-                        targets: 1
-                    },
-                    {
-                        width: '15%',
-                        targets: 2
-                    },
-                    {
-                        width: '15%',
-                        targets: 3
-                    },
-
-                    {
-                        width: '20%',
-                        targets: 4
-                    },
-                    {
-                        width: '15%',
-                        targets: 5
-                    },
-
-                ],
-                pagingType: "full_numbers", // Kiểu phân trang
-                // scrollX: true,
-                language: {
-                    paginate: {
-                        previous: '&laquo;', // Nút trước
-                        next: '&raquo;' // Nút sau
-                    },
-                    lengthMenu: "Hiển thị _MENU_ mục mỗi trang",
-                    zeroRecords: "Không tìm thấy dữ liệu",
-                    info: "Hiển thị _START_ đến _END_ của _TOTAL_ mục",
-                    infoEmpty: "Không có dữ liệu để hiển thị",
-                    infoFiltered: "(lọc từ _MAX_ mục)"
+        $('#categoryTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: '{{ route('hosting.index') }}',
+            order: [],
+            columns: [
+                {
+                    data: 'package_name',
+                    name: 'package_name',
+                    orderable: false
                 },
-                dom: '<"row"<"col-md-6"l><"col-md-6"f>>t<"row"<"col-md-6"i><"col-md-6"p>>',
-                lengthMenu: [10, 25, 50, 100],
-                // fixedHeader: true, // Giữ cố định tiêu đề và phần tìm kiếm
-                // scrollX: true
-            });
+                {
+                    data: 'storage',
+                    name: 'storage',
+                    orderable: false
+                },
+                {
+                    data: 'bandwidth',
+                    name: 'bandwidth',
+                    orderable: false
+                },
+                {
+                    data: 'website_limit',
+                    name: 'website_limit',
+                    orderable: false
+                },
+                {
+                    data: 'price',
+                    name: 'price',
+                    orderable: false
+                },
+                {
+                    data: 'backup_frequency',
+                    name: 'backup_frequency',
+                    orderable: false
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false
+                }
+            ],
+            columnDefs: [
+                { width: '16%', targets: 0 },
+                { width: '16%', targets: 1 },
+                { width: '15%', targets: 2 },
+                { width: '15%', targets: 3 },
+                { width: '20%', targets: 4 },
+                { width: '15%', targets: 5 }
+            ],
+            pagingType: "full_numbers",
+            language: {
+                paginate: {
+                    previous: '&laquo;',
+                    next: '&raquo;' 
+                },
+                lengthMenu: "Hiển thị _MENU_ mục mỗi trang",
+                zeroRecords: "Không tìm thấy dữ liệu",
+                info: "Hiển thị _START_ đến _END_ của _TOTAL_ mục",
+                infoEmpty: "Không có dữ liệu để hiển thị",
+                infoFiltered: "(lọc từ _MAX_ mục)"
+            },
+            dom: '<"row"<"col-md-6"l><"col-md-6"f>>t<"row"<"col-md-6"i><"col-md-6"p>>',
+            lengthMenu: [10, 25, 50, 100]
+        });
     });
 
     function confirmDelete(event, id) {
-                event.preventDefault();
-                Swal.fire({
-                    title: 'Bạn có chắc chắn muốn xóa?',
-                    text: "Hành động này không thể hoàn tác!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Xóa',
-                    cancelButtonText: 'Hủy',
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Nếu người dùng xác nhận, submit form xóa
-                        document.getElementById('delete-form-' + id).submit();
-                    }
-                });
+        event.preventDefault();
+        Swal.fire({
+            title: 'Bạn có chắc chắn muốn xóa?',
+            text: "Hành động này không thể hoàn tác!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Xóa',
+            cancelButtonText: 'Hủy',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Nếu người dùng xác nhận, submit form xóa
+                document.getElementById('delete-form-' + id).submit();
             }
+        });
+    }
 </script>
+
 @endpush

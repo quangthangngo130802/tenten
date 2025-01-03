@@ -7,13 +7,13 @@
         <table class="table table-striped table-hover" id="categoryTable">
             <thead>
                 <tr>
-                    <th>Mã đơn hàng</th>
-                    {{-- <th>Chi tiết</th> --}}
-                    <th>Tổng tiền</th>
-                    <th>Trạng thái thanh toán</th>
-                    <th>Ngày đặt hàng</th>
-                    {{-- <th>Thanh toán</th> --}}
-                    <th>Hoạt động</th>
+                    <th>STT</th>
+                    <th>Tên gói</th>
+                    <th>Gia hạn</th>
+                    <th>Ngày bắt đầu</th>
+                    <th>Ngày kết thúc</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
                 </tr>
             </thead>
         </table>
@@ -23,48 +23,79 @@
 
 @push('styles')
 <style>
-    .dataTables_scrollBody thead tr {
-        display: none;
-    }
-
-    #add-category-btn {
-        display: flex;
-        justify-content: flex-end;
+    .status {
+        display: inline-flex;
         align-items: center;
-        */
-        /* text-align: end; */
-        padding: 10px;
-        margin-right: 100px;
+        justify-content: center;
+        padding: 6px 12px;
+        border-radius: 25px;
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: capitalize;
+        line-height: 1.5;
+        white-space: nowrap;
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-
-    td a {
-        padding: 8px 11px !important;
-        border-radius: 5px;
-        color: white;
+    .status .icon-check,
+    .status .icon-warning {
         display: inline-block;
+        width: 16px;
+        height: 16px;
+        margin-right: 8px;
+        background-size: contain;
+        background-repeat: no-repeat;
     }
 
-    .edit {
-        background: #ffc107;
-        margin: 0px 15px;
+
+    .status.active {
+        background-color: #e6f4ea;
+        color: #2b8a3e;
+        border: 1px solid #cce7d0;
     }
 
-    .delete {
-        background: #dc3545;
-        padding: 8px 12px !important;
+    .status.active .icon-check {
+        background-image: url('https://cdn-icons-png.flaticon.com/512/845/845646.png');
     }
 
-    .btn-orange {
-        background-color: #fd7e14;
-        border-color: #fd7e14;
-        color: #fff;
+    .status.paused {
+        background-color: #fdecea;
+        color: #d93025;
+        border: 1px solid #f5c6cb;
     }
 
-    .btn-orange:hover {
-        background-color: #fd7e14;
-        border-color: #fd7e14;
-        color: #fff;
+    .status.paused .icon-warning {
+        background-image: url('https://cdn-icons-png.flaticon.com/512/1828/1828843.png');
+    }
+
+    .endday {
+        color: red;
+        font-size: 13px;
+    }
+
+    td,
+    th {
+        text-align: center;
+    }
+
+    .dropdown {
+        position: relative;
+        /* Ensure the dropdown menu is positioned relative to this div */
+    }
+
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        background-color: white;
+        border: 1px solid #ccc;
+        z-index: 1050;
+        min-width: 160px;
+    }
+
+    .action:hover .dropdown-menu {
+        display: block;
+
     }
 </style>
 
@@ -73,34 +104,44 @@
 @push('scripts')
 
 <script type="text/javascript">
-    $(document).ready(function() {
+        $(document).ready(function() {
             $('#categoryTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route('order.index', ['status' => request()->status]) }}',
+                ajax: '{{ route('service.cloud.list.cloud') }}',
                 columns: [
                     {
-                        data: 'code',
-                        name: 'code'
+                        data: null, // STT
+                        name: 'STT',
+                        orderable: false,
+                        searchable: false,
+                        render: function(data, type, row, meta) {
+                            return meta.row + 1;
+                        }
+                    },
+                    {
+                        data: 'packagename',
+                        name: 'id'
+                    },
+                    {
+                        data: 'giahan',
+                        name: 'id'
                     },
 
                     {
-                        data: 'amount',
-                        name: 'amount'
+                        data: 'active_at',
+                        name: 'active_at'
                     },
-
                     {
-                        data: 'status',
+                        data: 'enddate',
+                        name: 'number'
+
+                    },
+                    {
+                        data: 'active',
                         name: 'status'
+
                     },
-                    {
-                        data: 'created_at',
-                        name: 'created_at'
-                    },
-                    // {
-                    //     data: 'payment',
-                    //     name: 'payment'
-                    // },
                     {
                         data: 'action',
                         name: 'action',
@@ -109,11 +150,11 @@
                     }
                 ],
                 columnDefs: [{
-                        width: '16%',
+                        width: '8%',
                         targets: 0
                     },
                     {
-                        width: '16%',
+                        width: '26%',
                         targets: 1
                     },
                     {
@@ -135,8 +176,6 @@
                     },
 
                 ],
-            //   fixedHeader: true, // Giữ cố định tiêu đề và phần tìm kiếm
-            //     scrollX: true,
                 pagingType: "full_numbers", // Kiểu phân trang
                 language: {
                     paginate: {
@@ -151,6 +190,21 @@
                 },
                 dom: '<"row"<"col-md-6"l><"col-md-6"f>>t<"row"<"col-md-6"i><"col-md-6"p>>',
                 lengthMenu: [10, 25, 50, 100],
+
+            });
+
+            $('#categoryTable').on('click', '.action', function(e) {
+                e.stopPropagation();
+
+                const $currentMenu = $(this).siblings('.dropdown-menu');
+
+                $('.dropdown-menu').not($currentMenu).hide();
+
+                $currentMenu.toggle();
+            });
+
+            $(document).on('click', function() {
+                $('.dropdown-menu').hide();
             });
         });
         function confirmDelete(event, id) {
@@ -183,7 +237,7 @@
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Duyêt',
+                confirmButtonText: 'Duyệt',
                 cancelButtonText: 'Hủy',
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -193,5 +247,8 @@
             });
         }
 
+
+
 </script>
+
 @endpush

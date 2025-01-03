@@ -83,7 +83,7 @@
                                 <div class="u-text">
                                     <h4>{{ Auth::user()->full_name }}</h4>
                                     <p class="text-muted">{{ Auth::user()->email }}</p>
-                                    <a href="">
+                                    <a href="{{ route('profile') }}">
                                         View Profile</a>
                                 </div>
                             </div>

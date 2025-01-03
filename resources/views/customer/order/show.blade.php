@@ -13,17 +13,26 @@
                     <li class="col-md-3 col-12"><span>Mã đơn hàng:</span>
                         <p>{{ $order->code }}</p>
                     </li>
-                    <li class="col-md-3 col-12"><span>Ngày mua:</span>
-                        <p>{{ \Carbon\Carbon::parse($order->created_at)->format('Y-m-d H:i:s') }}</p>
+                    @if ($order->status == 'active')
+                    <li class="col-md-3 col-12"><span>Ngày kích hoạt:</span>
+                        <p>{{ \Carbon\Carbon::parse($order->active_at)->format('d/m/Y') }}</p>
                     </li>
+                    @else
+                    <li class="col-md-3 col-12"><span>Ngày mua:</span>
+                        <p>{{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y') }}</p>
+                    </li>
+                    @endif
+                    {{-- <li class="col-md-3 col-12"><span>Ngày mua:</span>
+                        <p>{{ \Carbon\Carbon::parse($order->created_at)->format('Y-m-d H:i:s') }}</p>
+                    </li> --}}
                     <li class="col-md-3 col-12"><span>Trạng thái:</span>
                         <p>
                             @if ($order->status == 'payment')
-                            Đã thanh toán
+                            Đã thanh toán <span style="color: red">(Chờ kích hoạt)</span>
                             @elseif ($order->status == 'nopayment')
                             Chưa thanh toán
                             @else
-                            Chờ kích hoạt
+                            Đã kích hoạt
                             @endif
                         </p>
                     </li>
@@ -33,14 +42,15 @@
                 <div class="mobile_configuration">
                     <table class="order_price_info tg_navi_2021">
                         <tbody>
-                            <tr class="order">
+                            <tr>
                                 <td>STT</td>
                                 <td>Loại đơn hàng</td>
                                 <td>Dịch vụ</td>
+                                <td>Thời gian</td>
                                 <td>Thao tác</td>
-                                <td>Thời hạn</td>
                                 <td>Số tiền</td>
                             </tr>
+                            {{-- @dd($order->orderDetail); --}}
                             @forelse ($order->orderDetail as $index => $item )
                             <tr>
                                 <td>{{ $index + 1 }}</td>
@@ -55,54 +65,68 @@
                                     <?php
                                         if($item->type == 'hosting'){
                                             $product = \App\Models\Hosting::find($item->product_id);
-                                        }else {
+                                            $os = '';
+                                            $backup = '';
+                                        } else {
                                             $product = \App\Models\Cloud::find($item->product_id);
+                                            $os = ' - '.$item->os->name;
+                                            $backup =  $item->backup ? ' - Tự backup' : '';
                                         }
-                                        echo $product->package_name. ' ( '. $item->type. ')';
+                                        $name =  $product->package_name.$os.$backup;
                                     ?>
+                                    {{ $name }}
                                 </td>
-
+                                <td>@if ($item->number >= 12)
+                                    @if ($item->number % 12 == 0)
+                                    {{ intval($item->number / 12) }} năm
+                                    @else
+                                    {{ intval($item->number / 12) }} năm và {{ $item->number % 12 }} tháng
+                                    @endif
+                                    @else
+                                    {{ $item->number }} tháng
+                                    @endif
+                                </td>
                                 <td>
 
                                     <div class="status-badge">
                                         @if ($order->status == 'payment')
-                                        <i class="status-icon payment"></i> Đã xử lý
+                                        <i class="status-icon pending"></i> Đã thanh toán( Chờ kích hoạt )
                                         @elseif ($order->status == 'nopayment')
                                         <i class="status-icon nopayment"></i> Chưa thanh toán
                                         @else
-                                        <i class="status-icon pending"></i> Chưa duyệt
+                                        <i class="status-icon payment"></i> Đã kích hoạt
                                         @endif
                                     </div>
 
                                 </td>
 
-                                <td>
+                                {{-- <td>
 
                                     @if($order->active_at)
-                                        @php
-                                            $createdAt = \Carbon\Carbon::parse($order->active_at);
-                                            $deadline = \Carbon\Carbon::parse($item->deadline);
+                                    @php
+                                    $createdAt = \Carbon\Carbon::parse($order->active_at);
+                                    $deadline = \Carbon\Carbon::parse($item->deadline);
 
-                                            $diffYears = $createdAt->diffInYears($deadline);
-                                            $diffMonths = $createdAt->diffInMonths($deadline) % 12; // Lấy số tháng lẻ sau năm
-                                            $diffDays = $createdAt->diffInDays($deadline) % 30; // Lấy số ngày lẻ sau tháng
-                                        @endphp
+                                    $diffYears = $createdAt->diffInYears($deadline);
+                                    $diffMonths = $createdAt->diffInMonths($deadline) % 12; // Lấy số tháng lẻ sau năm
+                                    $diffDays = $createdAt->diffInDays($deadline) % 30; // Lấy số ngày lẻ sau tháng
+                                    @endphp
 
-                                        @if ($deadline->isPast())
-                                            Hết hạn
-                                        @elseif ($diffYears > 0)
-                                            {{ $diffYears }} năm {{ $diffMonths }} tháng
-                                        @elseif ($diffMonths > 0)
-                                            {{ $diffMonths }} tháng
-                                        @else
-                                            {{ $diffDays }} ngày
-                                        @endif
+                                    @if ($deadline->isPast())
+                                    Hết hạn
+                                    @elseif ($diffYears > 0)
+                                    {{ $diffYears }} năm {{ $diffMonths }} tháng
+                                    @elseif ($diffMonths > 0)
+                                    {{ $diffMonths }} tháng
+                                    @else
+                                    {{ $diffDays }} ngày
+                                    @endif
 
                                     @endif
 
 
 
-                                </td>
+                                </td> --}}
                                 <td><label style="text-decoration: inherit;">{{ number_format($item->price) }}
                                         đ</label></td>
                             </tr>
@@ -123,8 +147,8 @@
                                 <p>0 đ</p>
                             </li>
                             <li>
-                                <span class="vat_vn_doamin" >Tổng tiền </span>
-                                <p style=" font-weight: 900; !important; color:red">{{ number_format($order->amount) }} đ</p>
+                                <span class="vat_vn_doamin">Tổng tiền </span>
+                                <p>{{ number_format($order->amount) }} đ</p>
                             </li>
                         </ul>
                     </div>
@@ -137,12 +161,6 @@
 
 @push('styles')
 <style>
-    .order td{
-        font-weight: 900;
-    }
-    td, th{
-        text-align: center;
-    }
     .qb_order_has_been_paid_page {
         background-color: #fff;
         border-radius: 8px;
@@ -233,6 +251,8 @@
 
     .vat_vn_doamin p {
         font-size: 12px;
+        color: #999;
+
     }
 
     .detail {
@@ -329,14 +349,14 @@
     .status-badge.pending {
         background-color: #f8d7da;
         /* Màu nền */
-        color: #dc3545;
+        color: #f0bc5c;
         /* Màu chữ */
         border: 1px solid #f5c6cb;
         /* Viền */
     }
 
     .status-icon.pending {
-        background-color: #dc3545;
+        background-color: #f0bc5c;
         /* Màu biểu tượng */
     }
 
@@ -348,41 +368,6 @@
         top: -1px;
         left: 4px;
     }
-
-
 </style>
 
 @endpush
-
-@push('scripts')
-@if(session()->has('pdfContent'))
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const pdfContent = "{{ session('pdfContent') }}";
-        const link = document.createElement('a');
-        link.href = pdfContent;
-        link.download = 'receipt_order.pdf';
-
-        // Tải file PDF
-        link.click();
-
-        // Gửi yêu cầu AJAX để xóa session
-        fetch("{{ route('clear.pdf.session') }}", {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log("Session đã được xóa!");
-        })
-        .catch(error => {
-            console.error("Có lỗi xảy ra khi xóa session:", error);
-        });
-    });
-</script>
-@endif
-@endpush
-
-

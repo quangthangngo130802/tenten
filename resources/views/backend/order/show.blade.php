@@ -28,7 +28,7 @@
                     <li class="col-md-3 col-12"><span>Trạng thái:</span>
                         <p>
                             @if ($order->status == 'payment')
-                            Đã thanh toán
+                            Đã thanh toán <span style="color: red">(Chờ kích hoạt)</span>
                             @elseif ($order->status == 'nopayment')
                             Chưa thanh toán
                             @else
@@ -90,7 +90,7 @@
 
                                     <div class="status-badge">
                                         @if ($order->status == 'payment')
-                                        <i class="status-icon pending"></i> Đã thanh toán( Chờ duyệt )
+                                        <i class="status-icon pending"></i> Đã thanh toán( Chờ kích hoạt )
                                         @elseif ($order->status == 'nopayment')
                                         <i class="status-icon nopayment"></i> Chưa thanh toán
                                         @else

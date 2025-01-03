@@ -5,7 +5,7 @@
     <!-- Bảng danh sách danh mục -->
     <div class="category-list">
         <div class="card-tools mb-3" id="add-category-btn">
-            <a href="{{ route('cloud.create') }}" class="btn btn-primary btn-sm">Thêm mới (+)</a>
+            <a href="{{ route('hosting.create') }}" class="btn btn-primary btn-sm">Thêm mới (+)</a>
         </div>
         <div style="overflow-x: auto;">
             <table class=" table table-striped table-hover" id="categoryTable">
@@ -123,7 +123,7 @@
             language: {
                 paginate: {
                     previous: '&laquo;',
-                    next: '&raquo;' 
+                    next: '&raquo;'
                 },
                 lengthMenu: "Hiển thị _MENU_ mục mỗi trang",
                 zeroRecords: "Không tìm thấy dữ liệu",

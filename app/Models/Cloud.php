@@ -9,5 +9,6 @@ class Cloud extends Model
 {
     use HasFactory;
     protected $table = 'cloudservices';
-    protected $guarded = [];
+     protected $guarded = [];
+    public $timestamps = true;
 }

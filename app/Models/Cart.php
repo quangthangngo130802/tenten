@@ -9,7 +9,8 @@ class Cart extends Model
 {
     use HasFactory;
     protected $table = 'cart';
-    protected $guarded = [];
+     protected $guarded = [];
+    public $timestamps = true;
 
     public function details()
     {

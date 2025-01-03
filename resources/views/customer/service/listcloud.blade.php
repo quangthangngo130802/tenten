@@ -196,15 +196,15 @@
             $('#categoryTable').on('click', '.action', function(e) {
                 e.stopPropagation();
 
-                const $currentMenu = $(this).siblings('.menu-action');
+                const $currentMenu = $(this).siblings('.dropdown-menu');
 
-                $('.menu-action').not($currentMenu).hide();
+                $('.dropdown-menu').not($currentMenu).hide();
 
                 $currentMenu.toggle();
             });
 
             $(document).on('click', function() {
-                $('.menu-action').hide();
+                $('.dropdown-menu').hide();
             });
         });
         function confirmDelete(event, id) {

@@ -23,6 +23,9 @@
 
 @push('styles')
 <style>
+    td, th{
+        text-align: center;
+    }
     .dataTables_scrollBody thead tr {
         display: none;
     }
@@ -62,107 +65,79 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-            $('#categoryTable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: '{{ route('history.index')}}',
-                columns: [
-                    {
-                        data: 'code',
-                        name: 'code'
-                    },
-                    {
-                        data: 'user_id',
-                        name: 'user_id'
-                        // orderable: false,
-                    },
-                    // {
-                    //     data: 'detail',
-                    //     name: 'id'
+        var roleId = {{ Auth::user()->role_id }}; // Lấy role_id của người dùng từ Laravel
 
-                    // },
-                    {
-                        data: 'amount',
-                        name: 'amount'
-                    },
-                    {
-                        data: 'description',
-                        name: 'description'
-                    },
-                    {
-                        data: 'created_at',
-                        name: 'created_at'
-                    },
+        // Khởi tạo mảng cột
+        var columns = [
+            { data: 'code', name: 'code' },
+            { data: 'user_id', name: 'user_id' },
+            { data: 'amount', name: 'amount' },
+            { data: 'description', name: 'description' },
+            { data: 'created_at', name: 'created_at' }
+        ];
 
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false
-                    }
-                ],
-                columnDefs: [{
-                        width: '16%',
-                        targets: 0
-                    },
-                    {
-                        width: '25%',
-                        targets: 1
-                    },
-                    {
-                        width: '15%',
-                        targets: 1
-                    },
-                    {
-                        width: '15%',
-                        targets: 1
-                    },
+        // Nếu role_id == 1, thêm cột "Hoạt động"
+        if (roleId == 1) {
+            columns.push({ data: 'action', name: 'action', orderable: false, searchable: false });
+        }
 
-                    {
-                        width: '20%',
-                        targets: 1
-                    },
-                    {
-                        width: '15%',
-                        targets: 1
-                    },
+        // Cấu hình columnDefs
+        var columnDefs = [
+            { width: '16%', targets: 0 },
+            { width: '25%', targets: 1 },
+            { width: '15%', targets: 2 },
+            { width: '15%', targets: 3 },
+            { width: '20%', targets: 4 }
+        ];
 
-                ],
-            //   fixedHeader: true, // Giữ cố định tiêu đề và phần tìm kiếm
-            //     scrollX: true,
-                pagingType: "full_numbers", // Kiểu phân trang
-                language: {
-                    paginate: {
-                        previous: '&laquo;', // Nút trước
-                        next: '&raquo;' // Nút sau
-                    },
-                    lengthMenu: "Hiển thị _MENU_ mục mỗi trang",
-                    zeroRecords: "Không tìm thấy dữ liệu",
-                    info: "Hiển thị _START_ đến _END_ của _TOTAL_ mục",
-                    infoEmpty: "Không có dữ liệu để hiển thị",
-                    infoFiltered: "(lọc từ _MAX_ mục)"
-                },
-                dom: '<"row"<"col-md-6"l><"col-md-6"f>>t<"row"<"col-md-6"i><"col-md-6"p>>',
-                lengthMenu: [10, 25, 50, 100],
-            });
+        if (roleId == 1) {
+            columnDefs.push({ width: '15%', targets: 5 }); // Thêm cột thứ 6 nếu role_id == 1
+        }
+
+        // Khởi tạo DataTable
+        $('#categoryTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: '{{ route('history.index') }}',
+            columns: columns, // Sử dụng mảng cột đã điều chỉnh
+            columnDefs: columnDefs, // Áp dụng columnDefs đã thay đổi
+            pagingType: "full_numbers", // Kiểu phân trang
+            language: {
+                paginate: { previous: '&laquo;', next: '&raquo;' },
+                lengthMenu: "Hiển thị _MENU_ mục mỗi trang",
+                zeroRecords: "Không tìm thấy dữ liệu",
+                info: "Hiển thị _START_ đến _END_ của _TOTAL_ mục",
+                infoEmpty: "Không có dữ liệu để hiển thị",
+                infoFiltered: "(lọc từ _MAX_ mục)"
+            },
+            dom: '<"row"<"col-md-6"l><"col-md-6"f>>t<"row"<"col-md-6"i><"col-md-6"p>>',
+            lengthMenu: [10, 25, 50, 100],
         });
-        function confirmDelete(event, id) {
-                event.preventDefault();
-                Swal.fire({
-                    title: 'Bạn có chắc chắn muốn xóa?',
-                    text: "Hành động này không thể hoàn tác!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Xóa',
-                    cancelButtonText: 'Hủy',
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Nếu người dùng xác nhận, submit form xóa
-                        document.getElementById('delete-form-' + id).submit();
-                    }
-                });
+
+        // Ẩn tiêu đề và cột "Hoạt động" nếu role_id != 1
+        if (roleId != 1) {
+            $('th:contains("Hoạt động")').hide();
+        }
+    });
+
+    // Hàm xác nhận xóa
+    function confirmDelete(event, id) {
+        event.preventDefault();
+        Swal.fire({
+            title: 'Bạn có chắc chắn muốn xóa?',
+            text: "Hành động này không thể hoàn tác!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Xóa',
+            cancelButtonText: 'Hủy',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('delete-form-' + id).submit();
             }
+        });
+    }
 </script>
+
 @endpush

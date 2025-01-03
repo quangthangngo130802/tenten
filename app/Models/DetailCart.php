@@ -10,7 +10,8 @@ class DetailCart extends Model
     use HasFactory;
     use HasFactory;
     protected $table = 'detail_cart';
-    protected $guarded = [];
-    
+     protected $guarded = [];
+    public $timestamps = true;
+
 
 }

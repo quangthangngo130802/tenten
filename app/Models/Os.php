@@ -9,5 +9,6 @@ class Os extends Model
 {
     use HasFactory;
     protected $table = 'os';
-    protected $guarded = [];
+     protected $guarded = [];
+    public $timestamps = true;
 }

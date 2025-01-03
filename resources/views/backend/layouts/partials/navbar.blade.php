@@ -53,12 +53,32 @@
                 </ul>
             </li>
             <li class="nav-item topbar-icon dropdown hidden-caret">
-                <a class="nav-link " href="{{ route('customer.cart.listcart') }}" id="notifDropdown">
-                    <i class="fa fa-shopping-cart"></i>
-                    <span class="notification">
-                        {{ count(optional(Auth::user()->cart)->details ?? []) }}
-                    </span>
-                </a>
+                @php
+                    $cartDetails = optional(Auth::user()->cart)->details ?? false;
+                    $renewCount = \App\Models\RenewService::where('email', Auth::user()->email)->count();
+                @endphp
+
+                @if ($cartDetails)
+                    <a class="nav-link" href="{{ route('customer.cart.listcart') }}" id="notifDropdown">
+                        <i class="fa fa-shopping-cart"></i>
+                        <span class="notification">
+                            {{ count($cartDetails) }}
+                        </span>
+                    </a>
+                @elseif ($renewCount > 0)
+                    <a class="nav-link" href="{{ route('customer.cart.listrenews') }}" id="notifDropdown">
+                        <i class="fa fa-shopping-cart"></i>
+                        <span class="notification">
+                            {{ $renewCount }}
+                        </span>
+                    </a>
+                @else
+                    <a class="nav-link" href="#" id="notifDropdown">
+                        <i class="fa fa-shopping-cart"></i>
+                        <span class="notification">0</span>
+                    </a>
+                @endif
+
             </li>
             @endif
             <li class="nav-item topbar-user dropdown hidden-caret">

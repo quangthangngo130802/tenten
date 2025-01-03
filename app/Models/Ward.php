@@ -9,7 +9,8 @@ class Ward extends Model
 {
     use HasFactory;
     protected $table = 'wards';
-    protected $guarded = [];
+     protected $guarded = [];
+    public $timestamps = true;
 
     public function district()
     {

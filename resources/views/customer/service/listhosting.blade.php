@@ -75,6 +75,24 @@
     td, th{
         text-align: center;
     }
+    .dropdown {
+        position: relative;
+        /* Ensure the dropdown menu is positioned relative to this div */
+    }
+
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        background-color: white;
+        border: 1px solid #ccc;
+        z-index: 1050;
+        min-width: 160px;
+    }
+
+    .action:hover .dropdown-menu {
+        display: block;
+
+    }
 
 </style>
 
@@ -170,6 +188,19 @@
                 dom: '<"row"<"col-md-6"l><"col-md-6"f>>t<"row"<"col-md-6"i><"col-md-6"p>>',
                 lengthMenu: [10, 25, 50, 100],
 
+            });
+            $('#categoryTable').on('click', '.action', function(e) {
+                e.stopPropagation();
+
+                const $currentMenu = $(this).siblings('.dropdown-menu');
+
+                $('.dropdown-menu').not($currentMenu).hide();
+
+                $currentMenu.toggle();
+            });
+
+            $(document).on('click', function() {
+                $('.dropdown-menu').hide();
             });
         });
 

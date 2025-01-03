@@ -13,7 +13,7 @@ class CloudController extends Controller
 {
     public function index(Request $request, $type_id = 1)
     {
-        $title = "Cloud";
+        $title = "Danh sách Cloud";
         if ($request->ajax()) {
             $data = Cloud::where('type_id',$type_id)->select('*');
             return DataTables::of($data)
@@ -45,11 +45,15 @@ class CloudController extends Controller
     }
 
     public function edit($id){
+        $page ='Cloud';
+        $title = 'Thay đổi Cloud';
         $cloud = Cloud::findOrFail($id);
-        return view('backend.cloud.detail', compact('cloud'));
+        return view('backend.cloud.detail', compact('cloud', 'title', 'page'));
     }
     public function create(){
-        return view('backend.cloud.detail');
+        $page ='Cloud';
+        $title = 'Thêm Cloud';
+        return view('backend.cloud.detail', compact('title', 'page'));
     }
 
     public function update(CloudRequest $request, $id)

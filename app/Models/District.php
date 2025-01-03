@@ -9,7 +9,8 @@ class District extends Model
 {
     use HasFactory;
     protected $table = 'districts';
-    protected $guarded = [];
+     protected $guarded = [];
+    public $timestamps = true;
 
     public function province()
     {

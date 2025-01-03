@@ -25,6 +25,9 @@ class OrderController extends Controller
         if ($request->ajax()) {
             $data = Order::where('status', $status)->where('email', Auth::user()->email)->select('*');
             return DataTables::of($data)
+            ->editColumn('code', function ($row) {
+                return '<a href="' . route('customer.order.show', $row->id) . '" class=" text-primary "> '. $row->code .'</a>';
+            })
                 ->editColumn('created_at', function ($row) {
                     return Carbon::parse($row->created_at)->format('Y-m-d H:i:s');
                 })
@@ -48,7 +51,7 @@ class OrderController extends Controller
                 ->editColumn('detail', function ($row) {
                     return '<a href="' . route('customer.order.show', $row->id) . '" class=" btn-sm edit"> Chi tiết </a>';
                 })->rawColumns(['detail'])
-                ->rawColumns(['detail', 'status', 'payment'])
+                ->rawColumns(['detail', 'status', 'payment', 'code'])
                 ->make(true);
         }
         $page = 'Đơn hàng';

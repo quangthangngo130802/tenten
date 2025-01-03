@@ -50,7 +50,10 @@ class CustomerServiceController extends Controller
                     }
                 })->rawColumns(['active'])
                 ->editColumn('giahan', function ($row) {
-                    return '<a href="' . route('order.show', $row->id) . '" class="btn btn-primary btn-sm edit"> Gia hạn </a>';
+                    return '<form action="' . route('customer.cart.addrenews', $row->id) . '" method="POST" style="display: inline;">
+                                ' . csrf_field() . '
+                                <button type="submit" class="btn btn-primary btn-sm edit">Gia hạn</button>
+                            </form>';
                 })->rawColumns(['giahan'])
                 ->addColumn('action', function ($row) {
                     return '
@@ -58,7 +61,7 @@ class CustomerServiceController extends Controller
                                 <span style="font-size:26px; cursor:pointer;" class="action">
                                     <i class="fas fa-cog"></i>
                                 </span>
-                                <div class="dropdown-menu menu-action">
+                                <div class="dropdown-menu menu-action" style="right: 17px;">
                                     <a class="dropdown-item" href="#">Rao bán tên miền</a>
                                     <a class="dropdown-item" href="#">Cài đặt NS</a>
                                     <a class="dropdown-item" href="#">Cài đặt DNS</a>
@@ -112,14 +115,17 @@ class CustomerServiceController extends Controller
                     }
                 })->rawColumns(['active'])
                 ->editColumn('giahan', function ($row) {
-                    return '<a href="' . route('order.show', $row->id) . '" class="btn btn-primary btn-sm edit"> Gia hạn </a>';
+                    return '<form action="' . route('customer.cart.addrenews', $row->id) . '" method="POST" style="display: inline;">
+                                ' . csrf_field() . '
+                                <button type="submit" class="btn btn-primary btn-sm edit">Gia hạn</button>
+                            </form>';
                 })->rawColumns(['giahan'])
                 ->addColumn('action', function ($row) {
                     return '<div class="dropdown">
                                 <span style="font-size:26px; cursor:pointer;" class="action">
                                     <i class="fas fa-cog"></i>
                                 </span>
-                                <div class="dropdown-menu menu-action">
+                                <div class="dropdown-menu menu-action" style="right: 17px;">
                                     <a class="dropdown-item" href="#">Rao bán tên miền</a>
                                     <a class="dropdown-item" href="#">Cài đặt NS</a>
                                     <a class="dropdown-item" href="#">Cài đặt DNS</a>

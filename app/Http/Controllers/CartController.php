@@ -7,6 +7,7 @@ use App\Models\Cloud;
 use App\Models\DetailCart;
 use App\Models\Hosting;
 use App\Models\Order;
+use App\Models\RenewService;
 use App\Models\TransactionHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +25,10 @@ class CartController extends Controller
             $quantity = $request->input('quantity', 1);
 
             $user = Auth::user();
+            $renewservice = RenewService::where('email', $user->email)->get();
+            if ($renewservice) {
+                RenewService::where('email', $user->email)->delete();
+            }
 
             if ($type == 'hosting') {
                 $product = Hosting::find($itemId);

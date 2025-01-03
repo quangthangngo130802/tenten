@@ -5,16 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TransactionHistory extends Model
+class RenewService extends Model
 {
     use HasFactory;
-    protected $table = 'transaction_histories';
-
+    protected $table = 'renewservice';
      protected $guarded = [];
     public $timestamps = true;
 
-    public function user()
+    public function os()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Os::class, 'os_id', 'id');
     }
 }

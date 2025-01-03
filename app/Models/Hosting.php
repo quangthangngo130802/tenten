@@ -10,5 +10,6 @@ class Hosting extends Model
     use HasFactory;
 
     protected $table = 'hosting';
-    protected $guarded = [];
+     protected $guarded = [];
+    public $timestamps = true;
 }

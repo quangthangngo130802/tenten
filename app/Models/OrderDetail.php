@@ -10,7 +10,8 @@ class OrderDetail extends Model
 {
     use HasFactory;
     protected $table = 'order_details';
-    protected $guarded = [];
+     protected $guarded = [];
+    public $timestamps = true;
 
     public function order()
     {

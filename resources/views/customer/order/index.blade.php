@@ -8,7 +8,7 @@
             <thead>
                 <tr>
                     <th>Mã đơn hàng</th>
-                    <th>Chi tiết</th>
+                    {{-- <th>Chi tiết</th> --}}
                     <th>Tổng tiền</th>
                     <th>Trạng thái thanh toán</th>
                     <th>Ngày đặt hàng</th>
@@ -34,6 +34,10 @@
         /* text-align: end; */
         padding: 10px;
         margin-right: 100px;
+    }
+
+    td, th{
+        text-align: center;
     }
 
 
@@ -71,10 +75,10 @@
                         data: 'code',
                         name: 'code'
                     },
-                    {
-                        data: 'detail',
-                        name: 'id'
-                    },
+                    // {
+                    //     data: 'detail',
+                    //     name: 'id'
+                    // },
                     {
                         data: 'amount',
                         name: 'amount'
@@ -97,7 +101,7 @@
 
                 ],
                 columnDefs: [{
-                        width: '16%',
+                        width: '19%',
                         targets: 0
                     },
                     {
@@ -105,7 +109,7 @@
                         targets: 1
                     },
                     {
-                        width: '15%',
+                        width: '20%',
                         targets: 2
                     },
                     {
@@ -114,13 +118,13 @@
                     },
 
                     {
-                        width: '20%',
+                        width: '15%',
                         targets: 4
                     },
-                    {
-                        width: '15%',
-                        targets: 5
-                    },
+                    // {
+                    //     width: '15%',
+                    //     targets: 5
+                    // },
 
 
                 ],

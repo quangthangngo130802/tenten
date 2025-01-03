@@ -7,6 +7,7 @@ use App\Models\Cart;
 use App\Models\Cloud;
 use App\Models\DetailCart;
 use App\Models\Os;
+use App\Models\RenewService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;
@@ -56,11 +57,16 @@ class CloudController extends Controller
     {
         //   dd($request->all());
         try {
+
             $itemId = $request->input('product_id');
             $type = 'cloud';
             $quantity = $request->input('numbertg', 1);
 
             $user = Auth::user();
+            $renewservice = RenewService::where('email', $user->email)->get();
+            if ($renewservice) {
+                RenewService::where('email', $user->email)->delete();
+            }
 
             $product = Cloud::find($itemId);
 

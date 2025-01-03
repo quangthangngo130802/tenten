@@ -9,6 +9,7 @@ class ServiceTenmien extends Model
 {
     use HasFactory;
     protected $table = 'servicrtenmien';
-    protected $guarded = [];
-    
+     protected $guarded = [];
+    public $timestamps = true;
+
 }

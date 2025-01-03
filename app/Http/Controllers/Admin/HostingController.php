@@ -12,7 +12,7 @@ class HostingController extends Controller
 {
     public function index(Request $request, $status = null)
     {
-        $title = "Hosting";
+        $title = "Danh sách Hosting";
         if ($request->ajax()) {
             $data = Hosting::select('*')
             ->orderBy('website_limit', 'asc');
@@ -39,11 +39,15 @@ class HostingController extends Controller
     }
 
     public function edit($id){
+        $page ='Hosting';
+        $title = 'Thay đổi Hosting';
         $hosting = Hosting::findOrFail($id);
-        return view('backend.hosting.detail', compact('hosting'));
+        return view('backend.hosting.detail', compact('hosting', 'title', 'page'));
     }
     public function create(){
-        return view('backend.hosting.detail');
+        $page ='Hosting';
+        $title = 'Thêm Hosting';
+        return view('backend.hosting.detail' , compact( 'title', 'page'));
     }
 
     public function update(HostingRequest $request, $id)

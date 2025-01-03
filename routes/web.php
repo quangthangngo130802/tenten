@@ -14,6 +14,7 @@ use App\Http\Controllers\Customer\CloudController as CustomerCloudController;
 use App\Http\Controllers\Customer\CustomerServiceController;
 use App\Http\Controllers\Customer\HostingController as CustomerHostingController;
 use App\Http\Controllers\Customer\OrderController as CustomerOrderController;
+use App\Http\Controllers\Customer\RenewServiceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
@@ -143,7 +144,8 @@ Route::middleware('auth')->group(function () {
         Route::prefix('cart')->name('cart.')->group(function () {
             // route::get('', [CartController::class, 'listcart'])->name('listcart');
             route::get('', [CartController::class, 'listcart'])->name('listcart');
-
+            route::post('renews-ervice-{id}', [RenewServiceController::class, 'addrenews'])->name('addrenews');
+            route::get('renews-ervice', [RenewServiceController::class, 'listrenews'])->name('listrenews');
         });
 
         Route::prefix('service')->name('service.')->group(function () {
@@ -154,6 +156,8 @@ Route::middleware('auth')->group(function () {
                 Route::get('', [CustomerServiceController::class, 'listhosting'])->name('list.hosting');
             });
         });
+
+
 
 
     });
@@ -179,5 +183,8 @@ Route::prefix('history')->name('history.')->group(function () {
 });
 
 Route::post('/clear-pdf-session', [CustomerOrderController::class, 'clearPdfSession'])->name('clear.pdf.session');
+
+Route::post('/renews-delete-item', [RenewServiceController::class, 'deleteItem'])->name('renews.delete.item');
+Route::post('/renews-update-time', [RenewServiceController::class, 'updatetime'])->name('renews.update.time');
 
 

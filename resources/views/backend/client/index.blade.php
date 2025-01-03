@@ -69,7 +69,7 @@
             $('#categoryTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route('client.index') }}',
+                ajax: '{{ url()->secure(route('client.index')) }}',
                 columns: [
                     {
                         data: 'full_name',

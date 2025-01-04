@@ -94,10 +94,12 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        var APP_URL = '{{ env('APP_URL') }}';
+        var typeId = '{{ request()->type_id }}';
         $('#categoryTable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{{ route('cloud.index', ['type_id' => request()->type_id]) }}',
+            ajax: APP_URL + '/admin/cloud?type_id=' + typeId,
             order: [], // Vô hiệu hóa sắp xếp mặc định
             columns: [
                 { data: 'package_name', name: 'package_name', orderable: false },

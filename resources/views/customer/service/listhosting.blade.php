@@ -102,10 +102,11 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+        var APP_URL = '{{ env('APP_URL') }}';
             $('#categoryTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route('customer.service.hosting.list.hosting') }}',
+                ajax: APP_URL + '/customer/service/list-hosting',
                 columns: [
                     {
                         data: null, // STT

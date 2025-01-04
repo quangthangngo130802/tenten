@@ -68,10 +68,11 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+        var APP_URL = '{{ env('APP_URL') }}';
         $('#categoryTable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{{ route('hosting.index') }}',
+            ajax: APP_URL + '/admin/hosting',
             order: [],
             columns: [
                 {

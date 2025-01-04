@@ -66,7 +66,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
         var roleId = {{ Auth::user()->role_id }}; // Lấy role_id của người dùng từ Laravel
-
+        var APP_URL = '{{ env('APP_URL') }}';
         // Khởi tạo mảng cột
         var columns = [
             { data: 'code', name: 'code' },
@@ -98,7 +98,7 @@
         $('#categoryTable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{{ route('history.index') }}',
+            ajax: APP_URL + '/history' ,
             columns: columns, // Sử dụng mảng cột đã điều chỉnh
             columnDefs: columnDefs, // Áp dụng columnDefs đã thay đổi
             pagingType: "full_numbers", // Kiểu phân trang

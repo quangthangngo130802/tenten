@@ -74,10 +74,13 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+        var APP_URL = '{{ env('APP_URL') }}';
+         var status = '{{ request()->status ?? '' }}';
+        //  alert(APP_URL + '/admin/order' + (status ? '?status=' + status : ''));
             $('#categoryTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route('order.index', ['status' => request()->status]) }}',
+                ajax: APP_URL + '/admin/order/' + status,
                 columns: [
                     {
                         data: 'code',

@@ -99,7 +99,7 @@
         $('#categoryTable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: APP_URL + '/admin/cloud?type_id=' + typeId,
+            ajax: APP_URL + '/admin/cloud/' + typeId,
             order: [], // Vô hiệu hóa sắp xếp mặc định
             columns: [
                 { data: 'package_name', name: 'package_name', orderable: false },

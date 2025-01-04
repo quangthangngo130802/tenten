@@ -62,10 +62,11 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="text/javascript">
     $(document).ready(function() {
+        var APP_URL = '{{ env('APP_URL') }}';
             $('#categoryTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route('customer.hosting.index') }}',
+                ajax: APP_URL + '/customer/hosting',
                 columns: [
                     {
                         data: 'package_name',

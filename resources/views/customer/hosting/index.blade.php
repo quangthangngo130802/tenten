@@ -159,7 +159,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: APP_URL + 'add-to-cart',
+                            url: APP_URL + '/add-to-cart',
                             type: 'POST',
                             data: {
                                 item_id: itemId,

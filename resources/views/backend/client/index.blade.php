@@ -66,10 +66,11 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+        var APP_URL = '{{ env('APP_URL') }}';
             $('#categoryTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ url()->secure(route('client.index')) }}',
+                ajax: APP_URL + '/admin/client',
                 columns: [
                     {
                         data: 'full_name',

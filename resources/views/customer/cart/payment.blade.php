@@ -307,6 +307,7 @@
 
 <script>
     $(document).ready(function () {
+        var APP_URL = '{{ env('APP_URL') }}';
         $('input[name="invoice"]').on('change', function () {
             if ($('#yes-invoice').is(':checked')) {
                     // Đảm bảo sử dụng đúng cú pháp cho Bootstrap 5
@@ -390,7 +391,7 @@
             } else if (pttt === 'vi') {
 
                 $.ajax({
-                    url: '{{ route('customer.order.thanhtoan') }}',
+                    url: APP_URL + '/customer/order/thanh-toan/don-hang',
                     method: 'POST',
                     data: {
                         id : id,
@@ -444,7 +445,7 @@
                                     $('input[name=payment][value="qr"]').prop('checked', true);
                                     $('input[name=payment][value="vi"]').prop('checked', false);
                                     // Chuyển hướng tới trang QR Payment
-                                    window.location.href = "{{ route('customer.order.create.payment', ['id' => '__ID__', 'xsd' => '__XSD__']) }}".replace('__ID__', id).replace('__XSD__', xsd);
+                                    window.location.href = "{{ route('customer.order.create.payment.enews', ['id' => '__ID__', 'xsd' => '__XSD__']) }}".replace('__ID__', id).replace('__XSD__', xsd);
                                 } else if (result.isDenied) {
                                     // Xử lý hành động nạp tiền
                                     window.location.href = '{{ route('payment.recharge') }}';

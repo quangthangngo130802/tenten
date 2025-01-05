@@ -222,12 +222,12 @@
 
 <script>
     $(document).ready(function() {
-
+        var APP_URL = '{{ env('APP_URL') }}';
     $('.close').on('click', function() {
         let id = $(this).data('id');
         let btn = this;
         $.ajax({
-            url: `{{ route('delete.item') }}`,
+            url: APP_URL +'/delete-item',
             type: 'POST',
             data: {
                 id: id,
@@ -264,7 +264,7 @@
         let id = $(this).data('id');
         let pricePerItem = $(this).closest('tr').find('.price_new');
         $.ajax({
-            url: `{{ route('update.time') }}`,
+            url: APP_URL +'/update-time',
             type: 'POST',
             data: {
                 id: id,
@@ -298,7 +298,7 @@
             if (result.isConfirmed) {
                 // Nếu người dùng xác nhận đặt hàng, tiến hành gửi yêu cầu Ajax
                 $.ajax({
-                    url: `{{ route('checkout.item') }}`,
+                    url: APP_URL +'/checkout',
                     type: 'POST',
                     data: {
                         _token: $('meta[name="csrf-token"]').attr('content')

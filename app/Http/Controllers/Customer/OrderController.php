@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Order;
+use App\Models\OrderDetail;
+use App\Models\RenewService;
 use App\Models\TransactionHistory;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -329,5 +331,109 @@ class OrderController extends Controller
         session()->forget('pdfContent');
 
         return response()->json(['success' => true]);
+    }
+
+
+    public function createPaymentenews()
+    {
+        // Kiểm tra số tiền
+        // $order_new = Order::find($id);
+        // $amount = $order_new->amount;
+        $user = Auth::user();
+        $amount = RenewService::where('email', $user->email)->sum('price');
+        // Còn lại xử lý yêu cầu tạo thanh toán như hiện tại
+        $clientId = env('PAYOS_CLIENT_ID');
+        $apiKey = env('PAYOS_API_KEY');
+        $checksumKey = env('PAYOS_CHECKSUM_KEY');
+        $orderCode = substr(str_shuffle("0123456789"), 0, 11);
+
+        $data = [
+            "orderCode" => intval($orderCode),
+            "amount" => intval($amount),
+            "description" => "VQRIO123",
+            "cancelUrl" => route('customer.cart.listrenews'),
+            "returnUrl" => route('customer.order.create.payment.enews.success'),
+            "expiredAt" => time() + 3600,
+        ];
+
+        $data['signature'] = $this->createSignatureOfPaymentRequest($checksumKey, $data);
+
+        $client = new Client();
+
+        try {
+            $response = $client->post('https://api-merchant.payos.vn/v2/payment-requests', [
+                'headers' => [
+                    'x-client-id' => $clientId,
+                    'x-api-key' => $apiKey,
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => $data,
+            ]);
+
+            $responseBody = json_decode($response->getBody(), true);
+
+            if (isset($responseBody['data']['checkoutUrl'])) {
+                $paymentLink = $responseBody['data']['checkoutUrl'];
+                return redirect()->to($paymentLink);
+            }
+            return response()->json([
+                'success' => $responseBody,
+                'status_code' => $response->getStatusCode(),
+            ], $response->getStatusCode());
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function paymentenewsSuccess(){
+
+        $user = Auth::user();
+         /**
+         * @var User $user
+         */
+        $amount = RenewService::where('email', $user->email)->sum('price');
+        RenewService::where('email', $user->email)->delete();
+        $user->update([
+            'wallet' => $user->wallet,
+        ]);
+        return redirect()->route('customer.service.hosting.list.hosting');
+    }
+
+    public function thanhtoangiahan(){
+        $user = Auth::user();
+        /**
+         * @var User $user
+         */
+        // dd($request->all());
+        $price =  RenewService::where('email', $user->email)->sum('price');
+        // $order = Order::find($request->id);
+        // Giả sử số dư ví lưu trong trường `wallet_balance`
+        if ($user->wallet >= $price) {
+            $user->update([
+                'wallet' => $user->wallet - $price,
+            ]);
+            TransactionHistory::create([
+                'code' => Str::random(10),
+                'user_id' => $user->id,
+                'amount' => $price,
+                'status' => 1,
+                'type' => 2,
+                'description' => 'Thanh toán gia hạn ',
+            ]);
+            $renewService = RenewService::where('email', $user->email)->get();
+            $renewService->each(function ($service){
+                    $orderdetail = OrderDetail::find($service->orderdetail_id);
+                    $orderdetail->update([
+                        'price' => $orderdetail->price + $service->price,
+                        'number' => $orderdetail->number + $service->number
+                    ]);
+            });
+            RenewService::where('email', $user->email)->delete();
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['success' => false]);
+        }
     }
 }

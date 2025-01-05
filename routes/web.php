@@ -139,6 +139,9 @@ Route::middleware('auth')->group(function () {
             Route::post('thanh-toan/don-hang', [CustomerOrderController::class, 'thanhtoan'])->name('thanhtoan');
             Route::get('vi/prcode/{id}/{xsd}', [CustomerOrderController::class, 'createPayment'])->name('create.payment');
             Route::get('return/{id}/{xsd}', [CustomerOrderController::class, 'returnUrl'])->name('return');
+            Route::get('vi/prcode/enews', [CustomerOrderController::class, 'createPaymentenews'])->name('create.payment.enews');
+            Route::post('vi/prcode/enews', [CustomerOrderController::class, 'paymentenewsSuccess'])->name('create.payment.enews.success');
+            Route::post('thanh-toan/gia-han', [CustomerOrderController::class, 'thanhtoangiahan'])->name('thanhtoan.giahan');
 
         });
         Route::prefix('cart')->name('cart.')->group(function () {

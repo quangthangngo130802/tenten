@@ -164,7 +164,8 @@
                     if (result.isConfirmed) {
 
                         $.ajax({
-                            url: '{{ route('customer.order.payment') }}',
+                            // url: '{{ route('customer.order.payment') }}',
+                            url: APP_URL + '/customer/order/show/'+id,
                             type: 'POST',
                             data: {
                                 id: id,

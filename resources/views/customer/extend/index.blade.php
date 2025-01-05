@@ -208,12 +208,14 @@
 
 <script>
     $(document).ready(function () {
+        var APP_URL = '{{ env('APP_URL') }}';
         $('.close').on('click', function() {
             let id = $(this).data('id');
             // alert(id);
             let btn = this;
             $.ajax({
-                url: `{{ route('renews.delete.item') }}`,
+                // url: `{{ route('renews.delete.item') }}`,
+                url: APP_URL + '/renews-delete-item',
                 type: 'POST',
                 data: {
                     id: id,
@@ -249,7 +251,8 @@
             let id = $(this).data('id');
             let pricePerItem = $(this).closest('div.renews').find('.price_new');
             $.ajax({
-                url: `{{ route('renews.update.time') }}`,
+                // url: `{{ route('renews.update.time') }}`,
+                url: APP_URL + '/renews-update-time',
                 type: 'POST',
                 data: {
                     id: id,
@@ -274,11 +277,12 @@
             var pttt = $('input[name=payment]:checked').val();
             if (pttt === 'qr') {
                 // Chuyển đến trang quét QR
-                window.location.href = "{{ route('customer.order.create.payment', ['id' => '__ID__', 'xsd' => '__XSD__']) }}".replace('__ID__', id).replace('__XSD__', xsd);
+                window.location.href = "{{ route('customer.order.create.payment.enews') }}";
             } else if (pttt === 'vi') {
 
                 $.ajax({
-                    url: '{{ route('customer.order.thanhtoan') }}',
+                    // url: '{{ route('customer.order.thanhtoan') }}',
+                    url: APP_URL + '/customer/order/thanh-toan/gia-han',
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Laravel CSRF
@@ -290,7 +294,7 @@
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             }).then(() => {
-                                window.location.href = "{{ route('customer.order.show', ['id' => '__ID__']) }}".replace('__ID__', id);
+                                window.location.href = APP_URL + '/customer/service/list-cloud';
                             });
                         } else {
                             Swal.fire({
@@ -306,7 +310,7 @@
                                 if (result.isConfirmed) {
                                     $('input[name=payment][value="qr"]').prop('checked', true);
                                     $('input[name=payment][value="vi"]').prop('checked', false);
-                                    window.location.href = "{{ route('customer.order.create.payment', ['id' => '__ID__', 'xsd' => '__XSD__']) }}".replace('__ID__', id).replace('__XSD__', xsd);
+                                    window.location.href = "{{ route('customer.order.create.payment.enews') }}";
                                 } else if (result.isDenied) {
                                     window.location.href = '{{ route('payment.recharge') }}';
                                 }

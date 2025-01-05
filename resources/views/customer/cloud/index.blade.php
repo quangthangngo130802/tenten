@@ -198,7 +198,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: '{{ route('addToCart') }}',
+                            url: APP_URL +'/add-to-cart',
                             type: 'POST',
                             data: {
                                 item_id: itemId,

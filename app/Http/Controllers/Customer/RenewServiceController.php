@@ -23,6 +23,7 @@ class RenewServiceController extends Controller
         }
         RenewService::create(
             [
+                'orderdetail_id' => $id,
                 'email' => $user->email,
                 'product_id' => $detail->product_id,
                 'os_id' => $detail->os_id,

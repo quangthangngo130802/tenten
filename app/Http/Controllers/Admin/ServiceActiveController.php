@@ -19,7 +19,10 @@ class ServiceActiveController extends Controller
         $title = "Quản lý dịch vụ Cloud";
 
         if ($request->ajax()) {
-            $data = OrderDetail::where('status', 'active')->where('type', 'cloud')->select('*');
+            $data = OrderDetail::where('status', 'active')->where('type', 'cloud')
+            ->whereHas('order', function ($query) {
+                $query->where('order_type', '!=', 2);
+            })->select('*');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('packagename', function ($row) {
@@ -79,7 +82,10 @@ class ServiceActiveController extends Controller
         $title = "Quản lý dịch vụ Hosting";
 
         if ($request->ajax()) {
-            $data = OrderDetail::where('status', 'active')->where('type', 'hosting')->select('*');
+            $data = OrderDetail::where('status', 'active')->where('type', 'hosting')
+            ->whereHas('order', function ($query) {
+                $query->where('order_type', '!=', 2);
+            })->select('*');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('packagename', function ($row) {

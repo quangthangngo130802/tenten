@@ -27,9 +27,9 @@ class OrderController extends Controller
         if ($request->ajax()) {
             $data = Order::where('status', $status)->where('email', Auth::user()->email)->select('*');
             return DataTables::of($data)
-            ->editColumn('code', function ($row) {
-                return '<a href="' . route('customer.order.show', $row->id) . '" class=" text-primary "> '. $row->code .'</a>';
-            })
+                ->editColumn('code', function ($row) {
+                    return '<a href="' . route('customer.order.show', $row->id) . '" class=" text-primary "> ' . $row->code . '</a>';
+                })
                 ->editColumn('created_at', function ($row) {
                     return Carbon::parse($row->created_at)->format('Y-m-d H:i:s');
                 })
@@ -48,7 +48,9 @@ class OrderController extends Controller
                         ? '<span style="color: orange;">Chưa kích hoạt</span>'
                         : ($row->status == 'active'
                             ? '<span style="color: green;">Đã kích hoạt</span>'
-                            : '<a href="' . route('customer.order.payment', $row->id) . '" data-id=' . $row->id . ' class="btn btn-primary btn-sm "> Thanh toán</a>');
+                            : ($row->order_type == 2
+                                ? '<a href="' . route('customer.order.renew.payment', $row->id) . '" data-id="' . $row->id . '" class="btn btn-primary btn-sm">Thanh toán Gia hạn </a>'
+                                : '<a href="' . route('customer.order.payment', $row->id) . '" data-id="' . $row->id . '" class="btn btn-primary btn-sm">Thanh toán</a>'));
                 })
                 ->editColumn('detail', function ($row) {
                     return '<a href="' . route('customer.order.show', $row->id) . '" class=" btn-sm edit"> Chi tiết </a>';
@@ -126,6 +128,7 @@ class OrderController extends Controller
                 'amount' => $cart->total_price,
                 'status' => 'nopayment',
                 'payment' => 0,
+                'order_type' => 1
             ]);
 
 
@@ -137,7 +140,8 @@ class OrderController extends Controller
                     'type' => $detail->type,
                     'price' => $detail->price,
                     'backup' => $detail->backup,
-                    'number' => $detail->number
+                    'number' => $detail->number,
+
                 ]);
                 $detail->delete(); // Xóa chi tiết sau khi đã thêm vào order
             });
@@ -334,13 +338,52 @@ class OrderController extends Controller
     }
 
 
-    public function createPaymentenews()
+    public function createPaymentenews($id = null)
     {
         // Kiểm tra số tiền
         // $order_new = Order::find($id);
         // $amount = $order_new->amount;
+        // dd($id);
+        $amount = 0;
         $user = Auth::user();
-        $amount = RenewService::where('email', $user->email)->sum('price');
+        if($id != null){
+                $order = Order::find($id);
+                $amount = $order->amount;
+                $cancelUrl = route('customer.order.renew.payment', ['id' => $id]);
+                $returnUrl = route('customer.order.create.payment.enews.success', ['id' => $id]);
+        }else{
+            $amount = RenewService::where('email', $user->email)->sum('price');
+
+            $renewservices = RenewService::where('email', $user->email)->get();
+
+            $order = Order::create([
+                'code' => Str::random(15),
+                'email' => Auth::user()->email,
+                'fullname' => Auth::user()->full_name,
+                'amount' => $amount,
+                'status' => 'nopayment',
+                'payment' => 0,
+                'order_type' => 2
+            ]);
+
+            $renewservices->each(function ($detail) use ($order) {
+                $order->orderDetail()->create([
+                    'order_id' => $order->id,
+                    'product_id' => $detail->product_id,
+                    'os_id' => $detail->os_id,
+                    'type' => $detail->type,
+                    'price' => $detail->price,
+                    'backup' => $detail->backup,
+                    'number' => $detail->number,
+                    'orderdetail_id' => $detail->orderdetail_id
+                ]);
+                $detail->delete(); // Xóa chi tiết sau khi đã thêm vào order
+            });
+            $cancelUrl = route('customer.order.renew.payment', ['id' => $order->id]);
+            $returnUrl = route('customer.order.create.payment.enews.success', ['id' => $order->id]);
+        }
+
+
         // Còn lại xử lý yêu cầu tạo thanh toán như hiện tại
         $clientId = env('PAYOS_CLIENT_ID');
         $apiKey = env('PAYOS_API_KEY');
@@ -351,8 +394,8 @@ class OrderController extends Controller
             "orderCode" => intval($orderCode),
             "amount" => intval($amount),
             "description" => "VQRIO123",
-            "cancelUrl" => route('customer.cart.listrenews'),
-            "returnUrl" => route('customer.order.create.payment.enews.success'),
+            "cancelUrl" => $cancelUrl,
+            "returnUrl" => $returnUrl ,
             "expiredAt" => time() + 3600,
         ];
 
@@ -387,53 +430,111 @@ class OrderController extends Controller
         }
     }
 
-    public function paymentenewsSuccess(){
+    public function paymentenewsSuccess($id)
+    {
 
         $user = Auth::user();
-         /**
+        /**
          * @var User $user
          */
-        $amount = RenewService::where('email', $user->email)->sum('price');
+        // $amount = RenewService::where('email', $user->email)->sum('price');
         RenewService::where('email', $user->email)->delete();
+
+        $order = Order::find($id);
         $user->update([
-            'wallet' => $user->wallet,
+            'wallet' => $user->wallet - $order->amount,
         ]);
+        $order->update(
+           [
+            'status' => 'payment'
+           ]
+           );
         return redirect()->route('customer.service.hosting.list.hosting');
     }
 
-    public function thanhtoangiahan(){
+    public function thanhtoangiahan($id = null)
+    {
         $user = Auth::user();
         /**
          * @var User $user
          */
         // dd($request->all());
-        $price =  RenewService::where('email', $user->email)->sum('price');
-        // $order = Order::find($request->id);
-        // Giả sử số dư ví lưu trong trường `wallet_balance`
-        if ($user->wallet >= $price) {
-            $user->update([
-                'wallet' => $user->wallet - $price,
-            ]);
-            TransactionHistory::create([
-                'code' => Str::random(10),
-                'user_id' => $user->id,
-                'amount' => $price,
-                'status' => 1,
-                'type' => 2,
-                'description' => 'Thanh toán gia hạn ',
-            ]);
-            $renewService = RenewService::where('email', $user->email)->get();
-            $renewService->each(function ($service){
-                    $orderdetail = OrderDetail::find($service->orderdetail_id);
-                    $orderdetail->update([
-                        'price' => $orderdetail->price + $service->price,
-                        'number' => $orderdetail->number + $service->number
-                    ]);
-            });
-            RenewService::where('email', $user->email)->delete();
-            return response()->json(['success' => true]);
+        if ($id != null) {
+            $order = Order::find($id);
+            if ($user->wallet >= $order->amount) {
+                $user->update([
+                    'wallet' => $user->wallet - $order->amount,
+                ]);
+                TransactionHistory::create([
+                    'code' => Str::random(10),
+                    'user_id' => $user->id,
+                    'amount' => $order->amount,
+                    'status' => 1,
+                    'type' => 2,
+                    'description' => 'Thanh toán gia hạn ',
+                ]);
+                $order->status = 'payment';
+                $order->save();
+                return response()->json(['success' => true]);
+            } else {
+                return response()->json(['success' => false]);
+            }
         } else {
-            return response()->json(['success' => false]);
+
+
+            $price =  RenewService::where('email', $user->email)->sum('price');
+            // $order = Order::find($request->id);
+            // Giả sử số dư ví lưu trong trường `wallet_balance`
+            if ($user->wallet >= $price) {
+                $user->update([
+                    'wallet' => $user->wallet - $price,
+                ]);
+                TransactionHistory::create([
+                    'code' => Str::random(10),
+                    'user_id' => $user->id,
+                    'amount' => $price,
+                    'status' => 1,
+                    'type' => 2,
+                    'description' => 'Thanh toán gia hạn ',
+                ]);
+                $renewService = RenewService::where('email', $user->email)->get();
+                $order = Order::create([
+                    'code' => Str::random(15),
+                    'email' => Auth::user()->email,
+                    'fullname' => Auth::user()->full_name,
+                    'amount' => $price,
+                    'status' => 'payment',
+                    'payment' => 0,
+                    'order_type' => 2
+                ]);
+
+                $renewService->each(function ($detail) use ($order) {
+                    $order->orderDetail()->create([
+                        'order_id' => $order->id,
+                        'product_id' => $detail->product_id,
+                        'os_id' => $detail->os_id,
+                        'type' => $detail->type,
+                        'price' => $detail->price,
+                        'backup' => $detail->backup,
+                        'number' => $detail->number,
+                        'orderdetail_id' => $detail->orderdetail_id
+                    ]);
+                    $detail->delete(); // Xóa chi tiết sau khi đã thêm vào order
+                });
+                RenewService::where('email', $user->email)->delete();
+                
+                return response()->json(['success' => true]);
+            } else {
+                return response()->json(['success' => false]);
+            }
         }
+    }
+
+    public function renewaddorder($id)
+    {
+        $order = Order::find($id);
+        $listrenews = $order->orderDetail;
+        $sum = $order->amount;
+        return view('customer.extend.index', compact('listrenews', 'sum', 'id'));
     }
 }

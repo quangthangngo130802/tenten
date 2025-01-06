@@ -7,6 +7,7 @@
             <h4>Gia hạn dịch vụ</h4>
             <!-- Bắt đầu danh sách sản phẩm -->
             @forelse ($listrenews as $item)
+
             <div class=" mb-3 row renews" style="display: flex;justify-content: space-between">
                 <p class="mb-1 col-md-4 ">
                     <?php
@@ -21,6 +22,8 @@
                     ?>
                 </p>
                 <select class="select-form time_type" data-id="{{ $item->id }}"
+                    {{ isset($id) ? 'disabled' : '' }}
+
                     style="width: 100px; text-align: center; padding: 5px 5px;" class="col-md-2">
                     @if ($item->type === 'hosting')
                         <option value="12" {{ $item->number == 12 ? 'selected' : '' }}>1 năm</option>
@@ -42,7 +45,9 @@
                 <span class="fw-bold text-primary col-md-3 text-end price_new">{{ number_format($item->price, 0, ',', '.') }}
                     đ</span>
 
-                <span class="col-md-1 close" style="cursor: pointer" data-id="{{ $item->id }}"><i class="fas fa-trash"></i></span>
+                    <span class="col-md-1 close" style="cursor: pointer; {{ isset($id) ? 'display: none;' : '' }}" data-id="{{ $item->id }}">
+                        <i class="fas fa-trash"></i>
+                    </span>
 
             </div>
             @empty
@@ -209,6 +214,8 @@
 <script>
     $(document).ready(function () {
         var APP_URL = '{{ env('APP_URL') }}';
+        var id =   '{{ $id ?? null }}';
+        // alert(id);
         $('.close').on('click', function() {
             let id = $(this).data('id');
             // alert(id);
@@ -275,14 +282,26 @@
 
         $('.payment_end').click(function () {
             var pttt = $('input[name=payment]:checked').val();
+
+            // alert(id);
             if (pttt === 'qr') {
                 // Chuyển đến trang quét QR
-                window.location.href = "{{ route('customer.order.create.payment.enews') }}";
-            } else if (pttt === 'vi') {
+                if(id != null){
+                    // alert('ok');
+                    window.location.href = "{{ route('customer.order.create.payment.enews', ['id' => '__id__']) }}".replace('__id__', id);
+                }else{
+                    window.location.href = "{{ route('customer.order.create.payment.enews') }}";
+                }
 
+            } else if (pttt === 'vi') {
+                $url = APP_URL + '/customer/order/thanh-toan/gia-han';
+                if(id){
+                    $url += '/' + id;
+                }
+                // alert($url);
                 $.ajax({
                     // url: '{{ route('customer.order.thanhtoan') }}',
-                    url: APP_URL + '/customer/order/thanh-toan/gia-han',
+                    url: $url,
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Laravel CSRF
@@ -310,6 +329,9 @@
                                 if (result.isConfirmed) {
                                     $('input[name=payment][value="qr"]').prop('checked', true);
                                     $('input[name=payment][value="vi"]').prop('checked', false);
+                                    if(id != null){
+                                        window.location.href = "{{ route('customer.order.create.payment.enews', ['id' => '__id__']) }}".replace('__id__', id);
+                                    }
                                     window.location.href = "{{ route('customer.order.create.payment.enews') }}";
                                 } else if (result.isDenied) {
                                     window.location.href = '{{ route('payment.recharge') }}';

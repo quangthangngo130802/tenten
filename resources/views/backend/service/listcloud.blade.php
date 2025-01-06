@@ -9,7 +9,7 @@
                 <tr>
                     <th>STT</th>
                     <th>Tên gói</th>
-                    <th>Gia hạn</th>
+                    {{-- <th>Gia hạn</th> --}}
                     <th>Ngày bắt đầu</th>
                     <th>Ngày kết thúc</th>
                     <th>Trạng thái</th>
@@ -124,10 +124,10 @@
                         data: 'packagename',
                         name: 'id'
                     },
-                    {
-                        data: 'giahan',
-                        name: 'id'
-                    },
+                    // {
+                    //     data: 'giahan',
+                    //     name: 'id'
+                    // },
 
                     {
                         data: 'active_at',

@@ -55,11 +55,12 @@
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>
-                                    @if(\Carbon\Carbon::parse($item->created_at)->greaterThanOrEqualTo(now()->subMonth()))
-                                    Đăng ký mới
+                                    @if ($order->order_type == 1)
+                                        Đăng ký mới
                                     @else
-                                    Đăng ký cũ
+                                        Gia hạn
                                     @endif
+
                                 </td>
                                 <td>
                                     <?php

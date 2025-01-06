@@ -20,7 +20,10 @@ class CustomerServiceController extends Controller
         if ($request->ajax()) {
             $data = OrderDetail::whereHas('order', function ($query) use ($email) {
                 $query->where('email', $email);
-            })->where('status', 'active')->where('type', 'cloud')->select('*');
+            })->where('status', 'active')->where('type', 'cloud')
+            ->whereHas('order', function ($query) {
+                $query->where('order_type', '!=', 2);
+            })->select('*');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('packagename', function ($row) {
@@ -85,7 +88,10 @@ class CustomerServiceController extends Controller
         if ($request->ajax()) {
             $data = OrderDetail::whereHas('order', function ($query) use ($email) {
                 $query->where('email', $email);
-            })->where('status', 'active')->where('type', 'hosting')->select('*');
+            })->where('status', 'active')->where('type', 'hosting')
+            ->whereHas('order', function ($query) {
+                $query->where('order_type', '!=', 2);
+            })->select('*');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('packagename', function ($row) {

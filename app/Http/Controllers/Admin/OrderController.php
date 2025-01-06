@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\DataTables;
@@ -87,6 +88,21 @@ class OrderController extends Controller
 
     public function active($id){
         $order = Order::find($id);
+        if($order->order_type == 2){
+            $renewService = $order->orderDetail;
+                $renewService->each(function ($service) {
+                    $orderdetail = OrderDetail::find($service->orderdetail_id);
+                    $orderdetail->update([
+                        'price' => $orderdetail->price + $service->price,
+                        'number' => $orderdetail->number + $service->number
+                    ]);
+                    $ordernew = Order::find($orderdetail->order_id);
+                    $ordernew->update([
+                        'amount' => $ordernew->orderDetail->sum('price'),
+                    ]);
+                });
+
+        }
         $order->update([
             'status' => 'active',
             'active_at' => now(),

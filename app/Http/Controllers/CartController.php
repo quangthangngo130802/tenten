@@ -157,6 +157,7 @@ class CartController extends Controller
             'amount' => $cart->total_price,
             'status' => 'nopayment',
             'payment' => 0,
+            'order_type' => 1
         ]);
 
         // Duyệt qua chi tiết giỏ hàng và tạo các chi tiết đơn hàng
@@ -173,7 +174,8 @@ class CartController extends Controller
                 'quantity'     => $detail->quantity,
                 'type'         => $detail->type,
                 'amount'       => $product->price * $detail->quantity,
-                'active'       => 'nopayment'
+                'active'       => 'nopayment',
+
             ]);
             $detail->delete();
         });

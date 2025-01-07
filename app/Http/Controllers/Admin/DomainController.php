@@ -116,14 +116,14 @@ class DomainController extends Controller
                 throw new \Exception($responseBody['error']);
             }
 
-            // dd(count($responseBody['data']));
+            dd(count($responseBody['data']));
 
-            return view('backend.domain.show', [
-                'domain' => $responseBody['data'] ?? [],
-                'page' => $page,
-                'title' => $title
+            // return view('backend.domain.show', [
+            //     'domain' => $responseBody['data'] ?? [],
+            //     'page' => $page,
+            //     'title' => $title
 
-            ]);
+            // ]);
         } catch (\Exception $e) {
             // Xử lý lỗi
             return back()->withErrors('Không thể tải dữ liệu: ' . $e->getMessage());

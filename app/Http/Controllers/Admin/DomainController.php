@@ -103,7 +103,7 @@ class DomainController extends Controller
             "api_user" => "dnse002",
         ];
 
-        dd($url);
+        // dd($url);
 
         try {
 

@@ -113,7 +113,7 @@ class DomainController extends Controller
             ]);
 
             $responseBody = json_decode($response->getBody(), true);
-            dd($responseBody['data']);
+            dd($responseBody);
             if (isset($responseBody['error']) && !empty($responseBody['error'])) {
                 throw new \Exception($responseBody['error']);
             }

@@ -105,7 +105,15 @@ class DomainController extends Controller
 
         // try {
 
-            $client = new Client();
+            $client = new Client(
+                [
+                    'curl' => [
+                        CURLOPT_FOLLOWLOCATION => true, // Theo dõi chuyển hướng nếu có
+                        CURLOPT_SSL_VERIFYHOST => false, // Bỏ qua kiểm tra SSL (nếu cần)
+                        CURLOPT_SSL_VERIFYPEER => false  // Bỏ qua kiểm tra chứng chỉ SSL (nếu cần)
+                    ]
+                ]
+            );
             $response = $client->post($url, [
                 'form_params' => $data,
             ]);
@@ -116,7 +124,7 @@ class DomainController extends Controller
                 throw new \Exception($responseBody['error']);
             }
 
-            dd(count($responseBody['data']));
+            dd($responseBody['data']);
 
             // return view('backend.domain.show', [
             //     'domain' => $responseBody['data'] ?? [],

@@ -103,7 +103,7 @@ class DomainController extends Controller
             "api_user" => "dnse002",
         ];
 
-        try {
+        // try {
 
             $client = new Client();
             $response = $client->post($url, [
@@ -124,9 +124,9 @@ class DomainController extends Controller
             //     'title' => $title
 
             // ]);
-        } catch (\Exception $e) {
-            // Xử lý lỗi
-            return back()->withErrors('Không thể tải dữ liệu: ' . $e->getMessage());
-        }
+        // } catch (\Exception $e) {
+        //     // Xử lý lỗi
+        //     return back()->withErrors('Không thể tải dữ liệu: ' . $e->getMessage());
+        // }
     }
 }

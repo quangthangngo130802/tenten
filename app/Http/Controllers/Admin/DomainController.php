@@ -112,8 +112,8 @@ class DomainController extends Controller
                 'form_params' => $data,
             ]);
 
-            $responseBody = json_decode($response->getBody(), true);
-            dd($responseBody);
+            // $responseBody = json_decode($response->getBody(), true);
+            dd($response);
             if (isset($responseBody['error']) && !empty($responseBody['error'])) {
                 throw new \Exception($responseBody['error']);
             }

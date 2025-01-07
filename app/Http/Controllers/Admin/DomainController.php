@@ -96,15 +96,14 @@ class DomainController extends Controller
     {
         $page = "Tên miền";
         $title = "Bảng giá";
-        dd($title);
-        // $url = 'https://api-reseller.tenten.vn/v1/Domains/price.json';
+        $url = 'https://api-reseller.tenten.vn/v1/Domains/price.json';
 
+        $data = [
+            "api_key" => "6dc564c5e650dedd67144761a3f2fcdb",
+            "api_user" => "dnse002",
+        ];
 
-
-        // $data = [
-        //     "api_key" => "6dc564c5e650dedd67144761a3f2fcdb",
-        //     "api_user" => "dnse002",
-        // ];
+        dd($url);
 
         // try {
 

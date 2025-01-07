@@ -105,30 +105,29 @@ class DomainController extends Controller
 
         dd($url);
 
-        // try {
+        try {
 
-        //     $client = new Client();
-        //     $response = $client->post($url, [
-        //         'form_params' => $data,
-        //     ]);
+            $client = new Client();
+            $response = $client->post($url, [
+                'form_params' => $data,
+            ]);
 
-        //     $responseBody = json_decode($response->getBody(), true);
+            $responseBody = json_decode($response->getBody(), true);
+            dd($responseBody['data']);
+            if (isset($responseBody['error']) && !empty($responseBody['error'])) {
+                throw new \Exception($responseBody['error']);
+            }
 
-        //     if (isset($responseBody['error']) && !empty($responseBody['error'])) {
-        //         throw new \Exception($responseBody['error']);
-        //     }
 
-        //     dd($responseBody['data']);
+            // return view('backend.domain.show', [
+            //     'domain' => $responseBody['data'] ?? [],
+            //     'page' => $page,
+            //     'title' => $title
 
-        //     return view('backend.domain.show', [
-        //         'domain' => $responseBody['data'] ?? [],
-        //         'page' => $page,
-        //         'title' => $title
-
-        //     ]);
-        // } catch (\Exception $e) {
-        //     // Xử lý lỗi
-        //     return back()->withErrors('Không thể tải dữ liệu: ' . $e->getMessage());
-        // }
+            // ]);
+        } catch (\Exception $e) {
+            // Xử lý lỗi
+            return back()->withErrors('Không thể tải dữ liệu: ' . $e->getMessage());
+        }
     }
 }

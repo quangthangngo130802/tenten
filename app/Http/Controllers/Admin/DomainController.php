@@ -107,11 +107,7 @@ class DomainController extends Controller
 
             $client = new Client(
                 [
-                    'curl' => [
-                        CURLOPT_FOLLOWLOCATION => true, // Theo dõi chuyển hướng nếu có
-                        CURLOPT_SSL_VERIFYHOST => false, // Bỏ qua kiểm tra SSL (nếu cần)
-                        CURLOPT_SSL_VERIFYPEER => false  // Bỏ qua kiểm tra chứng chỉ SSL (nếu cần)
-                    ]
+                    'verify' => false,
                 ]
             );
             $response = $client->post($url, [

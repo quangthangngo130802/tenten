@@ -103,8 +103,6 @@ class DomainController extends Controller
             "api_user" => "dnse002",
         ];
 
-        // dd($url);
-
         try {
 
             $client = new Client();
@@ -112,19 +110,20 @@ class DomainController extends Controller
                 'form_params' => $data,
             ]);
 
-            // $responseBody = json_decode($response->getBody(), true);
-            dd($response);
+            $responseBody = json_decode($response->getBody(), true);
+
             if (isset($responseBody['error']) && !empty($responseBody['error'])) {
                 throw new \Exception($responseBody['error']);
             }
 
+            // dd(count($responseBody['data']));
 
-            // return view('backend.domain.show', [
-            //     'domain' => $responseBody['data'] ?? [],
-            //     'page' => $page,
-            //     'title' => $title
+            return view('backend.domain.show', [
+                'domain' => $responseBody['data'] ?? [],
+                'page' => $page,
+                'title' => $title
 
-            // ]);
+            ]);
         } catch (\Exception $e) {
             // Xử lý lỗi
             return back()->withErrors('Không thể tải dữ liệu: ' . $e->getMessage());

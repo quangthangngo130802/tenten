@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>{{ isset($title) ? $title : '-----' }}</title>
+    <title>{{ isset($title) ? $title : 'Dashboard' }}</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
 
@@ -60,21 +60,21 @@
                     <div class="page-header">
                         <ul class="breadcrumbs mb-3">
                             <li class="nav-home">
-                                <a href="">
+                                <a href="{{ route('dashboard') }}">
                                     <i class="icon-home"></i>
                                 </a>
                             </li>
                             <li class="separator">
                                 <i class="icon-arrow-right"></i>
                             </li>
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
 
                                 <a href="">{{ isset($page) ? $page : 'Dashboard' }}</a>
 
                             </li>
                             <li class="separator">
                                 <i class="icon-arrow-right"></i>
-                            </li>
+                            </li> --}}
                             <li class="nav-item">
 
                                 <a href="">{{ isset($title) ? $title : 'Dashboard' }}</a>

@@ -103,10 +103,11 @@
 <script type="text/javascript">
     $(document).ready(function() {
         var APP_URL = '{{ env('APP_URL') }}';
+        var date = '{{ $date }}';
             $('#categoryTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: APP_URL + '/customer/service/list-hosting',
+                ajax: APP_URL + '/customer/service/list-hosting' + date,
                 columns: [
                     {
                         data: null, // STT
@@ -190,19 +191,19 @@
                 lengthMenu: [10, 25, 50, 100],
 
             });
-            $('#categoryTable').on('click', '.action', function(e) {
-                e.stopPropagation();
+            // $('#categoryTable').on('click', '.action', function(e) {
+            //     e.stopPropagation();
 
-                const $currentMenu = $(this).siblings('.menu-action');
+            //     const $currentMenu = $(this).siblings('.menu-action');
 
-                $('.menu-action').not($currentMenu).hide();
+            //     $('.menu-action').not($currentMenu).hide();
 
-                $currentMenu.toggle();
-            });
+            //     $currentMenu.toggle();
+            // });
 
-            $(document).on('click', function() {
-                $('.menu-action').hide();
-            });
+            // $(document).on('click', function() {
+            //     $('.menu-action').hide();
+            // });
         });
 
 

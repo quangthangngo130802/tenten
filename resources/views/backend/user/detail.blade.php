@@ -21,7 +21,7 @@
         <div class="col-md-6">
             <div class="mb-3">
                 <label for="username" class="form-label">Tên đăng nhập</label>
-                <input type="text" class="form-control @error('username') is-invalid @enderror" id="username"
+                <input type="text" class="form-control @error('username') is-invalid @enderror" id="username"  @if(isset($user)) readonly @endif
                     name="username" placeholder="Nhập tên đăng nhập"
                     value="{{ old('username', $user->username ?? '') }}" />
                 @error('username')
@@ -73,6 +73,15 @@
 
         <div class="col-md-6">
             <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email"  @if(isset($user)) readonly @endif
+                    name="email" placeholder="Nhập email"
+                    value="{{ old('email', $user->email ?? '') }}" />
+                @error('email')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="mb-3">
                 <label for="identity_number" class="form-label">CMND/CCCD/Hộ chiếu</label>
                 <input type="text" class="form-control @error('identity_number') is-invalid @enderror" id="identity_number"
                     name="identity_number" placeholder="Nhập số CMND/CCCD/Hộ chiếu"
@@ -102,15 +111,7 @@
                 @enderror
             </div>
 
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email"
-                    name="email" placeholder="Nhập email"
-                    value="{{ old('email', $user->email ?? '') }}" />
-                @error('email')
-                <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
+
 
             <div class="mb-3">
                 <label for="role_id" class="form-label">Vai trò</label>

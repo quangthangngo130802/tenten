@@ -18,19 +18,13 @@ class TransactionHistoryController extends Controller
         $user = Auth::user(); // Lấy thông tin người dùng hiện tại
 
         if ($request->ajax()) {
-            // Sử dụng 'with' để eager load bảng 'users' liên kết với 'transaction_histories'
-            $data = TransactionHistory::with('user') // eager load thông tin người dùng
+            $data = TransactionHistory::with('user') ->orderBy('created_at', 'desc')
                 ->select('transaction_histories.*');
-
-            // Nếu user là admin (role_id = 1), lấy tất cả dữ liệu, nếu không chỉ lấy dữ liệu của người dùng đó
             if ($user->role_id != 1) {
-                // Lọc theo user_id nếu không phải admin
                 $data = $data->where('user_id', $user->id);
             }
-
-            // Tiến hành truy vấn và trả về dữ liệu cho DataTables
             return DataTables::of($data)
-                // Thêm filter cho 'user_name' để tìm kiếm theo tên người dùng và email
+                ->addIndexColumn()
                 ->filterColumn('user_name', function ($query, $keyword) {
                     $query->whereHas('user', function ($q) use ($keyword) {
                         $q->where('full_name', 'like', "%$keyword%")
@@ -54,11 +48,9 @@ class TransactionHistoryController extends Controller
                     return '<a href="' . route('order.show', $row->id) . '" class="btn btn-primary btn-sm edit"> Chi tiết </a>';
                 })
                 ->addColumn('action', function ($row) use ($user) {
-                    // Nếu user không phải admin (role_id khác 1), trả về rỗng cho cột action
                     if ($user->role_id != 1) {
-                        return ''; // Không hiển thị action
+                        return '';
                     }
-                    // Nếu là admin, hiển thị hành động xóa
                     return '<div style="display: flex;">
                             <a href="#" class="btn btn-danger btn-sm delete"
                             onclick="confirmDelete(event, ' . $row->id . ')">
@@ -79,6 +71,6 @@ class TransactionHistoryController extends Controller
     public function delete($id){
         $order = TransactionHistory::find($id);
         $order->delete();
-        return redirect()->back()->with('success', 'Đơn hàng đã xóa thành công');
+        return redirect()->back()->with('success', 'Đã xóa thành công');
     }
 }

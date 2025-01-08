@@ -8,6 +8,7 @@
             <thead>
                 <tr>
                     <th>STT</th>
+                    <th>Khách hàng</th>
                     <th>Tên gói</th>
                     {{-- <th>Gia hạn</th> --}}
                     <th>Ngày bắt đầu</th>
@@ -106,10 +107,11 @@
 <script type="text/javascript">
         $(document).ready(function() {
             var APP_URL = '{{ env('APP_URL') }}';
+            var date = '{{ $date }}';
             $('#categoryTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: APP_URL + '/admin/service/list-cloud',
+                ajax: APP_URL + '/admin/service/list-cloud/' + date,
                 columns: [
                     {
                         data: null, // STT
@@ -121,13 +123,13 @@
                         }
                     },
                     {
+                        data: 'user_info',
+                        name: 'id'
+                    },
+                    {
                         data: 'packagename',
                         name: 'id'
                     },
-                    // {
-                    //     data: 'giahan',
-                    //     name: 'id'
-                    // },
 
                     {
                         data: 'active_at',
@@ -155,7 +157,7 @@
                         targets: 0
                     },
                     {
-                        width: '26%',
+                        width: '20%',
                         targets: 1
                     },
                     {
@@ -179,7 +181,7 @@
                 ],
                 pagingType: "full_numbers", // Kiểu phân trang
                 language: {
-                    paginate: {
+                     paginate: {
                         previous: '&laquo;', // Nút trước
                         next: '&raquo;' // Nút sau
                     },
@@ -194,59 +196,21 @@
 
             });
 
-            $('#categoryTable').on('click', '.action', function(e) {
-                e.stopPropagation();
+            // $('#categoryTable').on('click', '.action', function(e) {
+            //     e.stopPropagation();
 
-                const $currentMenu = $(this).siblings('.menu-action');
+            //     const $currentMenu = $(this).siblings('.menu-action');
 
-                $('.menu-action').not($currentMenu).hide();
+            //     $('.menu-action').not($currentMenu).hide();
 
-                $currentMenu.toggle();
-            });
+            //     $currentMenu.toggle();
+            // });
 
-            $(document).on('click', function() {
-                $('.menu-action').hide();
-            });
+            // $(document).on('click', function() {
+            //     $('.menu-action').hide();
+            // });
         });
-        function confirmDelete(event, id) {
-            event.preventDefault();
 
-            Swal.fire({
-                title: 'Bạn có chắc chắn muốn xóa?',
-                text: "Hành động này không thể hoàn tác!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Xóa',
-                cancelButtonText: 'Hủy',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Nếu người dùng xác nhận, submit form xóa
-                    document.getElementById('delete-form-' + id).submit();
-                }
-            });
-        }
-
-        function confirmActive(event, id) {
-            event.preventDefault();
-
-            Swal.fire({
-                title: 'Bạn có chắc chắn muốn duyệt?',
-                text: "Hành động này không thể hoàn tác!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Duyệt',
-                cancelButtonText: 'Hủy',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Nếu người dùng xác nhận, submit form xóa
-                    document.getElementById('active-form-' + id).submit();
-                }
-            });
-        }
 
 
 

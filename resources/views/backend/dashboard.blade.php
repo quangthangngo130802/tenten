@@ -34,7 +34,7 @@
                     <img src="{{ asset('account_status_1.png') }}" class="img-fluid" style="max-width: 70px;">
                     <h3 class="total_service">{{ $orderactive }}</h3>
                     <p>Dịch vụ đang sử dụng</p>
-                    <a href="" class="btn btn-link">Chi tiết</a>
+                    <a href="{{ route('user.service') }}" class="btn btn-link">Chi tiết</a>
                 </div>
             </div>
         </div>

@@ -133,7 +133,7 @@
 
                 pagingType: "full_numbers", // Kiểu phân trang
                 language: {
-                    paginate: {
+                     paginate: {
                         previous: '&laquo;', // Nút trước
                         next: '&raquo;' // Nút sau
                     },

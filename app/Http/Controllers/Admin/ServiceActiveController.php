@@ -14,17 +14,29 @@ use Yajra\DataTables\DataTables;
 class ServiceActiveController extends Controller
 {
     //
-    public function listcloud(Request $request)
+    public function listcloud(Request $request, $date = null)
     {
         $title = "Quản lý dịch vụ Cloud";
-
         if ($request->ajax()) {
             $data = OrderDetail::where('status', 'active')->where('type', 'cloud')
-            ->whereHas('order', function ($query) {
-                $query->where('order_type', '!=', 2);
-            })->select('*');
+                ->whereHas('order', function ($query) {
+                    $query->where('order_type', '!=', 2);
+                })->select('*');
+                if ($date == 'expire_soon') {
+                    $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) BETWEEN 1 AND 30');
+                }
+                if ($date == 'expire') {
+                    $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) < 0');
+                }
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('user_info', function ($row) {
+                    // Kiểm tra nếu có liên kết với user qua order
+                    if ($row->order) {
+                        return $row->order->fullname . ' <p> (' . $row->order->email . ')</p>';
+                    }
+                    return 'N/A'; // Nếu không có thông tin
+                })
                 ->addColumn('packagename', function ($row) {
                     $cloud = Cloud::find($row->product_id);
                     return $cloud->package_name . ' - ' . $row->os->name;
@@ -32,6 +44,11 @@ class ServiceActiveController extends Controller
                 ->addColumn('enddate', function ($row) {
                     $activeAt = Carbon::parse($row->active_at);
                     $expirationDate = $activeAt->addMonths($row->number);
+
+                    if ($expirationDate->isPast()) {
+                        $daysOverdue = $expirationDate->diffInDays(Carbon::now());
+                        return $expirationDate->format('Y-m-d') . '<p class="endday">( Đã hết hạn - ' . $daysOverdue . ' ngày )</p>';
+                    }
 
                     $daysLeft = $expirationDate->diffInDays(Carbon::now());
                     if ($daysLeft < 30) {
@@ -70,24 +87,37 @@ class ServiceActiveController extends Controller
                                     <a class="dropdown-item" href="#">Download bản khai</a>
                                 </div>
                             </div>';
-                })->rawColumns(['action', 'giahan', 'enddate', 'packagename', 'active'])
+                })->rawColumns(['action', 'giahan', 'enddate', 'packagename', 'active', 'user_info'])
                 ->make(true);
         }
         $page = 'Quản lý dịch vụ Cloud';
-        return view('backend.service.listcloud', compact('title', 'page'));
+        return view('backend.service.listcloud', compact('title', 'page', 'date'));
     }
 
-    public function listhosting(Request $request)
+    public function listhosting(Request $request, $date = null)
     {
         $title = "Quản lý dịch vụ Hosting";
 
         if ($request->ajax()) {
             $data = OrderDetail::where('status', 'active')->where('type', 'hosting')
-            ->whereHas('order', function ($query) {
-                $query->where('order_type', '!=', 2);
-            })->select('*');
+                ->whereHas('order', function ($query) {
+                    $query->where('order_type', '!=', 2);
+                })->select('*');
+                if ($date == 'expire_soon') {
+                    $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) BETWEEN 1 AND 30');
+                }
+                if ($date == 'expire') {
+                    $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) < 0');
+                }
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('user_info', function ($row) {
+                    // Kiểm tra nếu có liên kết với user qua order
+                    if ($row->order) {
+                        return $row->order->fullname . ' <p> (' . $row->order->email . ')</p>';
+                    }
+                    return 'N/A'; // Nếu không có thông tin
+                })
                 ->addColumn('packagename', function ($row) {
                     $hosting = Hosting::find($row->product_id);
                     return $hosting->package_name;
@@ -95,6 +125,11 @@ class ServiceActiveController extends Controller
                 ->addColumn('enddate', function ($row) {
                     $activeAt = Carbon::parse($row->active_at);
                     $expirationDate = $activeAt->addMonths($row->number);
+
+                    if ($expirationDate->isPast()) {
+                        $daysOverdue = $expirationDate->diffInDays(Carbon::now());
+                        return $expirationDate->format('Y-m-d') . '<p class="endday">( Đã hết hạn -' . $daysOverdue . ' ngày )</p>';
+                    }
 
                     $daysLeft = $expirationDate->diffInDays(Carbon::now());
                     if ($daysLeft < 30) {
@@ -132,10 +167,10 @@ class ServiceActiveController extends Controller
                                     <a class="dropdown-item" href="#">Download bản khai</a>
                                 </div>
                             </div>';
-                })->rawColumns(['action', 'giahan', 'enddate', 'packagename', 'active'])
+                })->rawColumns(['action', 'giahan', 'enddate', 'packagename', 'active', 'user_info'])
                 ->make(true);
         }
         $page = 'Quản lý dịch vụ Hosting';
-        return view('backend.service.listhosting', compact('title', 'page'));
+        return view('backend.service.listhosting', compact('title', 'page', 'date'));
     }
 }

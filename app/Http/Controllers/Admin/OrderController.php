@@ -16,8 +16,9 @@ class OrderController extends Controller
         $title = "Đơn hàng";
 
         if ($request->ajax()) {
-            $data = Order::where('status', $status)->select('*');
+            $data = Order::where('status', $status)->orderBy('created_at', 'desc')->select('*');
             return DataTables::of($data)
+                ->addIndexColumn()
                 ->editColumn('code', function ($row) {
                     return '<a href="' . route('order.show', $row->id) . '" class=" text-primary "> '. $row->code .'</a>';
                 })

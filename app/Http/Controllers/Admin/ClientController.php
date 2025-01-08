@@ -19,6 +19,7 @@ class ClientController extends Controller
 
             $data = User::with(['ward1', 'district1', 'province1'])->where('role_id', '!=', 1)->select('*');
             return DataTables::of($data)
+            ->addIndexColumn()
                 ->addColumn('address_detail', function ($row) {
                     $address = $row->address;
                     $ward = $row->ward1 ? $row->ward1->name : '';

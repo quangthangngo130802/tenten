@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserEditRequest;
 use App\Http\Requests\UserRequest;
 use App\Mail\CreateUserEmail;
 use App\Models\User;
@@ -19,6 +20,7 @@ class UserController extends Controller
 
             $data = User::select('*');
             return DataTables::of($data)
+                ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     return '<div style="display: flex;">
                                 <a href="' . route('user.edit', $row->id) . '" class="btn btn-primary btn-sm edit">
@@ -55,7 +57,7 @@ class UserController extends Controller
         return view('backend.user.detail', compact('user', 'title', 'page'));
     }
 
-    public function update(UserRequest $request, $id)
+    public function update(UserEditRequest $request, $id)
     {
         $user = User::find($id);
         $credentials = $request->validated();

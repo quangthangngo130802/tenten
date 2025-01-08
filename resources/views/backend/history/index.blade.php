@@ -7,7 +7,8 @@
         <table class="table table-striped table-hover" id="categoryTable">
             <thead>
                 <tr>
-                    <th>Mã thanh toán</th>
+                    <th>STT</th>
+                    <th>Mã</th>
                     <th>Tài khoản </th>
                     {{-- <th>Chi tiết</th> --}}
                     <th>Tổng tiền (Vnđ)</th>
@@ -69,6 +70,7 @@
         var APP_URL = '{{ env('APP_URL') }}';
         // Khởi tạo mảng cột
         var columns = [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
             { data: 'code', name: 'code' },
             { data: 'user_id', name: 'user_id' },
             { data: 'amount', name: 'amount' },
@@ -83,11 +85,11 @@
 
         // Cấu hình columnDefs
         var columnDefs = [
-            { width: '16%', targets: 0 },
-            { width: '25%', targets: 1 },
-            { width: '15%', targets: 2 },
+            { width: '8%', targets: 0 },
+            { width: '15%', targets: 1 },
+            { width: '25%', targets: 2 },
             { width: '15%', targets: 3 },
-            { width: '20%', targets: 4 }
+            { width : '25%', targets: 4 }
         ];
 
         if (roleId == 1) {

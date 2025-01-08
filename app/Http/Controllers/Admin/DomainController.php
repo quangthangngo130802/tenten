@@ -105,17 +105,13 @@ class DomainController extends Controller
 
         // try {
 
-            $client = new Client(
-                [
-                    'verify' => false,
-                ]
-            );
+            $client = new Client();
             $response = $client->post($url, [
                 'form_params' => $data,
             ]);
 
             $responseBody = json_decode($response->getBody(), true);
-            dd($responseBody);
+            // dd($responseBody);
             if (isset($responseBody['error']) && !empty($responseBody['error'])) {
                 throw new \Exception($responseBody['error']);
             }

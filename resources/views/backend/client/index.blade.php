@@ -8,19 +8,20 @@
             <a href="{{ route('client.create') }}" class="btn btn-primary btn-sm">Thêm mới (+)</a>
         </div>
         <div style="overflow-x: auto;">
-        <table class="table table-striped table-hover" id="categoryTable">
-            <thead>
-                <tr>
-                    <th>Họ và tên</th>
-                    <th>Email</th>
-                    <th>Điện thoại</th>
-                    <th>CMND/CCCD</th>
-                    <th>Địa chỉ</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-        </table>
-    </div>
+            <table class="table table-striped table-hover" id="categoryTable">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Họ và tên</th>
+                        <th>Email</th>
+                        <th>Điện thoại</th>
+                        <th>CMND/CCCD</th>
+                        <th>Địa chỉ</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
     </div>
 </div>
 @endsection
@@ -73,6 +74,12 @@
                 ajax: APP_URL + '/admin/client',
                 columns: [
                     {
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
                         data: 'full_name',
                         name: 'full_name'
                     },
@@ -101,29 +108,29 @@
                     }
                 ],
                 columnDefs: [{
-                        width: '16%',
+                        width: '8%',
                         targets: 0
                     },
-                    {
-                        width: '16%',
-                        targets: 1
-                    },
-                    {
-                        width: '15%',
-                        targets: 1
-                    },
-                    {
-                        width: '15%',
-                        targets: 1
-                    },
-
                     {
                         width: '20%',
                         targets: 1
                     },
                     {
                         width: '15%',
-                        targets: 1
+                        targets: 2
+                    },
+                    {
+                        width: '15%',
+                        targets: 3
+                    },
+
+                    {
+                        width: '20%',
+                        targets: 4
+                    },
+                    {
+                        width: '20%',
+                        targets: 5
                     },
 
                 ],
@@ -131,7 +138,7 @@
                 // fixedHeader: true, // Giữ cố định tiêu đề và phần tìm kiếm
                 // scrollX: true,
                 language: {
-                    paginate: {
+                     paginate: {
                         previous: '&laquo;', // Nút trước
                         next: '&raquo;' // Nút sau
                     },

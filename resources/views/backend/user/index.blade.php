@@ -11,7 +11,7 @@
             <table class="table table-striped table-hover" id="categoryTable">
                 <thead>
                     <tr>
-                        <th>Id</th>
+                        <th>STT</th>
                         <th>Họ và tên</th>
                         <th>Email</th>
                         <th>Điện thoại</th>
@@ -67,9 +67,12 @@
                 processing: true,
                 serverSide: true,
                 ajax: APP_URL + '/admin/user',
-                columns: [{
-                        data: 'id',
-                        name: 'id'
+                columns: [
+                    {
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: 'full_name',
@@ -124,7 +127,7 @@
                 ],
                 pagingType: "full_numbers", // Kiểu phân trang
                 language: {
-                    paginate: {
+                     paginate: {
                         previous: '&laquo;', // Nút trước
                         next: '&raquo;' // Nút sau
                     },

@@ -7,8 +7,8 @@
         <table class="table table-striped table-hover" id="categoryTable">
             <thead>
                 <tr>
+                    <th>STT</th>
                     <th>Mã đơn hàng</th>
-                    {{-- <th>Chi tiết</th> --}}
                     <th>Tổng tiền</th>
                     <th>Trạng thái thanh toán</th>
                     <th>Ngày đặt hàng</th>
@@ -83,6 +83,12 @@
                 ajax: APP_URL + '/admin/order/' + status,
                 columns: [
                     {
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
                         data: 'code',
                         name: 'code'
                     },
@@ -112,7 +118,7 @@
                     }
                 ],
                 columnDefs: [{
-                        width: '16%',
+                        width: '10%',
                         targets: 0
                     },
                     {
@@ -142,7 +148,7 @@
             //     scrollX: true,
                 pagingType: "full_numbers", // Kiểu phân trang
                 language: {
-                    paginate: {
+                     paginate: {
                         previous: '&laquo;', // Nút trước
                         next: '&raquo;' // Nút sau
                     },

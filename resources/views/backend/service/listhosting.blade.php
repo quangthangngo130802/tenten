@@ -8,8 +8,9 @@
             <thead>
                 <tr>
                     <th>STT</th>
+                    <th>Khách hàng</th>
                     <th>Tên gói</th>
-                    <th>Gia hạn</th>
+                    {{-- <th>Gia hạn</th> --}}
                     <th>Ngày bắt đầu</th>
                     <th>Ngày kết thúc</th>
                     <th>Trạng thái</th>
@@ -103,10 +104,11 @@
 <script type="text/javascript">
     $(document).ready(function() {
         var APP_URL = '{{ env('APP_URL') }}';
+        var date = '{{ $date }}';
             $('#categoryTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: APP_URL + '/admin/service/list-hosting',
+                ajax: APP_URL + '/admin/service/list-hosting/' + date,
                 columns: [
                     {
                         data: null, // STT
@@ -118,13 +120,17 @@
                         }
                     },
                     {
-                        data: 'packagename',
+                        data: 'user_info',
                         name: 'id'
                     },
                     {
-                        data: 'giahan',
+                        data: 'packagename',
                         name: 'id'
                     },
+                    // {
+                    //     data: 'giahan',
+                    //     name: 'id'
+                    // },
 
                     {
                         data: 'active_at',
@@ -176,7 +182,7 @@
                 ],
                 pagingType: "full_numbers", // Kiểu phân trang
                 language: {
-                    paginate: {
+                     paginate: {
                         previous: '&laquo;', // Nút trước
                         next: '&raquo;' // Nút sau
                     },
@@ -190,19 +196,19 @@
                 lengthMenu: [10, 25, 50, 100],
 
             });
-            $('#categoryTable').on('click', '.action', function(e) {
-                e.stopPropagation();
+            // $('#categoryTable').on('click', '.action', function(e) {
+            //     e.stopPropagation();
 
-                const $currentMenu = $(this).siblings('.menu-action');
+            //     const $currentMenu = $(this).siblings('.menu-action');
 
-                $('.menu-action').not($currentMenu).hide();
+            //     $('.menu-action').not($currentMenu).hide();
 
-                $currentMenu.toggle();
-            });
+            //     $currentMenu.toggle();
+            // });
 
-            $(document).on('click', function() {
-                $('.menu-action').hide();
-            });
+            // $(document).on('click', function() {
+            //     $('.menu-action').hide();
+            // });
         });
 
 

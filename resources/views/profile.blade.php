@@ -136,7 +136,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group row align-items-center">
+                    {{-- <div class="form-group row align-items-center">
                         <div class="col-md-4">
                             <label for="password" class="form-label">Password</label>
                         </div>
@@ -147,7 +147,7 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                    </div>
+                    </div> --}}
 
                     <div class="form-group row align-items-center">
                         <div class="col-md-4">

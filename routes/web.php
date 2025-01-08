@@ -46,6 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::get('dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('user-service', [DashboardController::class, 'userService'])->name('user.service');
 
     Route::prefix('payment')->name('payment.')->group(function () {
         Route::get('', [PaymentController::class, 'recharge'])->name('recharge');
@@ -112,10 +113,10 @@ Route::middleware('auth')->group(function () {
 
         Route::prefix('service')->name('service.')->group(function () {
             Route::prefix('list-cloud')->name('cloud.')->group(function () {
-                Route::get('', [ServiceActiveController::class, 'listcloud'])->name('list.cloud');
+                Route::get('{date?}', [ServiceActiveController::class, 'listcloud'])->name('list.cloud');
             });
             Route::prefix('list-hosting')->name('hosting.')->group(function () {
-                Route::get('', [ServiceActiveController::class, 'listhosting'])->name('list.hosting');
+                Route::get('{date?}', [ServiceActiveController::class, 'listhosting'])->name('list.hosting');
             });
         });
     });

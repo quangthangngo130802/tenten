@@ -15,12 +15,6 @@
                 </select>
             </div>
         </form>
-
-
-
-
-
-
     </div>
     <div class="category-list">
         <div style="overflow-x: auto;">
@@ -28,7 +22,7 @@
 
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>STT</th>
                         <th>Tên miền</th>
                         <th>Ngày tạo</th>
                         <th>Ngày hết hạn</th>
@@ -44,13 +38,16 @@
                         <td>{{ \Carbon\Carbon::parse($domain['created_date'])->format('d-m-Y H:i:s') }}</td>
                         <td>{{ \Carbon\Carbon::parse($domain['expiration_date'])->format('d-m-Y H:i:s') }}</td>
                         <td>
-                            <span class="status-badge {{ $domain['domain_status'] == '0' ? 'expired' : 'using' }}">
-                                <i class="status-icon">{{ $domain['domain_status'] == '0' ? '⚠' : '✔' }}</i>
+                            <div class="status {{ $domain['domain_status'] == '0' ? 'paused' : 'active' }}">
+                                <span class="{{ $domain['domain_status'] == '0' ? 'icon-warning' : 'icon-check' }}"></span>
                                 {{ $domain['domain_status'] == '0' ? 'Tạm dừng' : 'Hoạt động' }}
-                            </span>
+                            </div>
+
 
                         </td>
-                        <td><a href="{{ route('domain.show', ['domain' => $domain['domain_name'] ]) }}">Chi tiết</a>
+                        <td><a href="{{ route('domain.show', ['domain' => $domain['domain_name'] ]) }}" title="Chi tiết ">
+                            <span class="fas fa-arrow-circle-right" style="font-size: 25px" ></span>
+                        </a>
                         </td>
                     </tr>
                     @empty
@@ -139,49 +136,52 @@
 
 @push('styles')
 <style>
-    /* Badge chung */
-    .status-badge {
+    .status {
         display: inline-flex;
         align-items: center;
-        padding: 2px 8px;
-        border-radius: 8px;
-        font-size: 12px;
-        font-weight: bold;
-        border: 1px solid transparent;
-    }
-
-    /* Biểu tượng */
-    .status-icon {
-        display: inline-block;
-        margin-right: 5px;
+        justify-content: center;
+        padding: 6px 12px;
+        border-radius: 25px;
         font-size: 14px;
+        font-weight: 600;
+        text-transform: capitalize;
+        line-height: 1.5;
+        white-space: nowrap;
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    /* Trạng thái "Hoạt động" */
-    .using {
-        background-color: #e6f7e6;
-        color: #389e0d;
-        border-color: #b7eb8f;
+    .status .icon-check,
+    .status .icon-warning {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        margin-right: 8px;
+        background-size: contain;
+        background-repeat: no-repeat;
     }
 
-    .using .status-icon {
-        content: "\2714";
-        /* Dấu tick */
-        color: #389e0d;
+
+    .status.active {
+        background-color: #e6f4ea;
+        color: #2b8a3e;
+        border: 1px solid #cce7d0;
     }
 
-    /* Trạng thái "Tạm dừng" */
-    .expired {
-        background-color: #fff1f0;
-        color: #cf1322;
-        border-color: #ffa39e;
+    .status.active .icon-check {
+        background-image: url('https://cdn-icons-png.flaticon.com/512/845/845646.png');
     }
 
-    .expired .status-icon {
-        content: "\2716";
-        /* Dấu X */
-        color: #cf1322;
+    .status.paused {
+        background-color: #fdecea;
+        color: #d93025;
+        border: 1px solid #f5c6cb;
     }
+
+    .status.paused .icon-warning {
+        background-image: url('https://cdn-icons-png.flaticon.com/512/1828/1828843.png');
+    }
+    /* Badge chung */
 
 
     #categoryTable {

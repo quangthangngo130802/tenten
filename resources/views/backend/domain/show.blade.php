@@ -28,7 +28,7 @@
                             <td class="t_nsd_nc"><strong>Nameservers :</strong></td>
                             <td class="t_nsd_nc_td"><strong>{{ $domain['ns']['adddomain1'] }}</strong></td>
                         </tr>
-                        
+
                         @if($domain['ns']['adddomain2'])
                             <tr>
                                 <td class="t_nsd_nc"><strong>Nameservers :</strong></td>

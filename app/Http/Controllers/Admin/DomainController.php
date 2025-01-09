@@ -99,24 +99,42 @@ class DomainController extends Controller
         $url = 'https://api-reseller.tenten.vn/v1/Domains/price.json';
 
         $data = [
-            "api_key" => "6dc564c5e650dedd67144761a3f2fcdb",
-            "api_user" => "dnse002",
+            [
+                'name' => 'api_key',
+                'contents' => '6dc564c5e650dedd67144761a3f2fcdb',
+            ],
+            [
+                'name' => 'api_user',
+                'contents' => 'dnse002',
+            ],
         ];
+
+        $client = new \GuzzleHttp\Client();
+        $response = $client->post($url, [
+            'multipart' => $data,
+        ]);
+
+        $responseBody = json_decode($response->getBody(), true);
+        dd($responseBody['data']);
+        // $data = [
+        //     "api_key" => "6dc564c5e650dedd67144761a3f2fcdb",
+        //     "api_user" => "dnse002",
+        // ];
 
         // try {
 
-            $client = new \GuzzleHttp\Client();
-            $response = $client->post($url, [
-                'form_params' => $data,
-            ]);
+            // $client = new \GuzzleHttp\Client();
+            // $response = $client->post($url, [
+            //     'form_params' => $data,
+            // ]);
 
-            $responseBody = json_decode($response->getBody(), true);
-            // dd($responseBody);
-            if (isset($responseBody['error']) && !empty($responseBody['error'])) {
-                throw new \Exception($responseBody['error']);
-            }
+            // $responseBody = json_decode($response->getBody(), true);
+            // // dd($responseBody);
+            // if (isset($responseBody['error']) && !empty($responseBody['error'])) {
+            //     throw new \Exception($responseBody['error']);
+            // }
 
-            dd($responseBody['data']);
+            // dd($responseBody['data']);
 
             // return view('backend.domain.show', [
             //     'domain' => $responseBody['data'] ?? [],

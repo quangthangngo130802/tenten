@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class DomainController extends Controller
 {
@@ -14,9 +15,9 @@ class DomainController extends Controller
         $title = "Danh sách đã đăng ký";
         $url = 'https://api-reseller.tenten.vn/v1/Domains/list.json';
 
-
         $page1 = $request->input('page', 1);
         $limit = $request->input('limit', 10);
+        $search = $request->input('search', ''); // Lấy từ khóa tìm kiếm
 
         $data = [
             "api_key" => "6dc564c5e650dedd67144761a3f2fcdb",
@@ -26,7 +27,6 @@ class DomainController extends Controller
         ];
 
         try {
-
             $client = new Client();
             $response = $client->post($url, [
                 'form_params' => $data,
@@ -38,18 +38,28 @@ class DomainController extends Controller
                 throw new \Exception($responseBody['error']);
             }
 
+            $domains = $responseBody['data'] ?? [];
+
+            // Tìm kiếm cục bộ
+            if ($search) {
+                $domains = array_filter($domains, function ($domain) use ($search) {
+                    return stripos($domain['domain_name'], $search) !== false;
+                });
+            }
+
             return view('backend.domain.index', [
-                'domains' => $responseBody['data'] ?? [],
+                'domains' => $domains,
                 'paginate' => $responseBody['paginate'] ?? [],
                 'current_limit' => $limit,
+                'search' => $search,
                 'title' => $title,
                 'page' => $page,
             ]);
         } catch (\Exception $e) {
-            // Xử lý lỗi
             return back()->withErrors('Không thể tải dữ liệu: ' . $e->getMessage());
         }
     }
+
 
     public function show($domain)
     {
@@ -92,10 +102,11 @@ class DomainController extends Controller
         }
     }
 
-    public function tableprice()
+
+    public function tableprice(Request $request)
     {
         $page = "Tên miền";
-        $title = "Bảng giá";
+        $title = "Bảng giá tên kiền";
         $url = 'https://api-reseller.tenten.vn/v1/Domains/price.json';
 
         $data = [
@@ -104,28 +115,50 @@ class DomainController extends Controller
         ];
 
         try {
-
-            $client = new \GuzzleHttp\Client();
+            $client = new Client();
             $response = $client->post($url, [
                 'form_params' => $data,
             ]);
 
             $responseBody = json_decode($response->getBody(), true);
-            // dd($responseBody);
+
             if (isset($responseBody['error']) && !empty($responseBody['error'])) {
                 throw new \Exception($responseBody['error']);
             }
 
-            dd($responseBody['data']);
+            // Dữ liệu từ API
+            $domains = $responseBody['data'] ?? [];
 
-            return view('backend.domain.show', [
-                'domain' => $responseBody['data'] ?? [],
+            // Tìm kiếm
+            $search = $request->input('search');
+            if ($search) {
+                $domains = array_filter($domains, function ($key) use ($search) {
+                    return stripos($key, $search) !== false;
+                }, ARRAY_FILTER_USE_KEY);
+            }
+
+            // Phân trang
+            $perPage = $request->get('limit', 10);
+            $currentPage = $request->get('page', 1);
+            $startingPoint = ($currentPage - 1) * $perPage;
+
+            $currentPageItems = array_slice($domains, $startingPoint, $perPage, true);
+
+            $paginatedItems = new \Illuminate\Pagination\LengthAwarePaginator(
+                $currentPageItems,
+                count($domains),
+                $perPage,
+                $currentPage,
+                ['path' => $request->url(), 'query' => $request->query()]
+            );
+
+            return view('backend.domain.price', [
+                'domain' => $paginatedItems,
                 'page' => $page,
-                'title' => $title
-
+                'title' => $title,
+                'search' => $search,
             ]);
         } catch (\Exception $e) {
-            // Xử lý lỗi
             return back()->withErrors('Không thể tải dữ liệu: ' . $e->getMessage());
         }
     }

@@ -2,19 +2,29 @@
 
 @section('content')
 <div class="content">
-    <div>
-        <form method="GET" action="{{ route('domain.index') }}" class="mb-3">
-            <div class="d-flex align-items-center">
-                <label for="limit" class="mb-0 me-2">Hiển thị:</label>
-                <select id="limit" name="limit" class="form-select " style="width: 200px;"
-                    onchange="this.form.submit()">
-                    <option value="10" {{ $current_limit==10 ? 'selected' : '' }}>10</option>
-                    <option value="20" {{ $current_limit==20 ? 'selected' : '' }}>20</option>
-                    <option value="50" {{ $current_limit==50 ? 'selected' : '' }}>50</option>
-                    <option value="100" {{ $current_limit==100 ? 'selected' : '' }}>100</option>
-                </select>
+    <div class="row justify-content-between" >
+        <form method="GET" action="{{ route('domain.index') }}" class="row mb-3 col-md-4 align-items-center">
+            <label for="limit" class="mb-0 me-2 col-md-4">Hiển thị:</label>
+            <select id="limit" name="limit" class="form-select me-2 col-md-8" style="width: 200px;"
+                onchange="this.form.submit()">
+                <option value="10" {{ $current_limit==10 ? 'selected' : '' }}>10</option>
+                <option value="20" {{ $current_limit==20 ? 'selected' : '' }}>20</option>
+                <option value="50" {{ $current_limit==50 ? 'selected' : '' }}>50</option>
+                <option value="100" {{ $current_limit==100 ? 'selected' : '' }}>100</option>
+            </select>
+        </form>
+
+        <form method="GET" action="{{ route('domain.index') }}" class=" row mb-3 col-md-4">
+            <div class="col-md-8">
+                <input type="text" name="search" value="{{ $search ?? '' }}" class="form-control" placeholder="Nhập tên miền để tìm kiếm (.vn, .com)">
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
             </div>
         </form>
+
+        <!-- Form chọn số lượng hiển thị -->
+
     </div>
     <div class="category-list">
         <div style="overflow-x: auto;">
@@ -39,15 +49,17 @@
                         <td>{{ \Carbon\Carbon::parse($domain['expiration_date'])->format('d-m-Y H:i:s') }}</td>
                         <td>
                             <div class="status {{ $domain['domain_status'] == '0' ? 'paused' : 'active' }}">
-                                <span class="{{ $domain['domain_status'] == '0' ? 'icon-warning' : 'icon-check' }}"></span>
+                                <span
+                                    class="{{ $domain['domain_status'] == '0' ? 'icon-warning' : 'icon-check' }}"></span>
                                 {{ $domain['domain_status'] == '0' ? 'Tạm dừng' : 'Hoạt động' }}
                             </div>
 
 
                         </td>
-                        <td><a href="{{ route('domain.show', ['domain' => $domain['domain_name'] ]) }}" title="Chi tiết ">
-                            <span class="fas fa-arrow-circle-right" style="font-size: 25px" ></span>
-                        </a>
+                        <td><a href="{{ route('domain.show', ['domain' => $domain['domain_name'] ]) }}"
+                                title="Chi tiết ">
+                                <span class="fas fa-arrow-circle-right" style="font-size: 25px"></span>
+                            </a>
                         </td>
                     </tr>
                     @empty
@@ -181,6 +193,7 @@
     .status.paused .icon-warning {
         background-image: url('https://cdn-icons-png.flaticon.com/512/1828/1828843.png');
     }
+
     /* Badge chung */
 
 

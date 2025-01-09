@@ -115,7 +115,7 @@ class DomainController extends Controller
         ]);
 
         $responseBody = json_decode($response->getBody(), true);
-        dd($responseBody['data']);
+        dd($responseBody);
         // $data = [
         //     "api_key" => "6dc564c5e650dedd67144761a3f2fcdb",
         //     "api_user" => "dnse002",

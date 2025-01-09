@@ -96,37 +96,34 @@ class DomainController extends Controller
     {
         $page = "Tên miền";
         $title = "Bảng giá";
-        $url = 'https://api-reseller.tenten.vn/v1/Domains/price.json';
+        $url = 'https://api.thedogapi.com/v1/breeds';
 
-        $data = [
-            "api_key" => "6dc564c5e650dedd67144761a3f2fcdb",
-            "api_user" => "dnse002",
-        ];
+        try {
+            // Gửi yêu cầu GET tới API
+            $client = new \GuzzleHttp\Client();
+            $response = $client->get($url);
 
-        // try {
-
-            $client = new Client();
-            $response = $client->post($url, [
-                'form_params' => $data,
-            ]);
-
+            // Giải mã phản hồi từ JSON
             $responseBody = json_decode($response->getBody(), true);
-            // dd($responseBody);
-            if (isset($responseBody['error']) && !empty($responseBody['error'])) {
-                throw new \Exception($responseBody['error']);
+
+            // Kiểm tra và debug dữ liệu phản hồi
+            if (empty($responseBody)) {
+                throw new \Exception("Phản hồi API rỗng.");
             }
 
-            dd($responseBody['data']);
+            // Hiển thị dữ liệu để kiểm tra (hoặc xử lý tùy ý)
+            dd($responseBody); // Debug toàn bộ dữ liệu phản hồi
 
-            // return view('backend.domain.show', [
-            //     'domain' => $responseBody['data'] ?? [],
-            //     'page' => $page,
-            //     'title' => $title
-
-            // ]);
-        // } catch (\Exception $e) {
-        //     // Xử lý lỗi
-        //     return back()->withErrors('Không thể tải dữ liệu: ' . $e->getMessage());
-        // }
+            // Trả về view (sau khi kiểm tra dữ liệu phản hồi)
+            return view('backend.domain.show', [
+                'domain' => $responseBody,
+                'page' => $page,
+                'title' => $title,
+            ]);
+        } catch (\Exception $e) {
+            // Xử lý lỗi
+            return back()->withErrors('Không thể tải dữ liệu: ' . $e->getMessage());
+        }
     }
+
 }

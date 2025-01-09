@@ -27,6 +27,7 @@ class OrderController extends Controller
         if ($request->ajax()) {
             $data = Order::where('status', $status)->where('email', Auth::user()->email)->select('*');
             return DataTables::of($data)
+            ->addIndexColumn()
                 ->editColumn('code', function ($row) {
                     return '<a href="' . route('customer.order.show', $row->id) . '" class=" text-primary "> ' . $row->code . '</a>';
                 })
@@ -522,7 +523,7 @@ class OrderController extends Controller
                     $detail->delete(); // Xóa chi tiết sau khi đã thêm vào order
                 });
                 RenewService::where('email', $user->email)->delete();
-                
+
                 return response()->json(['success' => true]);
             } else {
                 return response()->json(['success' => false]);

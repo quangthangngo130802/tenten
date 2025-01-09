@@ -22,13 +22,24 @@
     </thead>
     <tbody>
         @foreach($types as $type => $data)
-            @if($data['active_count'] > 0 || $data['expiring_soon_count'] > 0 || $data['expired_count'] > 0)
-                <tr>
-                    <td><div style="margin-left: 70px; font-weight: bold">{{ ucfirst($type) }}</div></td>
-                    <td style="text-align: center"><a href="{{ route('service.' . $type . '.list.'.$type) }}">{{ $data['active_count'] }}</a> </td>
-                    <td style="text-align: center"><a href="{{ route('service.' . $type . '.list.'.$type, ['date' => 'expire_soon']) }}">{{ $data['expiring_soon_count'] }}</a></td>
-                    <td style="text-align: center"><a href="{{ route('service.' . $type . '.list.'.$type, ['date' => 'expire']) }}">{{ $data['expired_count'] }}</a></td>
-                </tr>
+            @if (Auth::user()->role_id == 1)
+                @if($data['active_count'] > 0 || $data['expiring_soon_count'] > 0 || $data['expired_count'] > 0)
+                    <tr>
+                        <td><div style="margin-left: 70px; font-weight: bold">{{ ucfirst($type) }}</div></td>
+                        <td style="text-align: center"><a href="{{ route('service.' . $type . '.list.'.$type) }}">{{ $data['active_count'] }}</a> </td>
+                        <td style="text-align: center"><a href="{{ route('service.' . $type . '.list.'.$type, ['date' => 'expire_soon']) }}">{{ $data['expiring_soon_count'] }}</a></td>
+                        <td style="text-align: center"><a href="{{ route('service.' . $type . '.list.'.$type, ['date' => 'expire']) }}">{{ $data['expired_count'] }}</a></td>
+                    </tr>
+                @endif
+            @else
+                @if($data['active_count'] > 0 || $data['expiring_soon_count'] > 0 || $data['expired_count'] > 0)
+                    <tr>
+                        <td><div style="margin-left: 70px; font-weight: bold">{{ ucfirst($type) }}</div></td>
+                        <td style="text-align: center"><a href="{{ route('customer.service.' . $type . '.list.'.$type) }}">{{ $data['active_count'] }}</a> </td>
+                        <td style="text-align: center"><a href="{{ route('customer.service.' . $type . '.list.'.$type, ['date' => 'expire_soon']) }}">{{ $data['expiring_soon_count'] }}</a></td>
+                        <td style="text-align: center"><a href="{{ route('customer.service.' . $type . '.list.'.$type, ['date' => 'expire']) }}">{{ $data['expired_count'] }}</a></td>
+                    </tr>
+                @endif
             @endif
         @endforeach
     </tbody>

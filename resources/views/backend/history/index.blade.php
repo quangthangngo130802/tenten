@@ -90,6 +90,7 @@
             { width: '25%', targets: 2 },
             { width: '15%', targets: 3 },
             { width : '25%', targets: 4 }
+            // { width : '15%', targets: 5 }
         ];
 
         if (roleId == 1) {
@@ -101,9 +102,9 @@
             processing: true,
             serverSide: true,
             ajax: APP_URL + '/history' ,
-            columns: columns, // Sử dụng mảng cột đã điều chỉnh
-            columnDefs: columnDefs, // Áp dụng columnDefs đã thay đổi
-            pagingType: "full_numbers", // Kiểu phân trang
+            columns: columns,
+            columnDefs: columnDefs,
+            pagingType: "full_numbers", 
             language: {
                 paginate: { previous: '&laquo;', next: '&raquo;' },
                 lengthMenu: "Hiển thị _MENU_ mục mỗi trang",

@@ -7,6 +7,7 @@
         <table class="table table-striped table-hover" id="categoryTable">
             <thead>
                 <tr>
+                    <th>STT</th>
                     <th>Mã đơn hàng</th>
                     {{-- <th>Chi tiết</th> --}}
                     <th>Tổng tiền</th>
@@ -74,6 +75,12 @@
                 ajax: APP_URL + '/customer/order/' + status,
                 columns: [
                     {
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
                         data: 'code',
                         name: 'code'
                     },
@@ -103,11 +110,11 @@
 
                 ],
                 columnDefs: [{
-                        width: '19%',
+                        width: '10%',
                         targets: 0
                     },
                     {
-                        width: '15%',
+                        width: '18%',
                         targets: 1
                     },
                     {
@@ -123,10 +130,10 @@
                         width: '15%',
                         targets: 4
                     },
-                    // {
-                    //     width: '15%',
-                    //     targets: 5
-                    // },
+                    {
+                        width: '15%',
+                        targets: 5
+                    },
 
 
                 ],

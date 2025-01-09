@@ -114,13 +114,10 @@
                 ajax: APP_URL + '/admin/service/list-cloud/' + date,
                 columns: [
                     {
-                        data: null, // STT
-                        name: 'STT',
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
                         orderable: false,
-                        searchable: false,
-                        render: function(data, type, row, meta) {
-                            return meta.row + 1;
-                        }
+                        searchable: false
                     },
                     {
                         data: 'user_info',

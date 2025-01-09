@@ -89,7 +89,7 @@ class CustomerServiceController extends Controller
                 ->make(true);
         }
         $page = 'Quản lý dịch vụ Cloud';
-        return view('customer.service.listcloud', compact('title', 'page'));
+        return view('customer.service.listcloud', compact('title', 'page', 'date'));
     }
 
     public function listhosting(Request $request, $date = null)

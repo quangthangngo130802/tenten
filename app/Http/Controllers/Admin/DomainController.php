@@ -99,52 +99,34 @@ class DomainController extends Controller
         $url = 'https://api-reseller.tenten.vn/v1/Domains/price.json';
 
         $data = [
-            [
-                'name' => 'api_key',
-                'contents' => '6dc564c5e650dedd67144761a3f2fcdb',
-            ],
-            [
-                'name' => 'api_user',
-                'contents' => 'dnse002',
-            ],
+            "api_key" => "6dc564c5e650dedd67144761a3f2fcdb",
+            "api_user" => "dnse002",
         ];
 
-        $client = new \GuzzleHttp\Client();
-        $response = $client->post($url, [
-            'multipart' => $data,
-        ]);
+        try {
 
-        $responseBody = json_decode($response->getBody(), true);
-        dd($responseBody);
-        // $data = [
-        //     "api_key" => "6dc564c5e650dedd67144761a3f2fcdb",
-        //     "api_user" => "dnse002",
-        // ];
+            $client = new \GuzzleHttp\Client();
+            $response = $client->post($url, [
+                'form_params' => $data,
+            ]);
 
-        // try {
+            $responseBody = json_decode($response->getBody(), true);
+            // dd($responseBody);
+            if (isset($responseBody['error']) && !empty($responseBody['error'])) {
+                throw new \Exception($responseBody['error']);
+            }
 
-            // $client = new \GuzzleHttp\Client();
-            // $response = $client->post($url, [
-            //     'form_params' => $data,
-            // ]);
+            dd($responseBody['data']);
 
-            // $responseBody = json_decode($response->getBody(), true);
-            // // dd($responseBody);
-            // if (isset($responseBody['error']) && !empty($responseBody['error'])) {
-            //     throw new \Exception($responseBody['error']);
-            // }
+            return view('backend.domain.show', [
+                'domain' => $responseBody['data'] ?? [],
+                'page' => $page,
+                'title' => $title
 
-            // dd($responseBody['data']);
-
-            // return view('backend.domain.show', [
-            //     'domain' => $responseBody['data'] ?? [],
-            //     'page' => $page,
-            //     'title' => $title
-
-            // ]);
-        // } catch (\Exception $e) {
-        //     // Xử lý lỗi
-        //     return back()->withErrors('Không thể tải dữ liệu: ' . $e->getMessage());
-        // }
+            ]);
+        } catch (\Exception $e) {
+            // Xử lý lỗi
+            return back()->withErrors('Không thể tải dữ liệu: ' . $e->getMessage());
+        }
     }
 }

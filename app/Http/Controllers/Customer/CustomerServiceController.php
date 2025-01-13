@@ -71,20 +71,13 @@ class CustomerServiceController extends Controller
                 })->rawColumns(['giahan'])
                 ->addColumn('action', function ($row) {
                     return '
-                            <div class="dropdown">
-                                <span style="font-size:26px; cursor:pointer;" class="action">
-                                    <i class="fas fa-cog"></i>
-                                </span>
-                                <div class="dropdown-menu menu-action" style="right: 17px;">
-                                    <a class="dropdown-item" href="#">Rao bán tên miền</a>
-                                    <a class="dropdown-item" href="#">Cài đặt NS</a>
-                                    <a class="dropdown-item" href="#">Cài đặt DNS</a>
-                                    <a class="dropdown-item" href="#">Gửi email xác thực</a>
-                                    <a class="dropdown-item" href="#">Thay đổi mật khẩu</a>
-                                    <a class="dropdown-item" href="#">Chi tiết tên miền</a>
-                                    <a class="dropdown-item" href="#">Download bản khai</a>
-                                </div>
-                            </div>';
+                        <div class="dropdown">
+                            <!-- Icon hiển thị modal -->
+                            <span style="font-size:26px; cursor:pointer;" class="action"
+                                onclick="openModal(' . $row->id . ')">
+                                <i class="fas fa-cog"></i>
+                            </span>
+                        </div>';
                 })->rawColumns(['action', 'giahan', 'enddate', 'packagename', 'active', 'date'])
                 ->make(true);
         }
@@ -149,20 +142,14 @@ class CustomerServiceController extends Controller
                             </form>';
                 })->rawColumns(['giahan'])
                 ->addColumn('action', function ($row) {
-                    return '<div class="dropdown">
-                                <span style="font-size:26px; cursor:pointer;" class="action">
-                                    <i class="fas fa-cog"></i>
-                                </span>
-                                <div class="dropdown-menu menu-action" style="right: 17px;">
-                                    <a class="dropdown-item" href="#">Rao bán tên miền</a>
-                                    <a class="dropdown-item" href="#">Cài đặt NS</a>
-                                    <a class="dropdown-item" href="#">Cài đặt DNS</a>
-                                    <a class="dropdown-item" href="#">Gửi email xác thực</a>
-                                    <a class="dropdown-item" href="#">Thay đổi mật khẩu</a>
-                                    <a class="dropdown-item" href="#">Chi tiết tên miền</a>
-                                    <a class="dropdown-item" href="#">Download bản khai</a>
-                                </div>
-                            </div>';
+                    return '
+                        <div class="dropdown">
+                            <!-- Icon hiển thị modal -->
+                            <span style="font-size:26px; cursor:pointer;" class="action"
+                                onclick="openModal(' . $row->id . ')">
+                                <i class="fas fa-cog"></i>
+                            </span>
+                        </div>';
                 })->rawColumns(['action', 'giahan', 'enddate', 'packagename', 'active'])
                 ->make(true);
         }

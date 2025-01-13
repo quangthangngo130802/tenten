@@ -7,6 +7,7 @@ use App\Models\Cloud;
 use App\Models\DetailCart;
 use App\Models\Hosting;
 use App\Models\Order;
+use App\Models\OrderDetail;
 use App\Models\RenewService;
 use App\Models\TransactionHistory;
 use Illuminate\Http\Request;
@@ -177,23 +178,11 @@ class CartController extends Controller
                 'active'       => 'nopayment',
 
             ]);
+            // dd($detail->domain);
             $detail->delete();
         });
 
         $cart->delete();
-
-        // $user->update([
-        //     'wallet' => $user->wallet - $cart->total_price,
-        // ]);
-
-        // TransactionHistory::create([
-        //     'code' => Str::random(10),
-        //     'user_id' => $user->id,
-        //     'type' => 'Thanh toán',
-        //     'amount' => $cart->total_price,
-        //     'type' => 2,
-        //     'description' => 'Thanh toán đơn hàng #' . $order->code,
-        // ]);
 
         return response()->json([
             'message' => 'Thanh toán thành công!',
@@ -232,5 +221,16 @@ class CartController extends Controller
         ]);
     }
 
+    public function saveDomain(Request $request)
+    {
+        $item = DetailCart::find($request->id); // Tìm item dựa trên ID
+        if ($item) {
+            $item->domain = $request->domain; // Cập nhật tên miền
+            $item->save(); // Lưu vào database
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Không tìm thấy item.'], 404);
+    }
 
 }

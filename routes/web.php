@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\CloudController;
+use App\Http\Controllers\Admin\ConfigController;
 use App\Http\Controllers\Admin\DomainController;
+use App\Http\Controllers\Admin\EmailController;
 use App\Http\Controllers\Admin\HostingController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ServiceActiveController;
@@ -12,6 +14,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\Customer\CloudController as CustomerCloudController;
 use App\Http\Controllers\Customer\CustomerServiceController;
+use App\Http\Controllers\Customer\EmailController as CustomerEmailController;
 use App\Http\Controllers\Customer\HostingController as CustomerHostingController;
 use App\Http\Controllers\Customer\OrderController as CustomerOrderController;
 use App\Http\Controllers\Customer\RenewServiceController;
@@ -103,6 +106,15 @@ Route::middleware('auth')->group(function () {
             Route::post('{id}', [CloudController::class, 'delete'])->name('delete');
         });
 
+        Route::prefix('email')->name('email.')->group(function () {
+            Route::get('add', [EmailController::class, 'create'])->name('create');
+            Route::get('{type_id?}', [EmailController::class, 'index'])->name('index');
+            Route::post('', [EmailController::class,'store'])->name('store');
+            Route::get('{id}/edit', [EmailController::class, 'edit'])->name('edit');
+            Route::put('{id}/edit', [EmailController::class, 'update'])->name('update');
+            Route::post('{id}', [EmailController::class, 'delete'])->name('delete');
+        });
+
         Route::post('delete-{id}', [TransactionHistoryController::class, 'delete'])->name('history.delete');
 
         Route::prefix('domain')->name('domain.')->group(function () {
@@ -119,6 +131,11 @@ Route::middleware('auth')->group(function () {
                 Route::get('{date?}', [ServiceActiveController::class, 'listhosting'])->name('list.hosting');
             });
         });
+
+        Route::prefix('company')->name('company.')->group(function () {
+            Route::get('', [ConfigController::class, 'index'])->name('index');
+            Route::post('', [ConfigController::class, 'store'])->name('store');
+        });
     });
 
     Route::prefix('customer')->name('customer.')->group(function () {
@@ -131,6 +148,10 @@ Route::middleware('auth')->group(function () {
             Route::get('{type_id?}', [CustomerCloudController::class, 'index'])->name('index');
             Route::get('vi/cloud-{id}', [CustomerCloudController::class, 'vicloud'])->name('vicloud');
             Route::post('add-cart', [CustomerCloudController::class, 'addtocart'])->name('addtocart');
+        });
+
+        Route::prefix('email')->name('email.')->group(function () {
+            Route::get('{email_type?}', [CustomerEmailController::class, 'index'])->name('index');
         });
 
         Route::prefix('order')->name('order.')->group(function () {
@@ -191,5 +212,12 @@ Route::post('/clear-pdf-session', [CustomerOrderController::class, 'clearPdfSess
 
 Route::post('/renews-delete-item', [RenewServiceController::class, 'deleteItem'])->name('renews.delete.item');
 Route::post('/renews-update-time', [RenewServiceController::class, 'updatetime'])->name('renews.update.time');
+
+Route::get('service/getContent/{id}', [ServiceActiveController::class, 'getContentService']);
+Route::post('/service/saveContent', [ServiceActiveController::class, 'saveContent']);
+Route::post('/save-domain', [CartController::class, 'saveDomain'])->name('save-domain');
+
+
+
 
 

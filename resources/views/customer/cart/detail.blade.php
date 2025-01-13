@@ -15,49 +15,51 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($cart->details as $item )
+                    @foreach ($cart->details as $item)
                     <tr>
                         <td>
                             @php
                             $product = '';
-                            if($item->type == 'hosting'){
+                            if ($item->type == 'hosting') {
                             $product = \App\Models\Hosting::find($item->product_id);
-                            echo $product->package_name . ' ( ' . 'Hosting' . ' )';
-                            }else if ($item->type == 'cloud') {
-                            $product = \App\Models\Cloud::find($item->product_id);
-                            echo $product->package_name . ' ( ' . 'Cloud' . ' )';
-                            }
+                            echo $product->package_name . ' (Hosting)';
 
+                            // Kiểm tra domain
+                            $domainText = $item->domain ? $item->domain : 'Nhập tên miền của bạn';
+
+                            echo '<div>
+                                <span class="domain-text" style="color: red" data-id="' . $item->id . '">' . $domainText
+                                    . '</span>
+                                <div class="form-group" style="display: flex; justify-content: center">
+                                    <input type="text" class="form-control domain-input" data-id="' . $item->id . '"
+                                        placeholder="Vui lòng nhập tên miền" style="display: none; width: 80%;"
+                                        value="' . $item->domain . '" />
+                                </div>
+                            </div>';
+                            } elseif ($item->type == 'cloud') {
+                            $product = \App\Models\Cloud::find($item->product_id);
+                            echo $product->package_name . ' (Cloud)';
+                            }
                             @endphp
                         </td>
+
                         <td>
                             <select class="select-form time_type" data-id="{{ $item->id }}">
-                                @if ($item->type === 'hosting')
-                                    <!-- Hiển thị từ 1 năm trở đi -->
-
-                                    <option value="12" {{ $item->number == 12 ? 'selected' : '' }}>1 năm</option>
-                                    <option value="24" {{ $item->number == 24 ? 'selected' : '' }}>2 năm</option>
-                                    <option value="36" {{ $item->number == 36 ? 'selected' : '' }}>3 năm</option>
-                                    <option value="48" {{ $item->number == 48 ? 'selected' : '' }}>4 năm</option>
-                                    <option value="60" {{ $item->number == 60 ? 'selected' : '' }}>5 năm</option>
-                                @else
-                                    <!-- Hiển thị tất cả các tùy chọn -->
-                                    <option value="1" {{ $item->number == 1 ? 'selected' : '' }}>1 tháng</option>
-                                    <option value="3" {{ $item->number == 3 ? 'selected' : '' }}>3 tháng</option>
-                                    <option value="6" {{ $item->number == 6 ? 'selected' : '' }}>6 tháng</option>
-                                    <option value="12" {{ $item->number == 12 ? 'selected' : '' }}>1 năm</option>
-                                    <option value="24" {{ $item->number == 24 ? 'selected' : '' }}>2 năm</option>
-                                    <option value="36" {{ $item->number == 36 ? 'selected' : '' }}>3 năm</option>
-                                    <option value="48" {{ $item->number == 48 ? 'selected' : '' }}>4 năm</option>
-                                    <option value="60" {{ $item->number == 60 ? 'selected' : '' }}>5 năm</option>
-                                @endif
+                                @for ($i = 1; $i <= 5; $i++) @php $months=$i * 12; @endphp <option value="{{ $months }}"
+                                    {{ $item->number == $months ? 'selected' : '' }}>
+                                    {{ $i }} năm
+                                    </option>
+                                    @endfor
                             </select>
-
                         </td>
+
                         <td class="price_new"> {{ number_format($item->price, 0, ',', '.') }} đ</td>
-                        <td data-id="{{ $item->id }}" class="close" style="margin-top: 13px;"> <i class="fa-solid fa-trash"></i> </td>
+                        <td data-id="{{ $item->id }}" class="close" style="margin-top: 13px;">
+                            <i class="fa-solid fa-trash"></i>
+                        </td>
                     </tr>
                     @endforeach
+
                     {{-- <tr>
                         <td>Wordpress Hosting v2 - StartUp</td>
                         <td>
@@ -75,18 +77,19 @@
                 <tbody>
                     <tr>
                         <td>Giá gốc</td>
-                        <td class="text-end total" >{{ number_format($cart->total_price, 0, ',', '.') }} đ</td>
+                        <td class="text-end total">{{ number_format($cart->total_price, 0, ',', '.') }} đ</td>
                     </tr>
 
                     <tr>
                         <td class="total-payment text-danger"><strong>Tổng tiền thanh toán</strong></td>
-                        <td class="text-end total-payment text-danger total"><strong>{{ number_format($cart->total_price, 0, ',', '.') }} đ</strong></td>
+                        <td class="text-end total-payment text-danger total"><strong>{{
+                                number_format($cart->total_price, 0, ',', '.') }} đ</strong></td>
                     </tr>
                 </tbody>
             </table>
             <div class="text-center mt-4">
                 <a href="{{ route('customer.order.payment') }}" class="btn btn-primary btn-lg">Tiếp tục</a>
-             </div>
+            </div>
         </div>
 
     </div>
@@ -112,7 +115,8 @@
                 </tr>
                 <tr>
                     <th>Địa chỉ</th>
-                    <td>{{ Auth::user()->province1->address }}</td>
+                    <td>{{ Auth::user()->address }} - {{ Auth::user()->ward1->name }} - {{ Auth::user()->district1->name
+                        }}</td>
                 </tr>
                 <tr>
                     <th>Ngày sinh</th>
@@ -163,10 +167,12 @@
         font-size: 11px !important;
         border: none !important;
     }
-    select{
+
+    select {
         font-size: 11px !important;
     }
-    tr{
+
+    tr {
         border: none !important;
     }
 
@@ -202,19 +208,18 @@
         font-size: 12px;
         color: #e74c3c;
     }
+
     select {
         padding: 3px 10px;
         font-size: 16px;
         border: 1px solid rgb(100, 94, 94) !important;
         border-radius: 7px;
     }
-    .time_type{
+
+    .time_type {
         width: 110px;
         text-align: center;
     }
-
-
-
 </style>
 
 @endpush
@@ -347,7 +352,75 @@
     });
 
 
+    $('.domain-text').on('click', function () {
+        const id = $(this).data('id'); // Lấy ID của item
+        $(this).hide(); // Ẩn đoạn text
+        $(`.domain-input[data-id="${id}"]`).show().focus(); // Hiển thị input và focus vào
+    });
+
+    // Khi người dùng nhấn Enter hoặc rời khỏi input
+    $('.domain-input').on('blur keydown', function (e) {
+    if (e.type === 'blur' || e.key === 'Enter') {
+        const id = $(this).data('id');
+
+        const value = $(this).val(); // Lấy giá trị đã nhập
+
+        if (value) {
+            // Gửi giá trị mới lên server để lưu vào database
+            $.ajax({
+                url: '/save-domain', // Đường dẫn API lưu vào database
+                method: 'POST',
+                data: {
+                    id: id,
+                    domain: value,
+                    _token: $('meta[name="csrf-token"]').attr('content') // Lấy CSRF token nếu dùng Laravel
+                },
+                success: function (response) {
+                    // Hiển thị tên miền đã nhập nếu lưu thành công
+                    $(`.domain-text[data-id="${id}"]`).text(value).show();
+                },
+                error: function () {
+                    // Thông báo lỗi nếu lưu thất bại
+                    alert('Có lỗi xảy ra khi lưu tên miền.');
+                }
+            });
+        } else {
+            // Nếu không có giá trị, hiển thị lại text mặc định
+            $(`.domain-text[data-id="${id}"]`).text('Nhập tên miền của bạn').show();
+        }
+
+        $(this).hide(); // Ẩn input
+    }
 });
 
+
+});
+
+</script>
+<script>
+    // Thêm sự kiện click vào span chứa text domain
+    document.querySelectorAll('.domain-text').forEach(function(span) {
+        span.addEventListener('click', function() {
+            var inputField = span.nextElementSibling.querySelector('input');
+            // Hiển thị input và xóa chữ "Nhập tên miền của bạn"
+            if (inputField.value === '' || inputField.value === 'Nhập tên miền của bạn') {
+                inputField.value = '';  // xóa nội dung placeholder
+                inputField.style.display = 'inline-block';  // hiển thị input
+                span.style.display = 'none';  // ẩn span chứa text
+            }
+        });
+    });
+
+    // Cập nhật lại khi người dùng nhập tên miền
+    document.querySelectorAll('.domain-input').forEach(function(input) {
+        input.addEventListener('blur', function() {
+            if (input.value === '') {
+                // Nếu không nhập gì, hiển thị lại chữ "Nhập tên miền của bạn"
+                input.style.display = 'none';
+                input.previousElementSibling.style.display = 'inline-block';
+                input.previousElementSibling.textContent = 'Nhập tên miền của bạn';
+            }
+        });
+    });
 </script>
 @endpush

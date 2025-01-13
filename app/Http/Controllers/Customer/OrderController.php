@@ -137,6 +137,7 @@ class OrderController extends Controller
                 $order->orderDetail()->create([
                     'order_id' => $order->id,
                     'product_id' => $detail->product_id,
+                    'domain' => $detail->domain,
                     'os_id' => $detail->os_id,
                     'type' => $detail->type,
                     'price' => $detail->price,

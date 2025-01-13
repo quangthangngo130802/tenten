@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="content">
-    <div class="row justify-content-between" >
+    <div class="row justify-content-between">
         <form method="GET" action="{{ route('domain.index') }}" class="row mb-3 col-md-4 align-items-center">
             <label for="limit" class="mb-0 me-2 col-md-4">Hiển thị:</label>
             <select id="limit" name="limit" class="form-select me-2 col-md-8" style="width: 200px;"
@@ -14,14 +14,6 @@
             </select>
         </form>
 
-        <form method="GET" action="{{ route('domain.index') }}" class=" row mb-3 col-md-4">
-            <div class="col-md-8">
-                <input type="text" name="search" value="{{ $search ?? '' }}" class="form-control" placeholder="Nhập tên miền để tìm kiếm (.vn, .com)">
-            </div>
-            <div class="col-md-4">
-                <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
-            </div>
-        </form>
 
         <!-- Form chọn số lượng hiển thị -->
 
@@ -73,41 +65,44 @@
         </div>
     </div>
     @if(!empty($paginate))
-    <nav>
-        <ul class="pagination">
-            <!-- Nút trang đầu -->
-            <li class="page-item {{ $paginate['has_prev_page'] ? '' : 'disabled' }}">
-                <a class="page-link" href="{{ route('domain.index', ['limit' => $current_limit, 'page' => 1]) }}">
-                    Đầu
-                </a>
-            </li>
+    <div style="display: flex; justify-content: center;">
+        <nav>
+            <ul class="pagination">
+                <!-- Nút trang đầu -->
+                <li class="page-item {{ $paginate['current_page'] == 1 ? 'disabled' : '' }}">
+                    <a class="page-link" href="{{ route('domain.index', ['limit' => $current_limit, 'page' => 1]) }}">
+                        &lt;&lt;
+                    </a>
+                </li>
 
-            <!-- Nút trang trước -->
-            <li class="page-item {{ $paginate['has_prev_page'] ? '' : 'disabled' }}">
-                <a class="page-link"
-                    href="{{ route('domain.index', ['limit' => $current_limit, 'page' => max($paginate['current_page'] - 1, 1)]) }}">
-                    Trước
-                </a>
-            </li>
+                <!-- Nút trang trước -->
+                <li class="page-item {{ $paginate['has_prev_page'] ? '' : 'disabled' }}">
+                    <a class="page-link"
+                        href="{{ route('domain.index', ['limit' => $current_limit, 'page' => max($paginate['current_page'] - 1, 1)]) }}">
+                        &lt;
+                    </a>
+                </li>
 
-            <!-- Hiển thị các trang -->
-            @php
-            $page_count = $paginate['page_count'];
-            $current_page = $paginate['current_page'];
-            $max_display = 5; // Số trang hiển thị tối đa
-            $start = max(1, $current_page - floor($max_display / 2));
-            $end = min($page_count, $start + $max_display - 1);
-
-            // Nếu có nhiều trang, hiển thị "..."
-            $show_start_ellipsis = $start > 1;
-            $show_end_ellipsis = $end < $page_count; @endphp <!-- Nếu có dấu "..." ở đầu -->
-                @if ($show_start_ellipsis)
+                <!-- Hiển thị trang đầu nếu cần -->
+                @if ($paginate['current_page'] > 3)
+                <li class="page-item">
+                    <a class="page-link" href="{{ route('domain.index', ['limit' => $current_limit, 'page' => 1]) }}">
+                        1
+                    </a>
+                </li>
                 <li class="page-item">
                     <a class="page-link" href="#">...</a>
                 </li>
                 @endif
 
-                <!-- Hiển thị các trang -->
+                <!-- Hiển thị các trang quanh trang hiện tại -->
+                @php
+                $page_count = $paginate['page_count'];
+                $current_page = $paginate['current_page'];
+                $start = max(1, $current_page - 1);
+                $end = min($page_count, $current_page + 1);
+                @endphp
+
                 @for ($i = $start; $i <= $end; $i++) <li class="page-item {{ $i == $current_page ? 'active' : '' }}">
                     <a class="page-link" href="{{ route('domain.index', ['limit' => $current_limit, 'page' => $i]) }}">
                         {{ $i }}
@@ -115,30 +110,47 @@
                     </li>
                     @endfor
 
-                    <!-- Nếu có dấu "..." ở cuối -->
-                    @if ($show_end_ellipsis)
-                    <li class="page-item">
+                    <!-- Hiển thị dấu "..." và trang gần cuối nếu cần -->
+                    @if ($paginate['current_page'] < $page_count - 2) <li class="page-item">
                         <a class="page-link" href="#">...</a>
-                    </li>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link"
+                                href="{{ route('domain.index', ['limit' => $current_limit, 'page' => $page_count - 1]) }}">
+                                {{ $page_count - 1 }}
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link"
+                                href="{{ route('domain.index', ['limit' => $current_limit, 'page' => $page_count ]) }}">
+                                {{ $page_count  }}
+                            </a>
+                        </li>
                     @endif
 
-                    <!-- Nút trang sau -->
-                    <li class="page-item {{ $paginate['has_next_page'] ? '' : 'disabled' }}">
-                        <a class="page-link"
-                            href="{{ route('domain.index', ['limit' => $current_limit, 'page' => min($paginate['current_page'] + 1, $paginate['page_count'])]) }}">
-                            Tiếp
-                        </a>
-                    </li>
 
-                    <!-- Nút trang cuối -->
-                    <li class="page-item {{ $paginate['has_next_page'] ? '' : 'disabled' }}">
-                        <a class="page-link"
-                            href="{{ route('domain.index', ['limit' => $current_limit, 'page' => $paginate['page_count']]) }}">
-                            Cuối
-                        </a>
-                    </li>
-        </ul>
-    </nav>
+
+                        <!-- Nút trang sau -->
+                        <li class="page-item {{ $paginate['has_next_page'] ? '' : 'disabled' }}">
+                            <a class="page-link"
+                                href="{{ route('domain.index', ['limit' => $current_limit, 'page' => min($paginate['current_page'] + 1, $paginate['page_count'])]) }}">
+                                &gt;
+                            </a>
+                        </li>
+
+                        <!-- Nút trang cuối -->
+                        <li class="page-item {{ $paginate['current_page'] == $page_count ? 'disabled' : '' }}">
+                            <a class="page-link"
+                                href="{{ route('domain.index', ['limit' => $current_limit, 'page' => $page_count]) }}">
+                                &gt;&gt;
+                            </a>
+                        </li>
+            </ul>
+        </nav>
+    </div>
+
+
+
     @endif
 
 

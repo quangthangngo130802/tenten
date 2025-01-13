@@ -17,7 +17,6 @@ class DomainController extends Controller
 
         $page1 = $request->input('page', 1);
         $limit = $request->input('limit', 10);
-        $search = $request->input('search', ''); // Lấy từ khóa tìm kiếm
 
         $data = [
             "api_key" => "6dc564c5e650dedd67144761a3f2fcdb",
@@ -32,26 +31,20 @@ class DomainController extends Controller
                 'form_params' => $data,
             ]);
 
-            $responseBody = json_decode($response->getBody(), true);
 
+            $responseBody = json_decode($response->getBody(), true);
+            // dd($responseBody);
             if (isset($responseBody['error']) && !empty($responseBody['error'])) {
                 throw new \Exception($responseBody['error']);
             }
 
             $domains = $responseBody['data'] ?? [];
 
-            // Tìm kiếm cục bộ
-            if ($search) {
-                $domains = array_filter($domains, function ($domain) use ($search) {
-                    return stripos($domain['domain_name'], $search) !== false;
-                });
-            }
-
             return view('backend.domain.index', [
                 'domains' => $domains,
                 'paginate' => $responseBody['paginate'] ?? [],
                 'current_limit' => $limit,
-                'search' => $search,
+
                 'title' => $title,
                 'page' => $page,
             ]);

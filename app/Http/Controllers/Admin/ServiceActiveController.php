@@ -22,12 +22,12 @@ class ServiceActiveController extends Controller
                 ->whereHas('order', function ($query) {
                     $query->where('order_type', '!=', 2);
                 })->select('*');
-                if ($date == 'expire_soon') {
-                    $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) BETWEEN 1 AND 30');
-                }
-                if ($date == 'expire') {
-                    $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) < 0');
-                }
+            if ($date == 'expire_soon') {
+                $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) BETWEEN 1 AND 30');
+            }
+            if ($date == 'expire') {
+                $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) < 0');
+            }
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('user_info', function ($row) {
@@ -73,20 +73,14 @@ class ServiceActiveController extends Controller
                 })->rawColumns(['giahan'])
                 ->addColumn('action', function ($row) {
                     return '
-                            <div class="dropdown">
-                                <span style="font-size:26px; cursor:pointer;" class="action">
-                                    <i class="fas fa-cog"></i>
-                                </span>
-                                <div class="dropdown-menu menu-action">
-                                    <a class="dropdown-item" href="#">Rao bán tên miền</a>
-                                    <a class="dropdown-item" href="#">Cài đặt NS</a>
-                                    <a class="dropdown-item" href="#">Cài đặt DNS</a>
-                                    <a class="dropdown-item" href="#">Gửi email xác thực</a>
-                                    <a class="dropdown-item" href="#">Thay đổi mật khẩu</a>
-                                    <a class="dropdown-item" href="#">Chi tiết tên miền</a>
-                                    <a class="dropdown-item" href="#">Download bản khai</a>
-                                </div>
-                            </div>';
+                        <div class="dropdown">
+                            <!-- Icon hiển thị modal -->
+                            <span style="font-size:26px; cursor:pointer;" class="action"
+                                onclick="openModal(' . $row->id . ')">
+                                <i class="fas fa-cog"></i>
+                            </span>
+                        </div>
+                    ';
                 })->rawColumns(['action', 'giahan', 'enddate', 'packagename', 'active', 'user_info'])
                 ->make(true);
         }
@@ -103,12 +97,12 @@ class ServiceActiveController extends Controller
                 ->whereHas('order', function ($query) {
                     $query->where('order_type', '!=', 2);
                 })->select('*');
-                if ($date == 'expire_soon') {
-                    $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) BETWEEN 1 AND 30');
-                }
-                if ($date == 'expire') {
-                    $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) < 0');
-                }
+            if ($date == 'expire_soon') {
+                $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) BETWEEN 1 AND 30');
+            }
+            if ($date == 'expire') {
+                $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) < 0');
+            }
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('user_info', function ($row) {
@@ -153,24 +147,45 @@ class ServiceActiveController extends Controller
                     return '<a href="' . route('order.show', $row->id) . '" class="btn btn-primary btn-sm edit"> Gia hạn </a>';
                 })->rawColumns(['giahan'])
                 ->addColumn('action', function ($row) {
-                    return '<div class="dropdown">
-                                <span style="font-size:26px; cursor:pointer;" class="action">
+                    return ' <div class="dropdown">
+                                <!-- Icon hiển thị modal -->
+                                <span style="font-size:26px; cursor:pointer;" class="action"
+                                    onclick="openModal(' . $row->id . ')">
                                     <i class="fas fa-cog"></i>
                                 </span>
-                                <div class="dropdown-menu menu-action">
-                                    <a class="dropdown-item" href="#">Rao bán tên miền</a>
-                                    <a class="dropdown-item" href="#">Cài đặt NS</a>
-                                    <a class="dropdown-item" href="#">Cài đặt DNS</a>
-                                    <a class="dropdown-item" href="#">Gửi email xác thực</a>
-                                    <a class="dropdown-item" href="#">Thay đổi mật khẩu</a>
-                                    <a class="dropdown-item" href="#">Chi tiết tên miền</a>
-                                    <a class="dropdown-item" href="#">Download bản khai</a>
-                                </div>
                             </div>';
                 })->rawColumns(['action', 'giahan', 'enddate', 'packagename', 'active', 'user_info'])
                 ->make(true);
         }
         $page = 'Quản lý dịch vụ Hosting';
         return view('backend.service.listhosting', compact('title', 'page', 'date'));
+    }
+
+    public function getContentService($id)
+    {
+
+        $cloud = OrderDetail::find($id);
+        $content = $cloud->content;
+
+        // Trả về dữ liệu dưới dạng JSON
+        return response()->json(['content' => $content]);
+    }
+
+    // Controller method to save content
+    public function saveContent(Request $request)
+    {
+        // Lấy ID và nội dung từ request
+        $content = $request->input('content');
+        $id = $request->input('id');
+
+        // Tìm bài viết theo ID và cập nhật nội dung
+        $service = OrderDetail::find($id);
+        if ($service) {
+            $service->content = $content;
+            $service->save();
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'service not found']);
     }
 }

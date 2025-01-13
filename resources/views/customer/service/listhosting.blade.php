@@ -2,7 +2,27 @@
 
 @section('content')
 <div class="content">
-    <!-- Bảng danh sách danh mục -->
+
+    <div class="modal fade" id="contentModal" tabindex="-1" aria-labelledby="contentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="contentModalLabel">Nội dung</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="content">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="category-list">
         <table class="table table-striped table-hover" id="categoryTable">
             <thead>
@@ -68,13 +88,17 @@
     .status.paused .icon-warning {
         background-image: url('https://cdn-icons-png.flaticon.com/512/1828/1828843.png');
     }
-    .endday{
+
+    .endday {
         color: red;
         font-size: 13px;
     }
-    td, th{
+
+    td,
+    th {
         text-align: center;
     }
+
     .dropdown {
         position: relative;
         /* Ensure the dropdown menu is positioned relative to this div */
@@ -93,7 +117,6 @@
         display: block;
 
     }
-
 </style>
 
 @endpush
@@ -205,6 +228,23 @@
             //     $('.menu-action').hide();
             // });
         });
+        function openModal(id) {
+            document.getElementById('content').innerHTML = '';
+            document.getElementById('contentModalLabel').innerText = 'Nội dung';
+            document.getElementById('contentModalLabel').setAttribute('data-id', id);
+            fetch(`/service/getContent/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('content').innerHTML = data.content;
+                })
+                .catch(error => {
+                    console.error('Error fetching content:', error);
+                });
+
+            // Mở modal bằng Bootstrap 5
+            var myModal = new bootstrap.Modal(document.getElementById('contentModal'), {});
+            myModal.show();
+        }
 
 
 </script>

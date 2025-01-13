@@ -13,11 +13,13 @@
                         if($item->type == 'hosting'){
                             $product = \App\Models\Hosting::find($item->product_id);
                             $backup = '';
+                            $domain = $item->domain;
                         } else {
                             $product = \App\Models\Cloud::find($item->product_id);
                             $backup = ' - '.$item->os->name;
+                            $domain = '';
                         }
-                        echo $product->package_name.$backup;
+                        echo $product->package_name.$backup.' ( ' .$domain. ' )';
                     ?>
                 </p>
                 <select disabled style="width: 100px; text-align: center; padding: 5px 5px;" class="col-md-1">

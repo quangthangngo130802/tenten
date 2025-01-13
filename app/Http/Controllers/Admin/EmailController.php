@@ -56,7 +56,8 @@ class EmailController extends Controller
 
         $email->update($credentials);
         toastr()->success('Cập nhật thành công.');
-        return redirect()->route('email.index');
+        // dd(route('email.index', ['type_id' => $email->email_type]));
+        return redirect()->route('email.index', ['type_id' => $email->email_type]);
     }
 
     public function store(EmailRequest $request)
@@ -64,7 +65,7 @@ class EmailController extends Controller
         $credentials = $request->validated();
         Email::create($credentials);
         toastr()->success('Thêm thành công.');
-        return redirect()->route('email.index');
+        return redirect()->route('email.index', ['type_id' => $request->email_type]);
     }
 
 
@@ -73,6 +74,6 @@ class EmailController extends Controller
         $email = Email::find($id);
         $email->delete();
         toastr()->success('Xóa thành công.');
-        return redirect()->route('email.index');
+        return redirect()->route('email.index', ['type_id' => $email->email_type]);
     }
 }

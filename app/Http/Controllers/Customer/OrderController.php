@@ -460,7 +460,7 @@ class OrderController extends Controller
         /**
          * @var User $user
          */
-        // dd($request->all());
+
         if ($id != null) {
             $order = Order::find($id);
             if ($user->wallet >= $order->amount) {
@@ -485,8 +485,7 @@ class OrderController extends Controller
 
 
             $price =  RenewService::where('email', $user->email)->sum('price');
-            // $order = Order::find($request->id);
-            // Giả sử số dư ví lưu trong trường `wallet_balance`
+
             if ($user->wallet >= $price) {
                 $user->update([
                     'wallet' => $user->wallet - $price,
@@ -519,7 +518,7 @@ class OrderController extends Controller
                         'price' => $detail->price,
                         'backup' => $detail->backup,
                         'number' => $detail->number,
-                        'orderdetail_id' => $detail->orderdetail_id
+                        'service_id' => $detail->service_id
                     ]);
                     $detail->delete(); // Xóa chi tiết sau khi đã thêm vào order
                 });

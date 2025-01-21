@@ -3,10 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\CloudNotify;
+use App\Mail\EmailNotify;
+use App\Mail\HostingNotify;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\Service;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Mail;
 use Yajra\DataTables\DataTables;
 
 class OrderController extends Controller
@@ -20,7 +26,7 @@ class OrderController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->editColumn('code', function ($row) {
-                    return '<a href="' . route('order.show', $row->id) . '" class=" text-primary "> '. $row->code .'</a>';
+                    return '<a href="' . route('order.show', $row->id) . '" class=" text-primary "> ' . $row->code . '</a>';
                 })
                 ->editColumn('created_at', function ($row) {
                     return Carbon::parse($row->created_at)->format('Y-m-d H:i:s');
@@ -30,10 +36,12 @@ class OrderController extends Controller
                 })
                 ->editColumn('status', function ($row) {
                     return $row->status == 'payment'
-                    ? '<span style="color: orange;">Đã thanh toán</span>'
-                    : ($row->status == 'active'
-                        ? '<span style="color: green;">Đã duyệt</span>'
-                        : '<span style="color: red;">Chưa thanh toán</span>');
+                        ? '<span style="color: orange;">Đã thanh toán</span>'
+                        : ($row->status == 'active'
+                            ? '<span style="color: green;">Đã duyệt</span>'
+                            : ($row->status == 'pending'
+                                ? '<span style="color: blue;">Đang chờ cấp tài khoản</span>'
+                                : '<span style="color: red;">Chưa thanh toán</span>'));
                 })
                 ->editColumn('payment', function ($row) {
                     return number_format($row->payment);
@@ -43,7 +51,7 @@ class OrderController extends Controller
                 // })->rawColumns(['detail'])
                 ->addColumn('action', function ($row) {
                     return $row->status == 'payment'
-                    ? '<div style="display: flex;">
+                        ? '<div style="display: flex;">
                             <a href="#" class="btn btn-orange btn-sm delete"
                                 onclick="confirmActive(event, ' . $row->id . ')">
                                Duyệt
@@ -52,9 +60,17 @@ class OrderController extends Controller
                                 ' . csrf_field() . '
                             </form>
                         </div>'
-                    : ($row->status == 'pending'
-                        ? '<span style="color: orange;">Chờ duyệt</span>'
-                        : '<div style="display: flex;">
+                        : ($row->status == 'pending'
+                            ? '<div style="display: flex;">
+                                    <a href="#" class="btn btn-orange btn-sm delete"
+                                        onclick="confirmActive(event, ' . $row->id . ')">
+                                    Cấp tài khoản
+                                    </a>
+                                    <form id="active-form-' . $row->id . '" action="' . route('order.active', $row->id) . '" method="POST" style="display:none;">
+                                        ' . csrf_field() . '
+                                    </form>
+                                </div>'
+                            : '<div style="display: flex;">
                                 <a href="#" class="btn btn-danger btn-sm delete"
                                     onclick="confirmDelete(event, ' . $row->id . ')">
                                     <i class="fas fa-trash btn-delete" title="Xóa"></i>
@@ -63,8 +79,6 @@ class OrderController extends Controller
                                     ' . csrf_field() . '
                                 </form>
                             </div>');
-
-
                 })->rawColumns(['action', 'status', 'code'])
                 ->make(true);
         }
@@ -80,38 +94,84 @@ class OrderController extends Controller
         return view('backend.order.show', compact('order', 'title', 'page'));
     }
 
-    public function delete($id){
+    public function delete($id)
+    {
         $order = Order::find($id);
         $order->orderDetail()->delete();
         $order->delete();
         return redirect()->back()->with('success', 'Đơn hàng đã xóa thành công');
     }
 
-    public function active($id){
+    public function active($id)
+    {
         $order = Order::find($id);
-        if($order->order_type == 2){
+        if ($order->order_type == 2) {
             $renewService = $order->orderDetail;
-                $renewService->each(function ($service) {
-                    $orderdetail = OrderDetail::find($service->orderdetail_id);
-                    $orderdetail->update([
-                        'price' => $orderdetail->price + $service->price,
-                        'number' => $orderdetail->number + $service->number
-                    ]);
-                    $ordernew = Order::find($orderdetail->order_id);
-                    $ordernew->update([
-                        'amount' => $ordernew->orderDetail->sum('price'),
-                    ]);
-                });
-
+            $renewService->each(function ($service) {
+                $orderdetail = OrderDetail::find($service->orderdetail_id);
+                $orderdetail->update([
+                    'price' => $orderdetail->price + $service->price,
+                    'number' => $orderdetail->number + $service->number
+                ]);
+                $ordernew = Order::find($orderdetail->order_id);
+                $ordernew->update([
+                    'amount' => $ordernew->orderDetail->sum('price'),
+                ]);
+            });
         }
+
         $order->update([
-            'status' => 'active',
+            'status' => 'pending',
             'active_at' => now(),
         ]);
+
         $order->orderDetail()->update([
-            'status' => 'active',
+            'status' => 'pending',
             'active_at' => now(),
         ]);
-        return redirect()->route('order.show', ['id' => $id])->with('success', 'Đơn hàng đã được kích hoạt');
+        return redirect()->route('order.show', ['id' => $id])->with('success', 'Đơn hàng đã được duyệt chờ cấp tài khoản');
+    }
+
+    public  function createAccount(Request $request, $id)
+    {
+        $orderDetail = OrderDetail::find($id);
+        // dd($orderDetail->order);
+        Service::create([
+            'email' => $orderDetail->order->email ?? null,
+            'product_id' => $orderDetail->product_id,
+            'os_id' => $orderDetail->os_id,
+            'type' => $orderDetail->type,
+            'domain' => $orderDetail->domain,
+            'price' => $orderDetail->price,
+            'time_type' => $orderDetail->time_type,
+            'number' => $orderDetail->number,
+            'backup' => $orderDetail->backup,
+            'status' => 'active',
+            'active_at' => now(),
+            'content' => $request->content,
+        ]);
+        $orderDetail->update([
+            'status' => 'active'
+        ]);
+
+        $order = $orderDetail->order;
+        if ($order->orderDetail()->where('status', '!=', 'active')->doesntExist()) {
+            $order->update(['status' => 'active']);
+        }
+        $user = User::where('email', $order->email)->first();
+
+        $data = [
+            'content' => $request->content,
+            'name' => $user->full_name,
+            'email' => $user->email
+        ];
+        if ($orderDetail->type == 'email') {
+            Mail::to($orderDetail->order->email)->send(new EmailNotify($data));
+        } else if ($orderDetail->type == 'cloud') {
+            Mail::to($orderDetail->order->email)->send(new CloudNotify($data));
+        } else if ($orderDetail->type == 'hosting') {
+            Mail::to($orderDetail->order->email)->send(new HostingNotify($data));
+        }
+        return redirect()->back()->with('success', 'Cấp tài khoản thành công');
     }
 }

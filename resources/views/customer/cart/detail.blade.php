@@ -37,9 +37,15 @@
                                 </div>
                             </div>';
                             } elseif ($item->type == 'cloud') {
-                            $product = \App\Models\Cloud::find($item->product_id);
-                            echo $product->package_name . ' (Cloud)';
-                            }
+                                $product = \App\Models\Cloud::find($item->product_id);
+                                echo $product->package_name . ' (Cloud)';
+                            }elseif ($item->type == 'email') {
+                                $product = \App\Models\Email::find($item->product_id);
+                                echo $product->package_name . ' (Email)';
+                                echo '<div>
+                                        <span " data-id="' . $item->id . '">' . $item->domain. '</span>
+                                    </div> ';
+                                }
                             @endphp
                         </td>
 
@@ -135,9 +141,9 @@
                     <td>{{ Auth::user()->email }}</td>
                 </tr>
             </table>
-            <p class="note text-danger">
+            {{-- <p class="note text-danger">
                 Trong trường hợp thông tin đăng ký không hợp lệ hoặc không khớp với giấy tờ xác nhận...
-            </p>
+            </p> --}}
         </div>
 
     </div>

@@ -39,7 +39,7 @@
                 </li>
                 @if (Auth::user()->role_id == 1)
                 <li class="nav-item">
-                    <a href="{{ route('user.index') }}">
+                    <a href="{{ route('company.index') }}">
                         <i class="fas fa-cogs"></i>
                         <p>Cấu hình công ty</p>
                     </a>
@@ -143,6 +143,11 @@
                                     <span class="sub-item">Đơn hàng đã thanh toán</span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('order.index', ['status' => 'pending']) }}">
+                                    <span class="sub-item">Đơn hàng chờ cấp tài khoản</span>
+                                </a>
+                            </li>
 
                             <li>
                                 <a href="{{ route('order.index', ['status' => 'active']) }}">
@@ -205,17 +210,17 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('customer.service.hosting.list.hosting') }}">
+                                <a href="{{ route('customer.service.list.service', ['type' => 'hosting']) }}">
                                     <span class="sub-item">Hosting</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="">
+                                <a href="{{ route('customer.service.list.service', ['type' => 'email']) }}">
                                     <span class="sub-item">Email Server</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('customer.service.cloud.list.cloud') }}">
+                                <a href="{{ route('customer.service.list.service', ['type' => 'cloud']) }}">
                                     <span class="sub-item">Cloud</span>
                                 </a>
                             </li>

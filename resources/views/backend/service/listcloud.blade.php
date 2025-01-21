@@ -281,7 +281,7 @@
         CKEDITOR.instances['content_noidung'].setData('');
         document.getElementById('contentModalLabel').innerText = 'Nội dung';
         document.getElementById('contentModalLabel').setAttribute('data-id', id);
-        fetch(`/cloud/getContent/${id}`)
+        fetch(`/service/getContent/${id}`)
             .then(response => response.json())
             .then(data => {
                 CKEDITOR.instances['content_noidung'].setData(data.content);

@@ -27,7 +27,7 @@
                     <th>STT</th>
                     <th>Khách hàng</th>
                     <th>Tên gói</th>
-                    {{-- <th>Gia hạn</th> --}}
+                    <th>Tên miền</th>
                     <th>Ngày bắt đầu</th>
                     <th>Ngày kết thúc</th>
                     <th>Trạng thái</th>
@@ -152,10 +152,10 @@
                         data: 'packagename',
                         name: 'id'
                     },
-                    // {
-                    //     data: 'giahan',
-                    //     name: 'id'
-                    // },
+                    {
+                        data: 'domain',
+                        name: 'domain'
+                    },
 
                     {
                         data: 'active_at',
@@ -178,31 +178,41 @@
                         searchable: false
                     }
                 ],
-                columnDefs: [{
-                        width: '8%',
+                columnDefs: [
+                    {
+                        width: '6%',
                         targets: 0
                     },
-                    {
-                        width: '26%',
-                        targets: 1
-                    },
-                    {
-                        width: '15%',
-                        targets: 1
-                    },
-                    {
-                        width: '15%',
-                        targets: 1
-                    },
-
                     {
                         width: '20%',
                         targets: 1
                     },
                     {
                         width: '15%',
-                        targets: 1
+                        targets: 2
                     },
+                    {
+                        width: '15%',
+                        targets: 3
+                    },
+                    {
+                        width: '15%',
+                        targets: 4
+                    },
+
+                    {
+                        width: '15%',
+                        targets: 5
+                    },
+                    // {
+                    //     width: '20%',
+                    //     targets: 6
+                    // },
+                    {
+                        width: '20%',
+                        targets: 7
+                    },
+
 
                 ],
                 pagingType: "full_numbers", // Kiểu phân trang

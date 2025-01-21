@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\Service;
 use com_exception;
 use Faker\Provider\ar_EG\Company;
 use Illuminate\Http\Request;
@@ -19,30 +20,31 @@ class DashboardController extends Controller
         $user = Auth::user();
         if ($user->role_id == 1) {
             $nopayment = Order::where('status', 'nopayment')->get();
-            $orderactive = OrderDetail::where('status', 'active')
-                ->whereHas('order', function ($query) use ($user) {
-                    $query->where('order_type', 1);
-                })->count();
-            $serviceRenewCount = OrderDetail::where('status', 'active')
-                ->whereHas('order', function ($query) use ($user) {
-                    $query->where('order_type', 1);
-                })
+            $orderactive = Service::where('status', 'active')
+                // ->whereHas('order', function ($query) use ($user) {
+                //     $query->where('order_type', 1);
+                // })
+                ->count();
+            $serviceRenewCount = Service::where('status', 'active')
+                // ->whereHas('order', function ($query) use ($user) {
+                //     $query->where('order_type', 1);
+                // })
                 ->where(function ($query) {
                     $query->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) <= 30');
                 })
                 ->count();
         } else {
             $nopayment = Order::where('status', 'nopayment')->where('email', $user->email)->get();
-            $orderactive = OrderDetail::where('status', 'active')
-                ->whereHas('order', function ($query) use ($user) {
-                    $query->where('email', $user->email)->where('order_type', 1);
-                })
+            $orderactive = Service::where('status', 'active')
+                // ->whereHas('order', function ($query) use ($user) {
+                //     $query->where('email', $user->email)->where('order_type', 1);
+                // })
                 ->count();
 
-            $serviceRenewCount = OrderDetail::where('status', 'active')
-                ->whereHas('order', function ($query) use ($user) {
-                    $query->where('email', $user->email)->where('order_type', 1);;
-                })
+            $serviceRenewCount = Service::where('status', 'active')
+                // ->whereHas('order', function ($query) use ($user) {
+                //     $query->where('email', $user->email)->where('order_type', 1);
+                // })
                 ->where(function ($query) {
                     $query->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) <= 30');
                 })
@@ -58,20 +60,21 @@ class DashboardController extends Controller
         $title = "Dịch vụ đang sử dụng";
         $user = Auth::user();
         $types = $this->getNearExpirationOrders($user);
+        // dd($types);
 
         return view('userservice.index', compact('page', 'title', 'types'));
     }
 
     function getNearExpirationOrders($user)
     {
-        $result = OrderDetail::query()
+        $result = Service::query()
             ->where('status', 'active')
-            ->whereNull('orderdetail_id')
-            ->when($user->role_id != 1, function ($query) use ($user) {
-                $query->whereHas('order', function ($subQuery) use ($user) {
-                    $subQuery->where('email', 'like', $user->email); 
-                });
-            })
+            // ->whereNull('orderdetail_id')
+            // ->when($user->role_id != 1, function ($query) use ($user) {
+            //     $query->whereHas('order', function ($subQuery) use ($user) {
+            //         $subQuery->where('email', 'like', $user->email);
+            //     });
+            // })
             ->selectRaw("
                     type,
                         COUNT(*) as active_count,  -- Đếm tất cả bản ghi có status = 'active'
@@ -100,6 +103,11 @@ class DashboardController extends Controller
                 'active_count' => $result->where('type', 'cloud')->first()->active_count ?? 0,
                 'expiring_soon_count' => $result->where('type', 'cloud')->first()->expiring_soon_count ?? 0,
                 'expired_count' => $result->where('type', 'cloud')->first()->expired_count ?? 0,
+            ],
+            'email' => [
+                'active_count' => $result->where('type', 'email')->first()->active_count ?? 0,
+                'expiring_soon_count' => $result->where('type', 'email')->first()->expiring_soon_count ?? 0,
+                'expired_count' => $result->where('type', 'email')->first()->expired_count ?? 0,
             ]
         ];
 

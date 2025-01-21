@@ -7,6 +7,7 @@ use App\Models\Cloud;
 use App\Models\Hosting;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\Service;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -18,10 +19,11 @@ class ServiceActiveController extends Controller
     {
         $title = "Quản lý dịch vụ Cloud";
         if ($request->ajax()) {
-            $data = OrderDetail::where('status', 'active')->where('type', 'cloud')
-                ->whereHas('order', function ($query) {
-                    $query->where('order_type', '!=', 2);
-                })->select('*');
+            $data = Service::where('status', 'active')->where('type', 'cloud')
+                // ->whereHas('order', function ($query) {
+                //     $query->where('order_type', '!=', 2);
+                // })
+                ->select('*');
             if ($date == 'expire_soon') {
                 $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) BETWEEN 1 AND 30');
             }
@@ -32,10 +34,11 @@ class ServiceActiveController extends Controller
                 ->addIndexColumn()
                 ->addColumn('user_info', function ($row) {
                     // Kiểm tra nếu có liên kết với user qua order
-                    if ($row->order) {
-                        return $row->order->fullname . ' <p> (' . $row->order->email . ')</p>';
-                    }
-                    return 'N/A'; // Nếu không có thông tin
+                    // if ($row->order) {
+                    //     return $row->order->fullname . ' <p> (' . $row->order->email . ')</p>';
+                    // }
+                    // return 'N/A'; // Nếu không có thông tin
+                    return $row->email;
                 })
                 ->addColumn('packagename', function ($row) {
                     $cloud = Cloud::find($row->product_id);
@@ -93,10 +96,11 @@ class ServiceActiveController extends Controller
         $title = "Quản lý dịch vụ Hosting";
 
         if ($request->ajax()) {
-            $data = OrderDetail::where('status', 'active')->where('type', 'hosting')
-                ->whereHas('order', function ($query) {
-                    $query->where('order_type', '!=', 2);
-                })->select('*');
+            $data = Service::where('status', 'active')->where('type', 'hosting')
+                // ->whereHas('order', function ($query) {
+                //     $query->where('order_type', '!=', 2);
+                // })
+                ->select('*');
             if ($date == 'expire_soon') {
                 $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) BETWEEN 1 AND 30');
             }
@@ -107,10 +111,11 @@ class ServiceActiveController extends Controller
                 ->addIndexColumn()
                 ->addColumn('user_info', function ($row) {
                     // Kiểm tra nếu có liên kết với user qua order
-                    if ($row->order) {
-                        return $row->order->fullname . ' <p> (' . $row->order->email . ')</p>';
-                    }
-                    return 'N/A'; // Nếu không có thông tin
+                    // if ($row->order) {
+                    //     return $row->order->fullname . ' <p> (' . $row->order->email . ')</p>';
+                    // }
+                    // return 'N/A'; // Nếu không có thông tin
+                    return $row->email;
                 })
                 ->addColumn('packagename', function ($row) {
                     $hosting = Hosting::find($row->product_id);
@@ -164,8 +169,10 @@ class ServiceActiveController extends Controller
     public function getContentService($id)
     {
 
-        $cloud = OrderDetail::find($id);
-        $content = $cloud->content;
+
+        $service = Service::find($id);
+        // dd($service);
+        $content = $service->content;
 
         // Trả về dữ liệu dưới dạng JSON
         return response()->json(['content' => $content]);
@@ -179,7 +186,7 @@ class ServiceActiveController extends Controller
         $id = $request->input('id');
 
         // Tìm bài viết theo ID và cập nhật nội dung
-        $service = OrderDetail::find($id);
+        $service = Service::find($id);
         if ($service) {
             $service->content = $content;
             $service->save();

@@ -11,43 +11,46 @@
             <div class=" mb-3 row renews" style="display: flex;justify-content: space-between">
                 <p class="mb-1 col-md-4 ">
                     <?php
-                        if($item->type == 'hosting'){
+                        if ($item->type == 'hosting') {
                             $product = \App\Models\Hosting::find($item->product_id);
                             $backup = '';
-                        } else {
+                        } elseif ($item->type == 'cloud') {
                             $product = \App\Models\Cloud::find($item->product_id);
-                            $backup = ' - '.$item->os->name;
+                            $backup = ' - ' . $item->os->name;
+                        } elseif ($item->type == 'email') {
+                            $product = \App\Models\Email::find($item->product_id);
+                            $backup = ' '; // Giả sử `email_service` là quan hệ tới thông tin dịch vụ email.
                         }
                         echo $product->package_name.$backup;
                     ?>
                 </p>
-                <select class="select-form time_type" data-id="{{ $item->id }}"
-                    {{ isset($id) ? 'disabled' : '' }}
-
+                <select class="select-form time_type" data-id="{{ $item->id }}" {{ isset($id) ? 'disabled' : '' }}
                     style="width: 100px; text-align: center; padding: 5px 5px;" class="col-md-2">
                     @if ($item->type === 'hosting')
-                        <option value="12" {{ $item->number == 12 ? 'selected' : '' }}>1 năm</option>
-                        <option value="24" {{ $item->number == 24 ? 'selected' : '' }}>2 năm</option>
-                        <option value="36" {{ $item->number == 36 ? 'selected' : '' }}>3 năm</option>
-                        <option value="48" {{ $item->number == 48 ? 'selected' : '' }}>4 năm</option>
-                        <option value="60" {{ $item->number == 60 ? 'selected' : '' }}>5 năm</option>
+                    <option value="12" {{ $item->number == 12 ? 'selected' : '' }}>1 năm</option>
+                    <option value="24" {{ $item->number == 24 ? 'selected' : '' }}>2 năm</option>
+                    <option value="36" {{ $item->number == 36 ? 'selected' : '' }}>3 năm</option>
+                    <option value="48" {{ $item->number == 48 ? 'selected' : '' }}>4 năm</option>
+                    <option value="60" {{ $item->number == 60 ? 'selected' : '' }}>5 năm</option>
                     @else
-                        <option value="1" {{ $item->number == 1 ? 'selected' : '' }}>1 tháng</option>
-                        <option value="3" {{ $item->number == 3 ? 'selected' : '' }}>3 tháng</option>
-                        <option value="6" {{ $item->number == 6 ? 'selected' : '' }}>6 tháng</option>
-                        <option value="12" {{ $item->number == 12 ? 'selected' : '' }}>1 năm</option>
-                        <option value="24" {{ $item->number == 24 ? 'selected' : '' }}>2 năm</option>
-                        <option value="36" {{ $item->number == 36 ? 'selected' : '' }}>3 năm</option>
-                        <option value="48" {{ $item->number == 48 ? 'selected' : '' }}>4 năm</option>
-                        <option value="60" {{ $item->number == 60 ? 'selected' : '' }}>5 năm</option>
+                    <option value="1" {{ $item->number == 1 ? 'selected' : '' }}>1 tháng</option>
+                    <option value="3" {{ $item->number == 3 ? 'selected' : '' }}>3 tháng</option>
+                    <option value="6" {{ $item->number == 6 ? 'selected' : '' }}>6 tháng</option>
+                    <option value="12" {{ $item->number == 12 ? 'selected' : '' }}>1 năm</option>
+                    <option value="24" {{ $item->number == 24 ? 'selected' : '' }}>2 năm</option>
+                    <option value="36" {{ $item->number == 36 ? 'selected' : '' }}>3 năm</option>
+                    <option value="48" {{ $item->number == 48 ? 'selected' : '' }}>4 năm</option>
+                    <option value="60" {{ $item->number == 60 ? 'selected' : '' }}>5 năm</option>
                     @endif
                 </select>
-                <span class="fw-bold text-primary col-md-3 text-end price_new">{{ number_format($item->price, 0, ',', '.') }}
+                <span class="fw-bold text-primary col-md-3 text-end price_new">{{ number_format($item->price, 0, ',',
+                    '.') }}
                     đ</span>
 
-                    <span class="col-md-1 close" style="cursor: pointer; {{ isset($id) ? 'display: none;' : '' }}" data-id="{{ $item->id }}">
-                        <i class="fas fa-trash"></i>
-                    </span>
+                <span class="col-md-1 close" style="cursor: pointer; {{ isset($id) ? 'display: none;' : '' }}"
+                    data-id="{{ $item->id }}">
+                    <i class="fas fa-trash"></i>
+                </span>
 
             </div>
             @empty

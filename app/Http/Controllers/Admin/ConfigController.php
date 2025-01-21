@@ -17,18 +17,12 @@ class ConfigController extends Controller
     }
     public function store(CompanyRequest $request)
     {
-
+        // dd($request->all());
         $data = $request->validated();
 
-        $company = Config::updateOrCreate(
-            ['tax_id' => $data['tax_id']],
-            $data
-        );
+       Config::updateOrCreate( ['id' => $request->input('id')],$data);
 
-        // Trả về phản hồi
-        return response()->json([
-            'message' => $company->wasRecentlyCreated ? 'Thêm công ty mới thành công' : 'Cập nhật công ty thành công',
-            'data' => $company
-        ]);
+        toastr()->success('Cập nhật thành công.');
+        return redirect()->back();
     }
 }

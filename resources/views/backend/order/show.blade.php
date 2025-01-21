@@ -26,15 +26,18 @@
                         <p>{{ \Carbon\Carbon::parse($order->created_at)->format('Y-m-d H:i:s') }}</p>
                     </li> --}}
                     <li class="col-md-3 col-12"><span>Trạng thái:</span>
-                        <p>
+                        <p class="order-status">
                             @if ($order->status == 'payment')
-                            Đã thanh toán <span style="color: red">(Chờ kích hoạt)</span>
+                            Đã thanh toán <span class="status-pending">(Chờ kích hoạt)</span>
                             @elseif ($order->status == 'nopayment')
                             Chưa thanh toán
+                            @elseif ($order->status == 'pending')
+                            <span class="status-pending">Đang chờ cấp tài khoản</span>
                             @else
                             Đã kích hoạt
                             @endif
                         </p>
+
                     </li>
                 </ul>
             </div>
@@ -56,23 +59,27 @@
                                 <td>{{ $index + 1 }}</td>
                                 <td>
                                     @if ($order->order_type == 1)
-                                        Đăng ký mới
+                                    Đăng ký mới
                                     @else
-                                        Gia hạn
+                                    Gia hạn
                                     @endif
                                 </td>
                                 <td>
                                     <?php
                                         if($item->type == 'hosting'){
                                             $product = \App\Models\Hosting::find($item->product_id);
-                                            $os = '';
                                             $backup = '';
-                                        } else {
+                                            $domain = ' ( ' .$item->domain. ' )';
+                                        } else if($item->type == 'cloud') {
                                             $product = \App\Models\Cloud::find($item->product_id);
-                                            $os = ' - '.$item->os->name;
-                                            $backup =  $item->backup ? ' - Tự backup' : '';
+                                            $backup = ' - '.$item->os->name;
+                                            $domain = '';
+                                        }else {
+                                            $product = \App\Models\Email::find($item->product_id);
+                                            $backup = '';
+                                            $domain = ' ( ' .$item->domain. ' )';
                                         }
-                                        $name =  $product->package_name.$os.$backup;
+                                        $name = '( ' . ucfirst($item->type) . ' ) '. $product->package_name.$backup.$domain;
                                     ?>
                                     {{ $name }}
                                 </td>
@@ -88,47 +95,69 @@
                                 </td>
                                 <td>
 
-                                    <div class="status-badge">
-                                        @if ($order->status == 'payment')
-                                        <i class="status-icon pending"></i> Đã thanh toán( Chờ kích hoạt )
-                                        @elseif ($order->status == 'nopayment')
-                                        <i class="status-icon nopayment"></i> Chưa thanh toán
-                                        @else
-                                        <i class="status-icon payment"></i> Đã kích hoạt
-                                        @endif
+                                    <div style="display: flex; align-items: center;">
+                                        <div class="status-badge">
+                                            @if ($item->status == 'payment')
+                                            <i class="status-icon pending"></i> Đã thanh toán (Chờ kích hoạt)
+                                            @elseif ($item->status == 'nopayment')
+                                            <i class="status-icon nopayment"></i> Chưa thanh toán
+                                            @elseif ($item->status == 'pending')
+                                            <i class="status-icon pending"></i> <span class="status-text">Đang chờ cấp
+                                                tài khoản</span>
+                                            @else
+                                            <i class="status-icon payment"></i> Đã kích hoạt
+                                            @endif
+                                        </div>
+                                        <div style="margin-left: 20px;">
+                                            @if ($item->status == 'pending')
+                                            <button class="btn btn-primary open-modal-btn"
+                                                style="padding: 5px 10px; border-radius: 5px;" data-bs-toggle="modal"
+                                                data-bs-target="#createAccountModal" data-id="{{ $item->id }}"
+                                                data-content="{{ $item->content ?? '' }}">
+                                                Tạo tài khoản
+                                            </button>
+                                            @endif
+                                        </div>
+
+                                        <div class="modal fade" id="createAccountModal" tabindex="-1"
+                                            aria-labelledby="createAccountModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <form
+                                                        action="{{ route('order.create.account', ['id' => '__id__']) }}"
+                                                        method="POST" id="dynamicForm">
+                                                        @csrf
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="createAccountModalLabel">Nội
+                                                                dung</h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <textarea class="form-control" id="dynamicContent"
+                                                                name="content" rows="10"></textarea>
+                                                            <p id="error-message" class="text-danger mt-2"
+                                                                style="display: none;">Nội dung không được để trống!</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Đóng</button>
+                                                            <button type="submit" class="btn btn-primary"
+                                                                id="submitButton">Lưu</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
                                     </div>
+
 
                                 </td>
 
-                                {{-- <td>
-
-                                    @if($order->active_at)
-                                    @php
-                                    $createdAt = \Carbon\Carbon::parse($order->active_at);
-                                    $deadline = \Carbon\Carbon::parse($item->deadline);
-
-                                    $diffYears = $createdAt->diffInYears($deadline);
-                                    $diffMonths = $createdAt->diffInMonths($deadline) % 12; // Lấy số tháng lẻ sau năm
-                                    $diffDays = $createdAt->diffInDays($deadline) % 30; // Lấy số ngày lẻ sau tháng
-                                    @endphp
-
-                                    @if ($deadline->isPast())
-                                    Hết hạn
-                                    @elseif ($diffYears > 0)
-                                    {{ $diffYears }} năm {{ $diffMonths }} tháng
-                                    @elseif ($diffMonths > 0)
-                                    {{ $diffMonths }} tháng
-                                    @else
-                                    {{ $diffDays }} ngày
-                                    @endif
-
-                                    @endif
-
-
-
-                                </td> --}}
-                                <td><label style="text-decoration: inherit;">{{ number_format($item->price) }}
-                                        đ</label></td>
+                                <td><label style="text-decoration: inherit;">{{ number_format($item->price) }} đ</label>
+                                </td>
                             </tr>
                             @empty
 
@@ -157,10 +186,19 @@
         </div>
     </div>
 </div>
+
 @endsection
 
 @push('styles')
 <style>
+    .cke_notifications_area {
+        display: none;
+    }
+
+    .error {
+        color: red;
+    }
+
     .qb_order_has_been_paid_page {
         background-color: #fff;
         border-radius: 8px;
@@ -370,4 +408,70 @@
     }
 </style>
 
+@endpush
+
+@push('scripts')
+
+<script src="https://cdn.ckeditor.com/4.19.1/standard-all/ckeditor.js"></script>
+<script src="https://cdn.ckeditor.com/ckeditor4/ckeditor.js"></script>
+<!-- Thêm SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    CKEDITOR.replace('dynamicContent', {
+        toolbar: [
+            { name: 'document', items: [ 'Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-', 'Templates' ] },
+            { name: 'clipboard', items: [ 'Undo', 'Redo' ] },
+            { name: 'editing', items: [ 'Find', 'Replace', '-', 'SelectAll', '-', 'SpellChecker', 'Scayt' ] },
+            { name: 'forms', items: [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField' ] },
+            '/',
+            { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', '-', 'Subscript', 'Superscript', '-', 'Strike', 'RemoveFormat' ] },
+            { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl', 'Language' ] },
+            { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
+            { name: 'insert', items: [ 'Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe' ] },
+            '/',
+            { name: 'styles', items: [ 'Styles', 'Format', 'Font', 'FontSize' ] },
+            { name: 'colors', items: [ 'TextColor', 'BGColor' ] },
+            { name: 'tools', items: [ 'Maximize', 'ShowBlocks', '-' ] },
+            { name: 'about', items: [ 'About' ] }
+        ],
+        extraPlugins: 'font,colorbutton,justify',
+        fontSize_sizes: '11px;12px;13px;14px;15px;16px;18px;20px;22px;24px;26px;28px;30px;32px;34px;36px',
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('createAccountModal');
+        const dynamicContent = document.getElementById('dynamicContent');
+        const dynamicForm = document.getElementById('dynamicForm');
+        const errorMessage = document.getElementById('error-message');
+        const submitButton = document.getElementById('submitButton');
+
+        // Listen for modal show event
+        modal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+
+            // Extract data attributes
+            const itemId = button.getAttribute('data-id');
+            const itemContent = button.getAttribute('data-content');
+
+            // Update modal content and form action dynamically
+            dynamicContent.value = itemContent;
+            dynamicForm.action = `{{ route('order.create.account', ['id' => '__id__']) }}`.replace('__id__', itemId);
+            errorMessage.style.display = 'none'; // Reset error message
+        });
+
+        // Validate content before submitting
+        dynamicForm.addEventListener('submit', function (event) {
+            CKEDITOR.instances.dynamicContent.updateElement();
+            if (dynamicContent.value.trim() === '') {
+                event.preventDefault(); // Stop form submission
+                errorMessage.style.display = 'block'; // Show error message
+            }
+        });
+
+        // Clear content when modal is hidden (optional)
+        modal.addEventListener('hidden.bs.modal', function () {
+            dynamicContent.value = '';
+            errorMessage.style.display = 'none'; // Hide error message
+        });
+    });
+</script>
 @endpush

@@ -12,125 +12,45 @@
 
             <!-- Thông tin công ty -->
             <h5 class="section-title">Thông tin công ty</h5>
+            <input type="hidden" name="id" value="{{ $company->id ?? '' }}">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="form-group row">
-                        <label for="company_name" class="form-label">Tên công ty</label>
-                        <input type="text" class="form-control @error('company_name') is-invalid @enderror"
-                            id="company_name" name="company_name" placeholder="Nhập tên công ty"
-                            value="{{ old('company_name', $company->company_name ?? '') }}" />
-                        @error('company_name')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
+                    @php
+                        $fields = [
+                            ['id' => 'company_name', 'label' => 'Tên công ty', 'type' => 'text', 'placeholder' => 'Nhập tên công ty'],
+                            ['id' => 'company_address', 'label' => 'Địa chỉ công ty', 'type' => 'text', 'placeholder' => 'Nhập địa chỉ công ty'],
+                            ['id' => 'company_phone', 'label' => 'Số điện thoại công ty', 'type' => 'text', 'placeholder' => 'Nhập số điện thoại công ty'],
+                            ['id' => 'company_email', 'label' => 'Email công ty', 'type' => 'email', 'placeholder' => 'Nhập email công ty'],
+                            ['id' => 'company_website', 'label' => 'Website công ty', 'type' => 'url', 'placeholder' => 'Nhập website công ty'],
+                            ['id' => 'tax_id', 'label' => 'Mã số thuế', 'type' => 'text', 'placeholder' => 'Nhập mã số thuế'],
+                            ['id' => 'vat_rate', 'label' => 'Tỷ lệ VAT', 'type' => 'text', 'placeholder' => 'Nhập tỷ lệ VAT'],
+                            ['id' => 'representative_name', 'label' => 'Tên người đại diện', 'type' => 'text', 'placeholder' => 'Nhập tên người đại diện'],
+                            ['id' => 'representative_position', 'label' => 'Chức vụ người đại diện', 'type' => 'text', 'placeholder' => 'Nhập chức vụ người đại diện'],
+                            ['id' => 'representative_phone', 'label' => 'Số điện thoại người đại diện', 'type' => 'text', 'placeholder' => 'Nhập số điện thoại người đại diện'],
+                            ['id' => 'representative_email', 'label' => 'Email người đại diện', 'type' => 'email', 'placeholder' => 'Nhập email người đại diện'],
+                        ];
+                    @endphp
 
-                    <div class="form-group row">
-                        <label for="company_address" class="form-label">Địa chỉ công ty</label>
-                        <input type="text" class="form-control @error('company_address') is-invalid @enderror"
-                            id="company_address" name="company_address" placeholder="Nhập địa chỉ công ty"
-                            value="{{ old('company_address', $company->company_address ?? '') }}" />
-                        @error('company_address')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
+                    @foreach ($fields as $field)
+                        <div class="form-group row">
+                            <label for="{{ $field['id'] }}" class="form-label col-md-2">{{ $field['label'] }}</label>
+                            <div class="col-md-10">
+                                <input type="{{ $field['type'] }}"
+                                   class="form-control  @error($field['id']) is-invalid @enderror"
+                                   id="{{ $field['id'] }}"
+                                   name="{{ $field['id'] }}"
+                                   placeholder="{{ $field['placeholder'] }}"
+                                   value="{{ old($field['id'], $company->{$field['id']} ?? '') }}" />
+                                   @error($field['id'])
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                            </div>
 
-                    <div class="form-group row">
-                        <label for="company_phone" class="form-label">Số điện thoại công ty</label>
-                        <input type="text" class="form-control @error('company_phone') is-invalid @enderror"
-                            id="company_phone" name="company_phone" placeholder="Nhập số điện thoại công ty"
-                            value="{{ old('company_phone', $company->company_phone ?? '') }}" />
-                        @error('company_phone')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="form-group row">
-                        <label for="company_email" class="form-label">Email công ty</label>
-                        <input type="email" class="form-control @error('company_email') is-invalid @enderror"
-                            id="company_email" name="company_email" placeholder="Nhập email công ty"
-                            value="{{ old('company_email', $company->company_email ?? '') }}" />
-                        @error('company_email')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="form-group row">
-                        <label for="company_website" class="form-label">Website công ty</label>
-                        <input type="url" class="form-control @error('company_website') is-invalid @enderror"
-                            id="company_website" name="company_website" placeholder="Nhập website công ty"
-                            value="{{ old('company_website', $company->company_website ?? '') }}" />
-                        @error('company_website')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="form-group row">
-                        <label for="tax_id" class="form-label">Mã số thuế</label>
-                        <input type="text" class="form-control @error('tax_id') is-invalid @enderror" id="tax_id"
-                            name="tax_id" placeholder="Nhập mã số thuế"
-                            value="{{ old('tax_id', $company->tax_id ?? '') }}" />
-                        @error('tax_id')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="form-group row">
-                        <label for="vat_rate" class="form-label">Tỷ lệ VAT</label>
-                        <input type="text" class="form-control @error('vat_rate') is-invalid @enderror" id="vat_rate"
-                            name="vat_rate" placeholder="Nhập tỷ lệ VAT"
-                            value="{{ old('vat_rate', $company->vat_rate ?? '') }}" />
-                        @error('vat_rate')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-
-
-                    <div class="form-group row">
-                        <label for="representative_name" class="form-label">Tên người đại diện</label>
-                        <input type="text" class="form-control @error('representative_name') is-invalid @enderror"
-                            id="representative_name" name="representative_name" placeholder="Nhập tên người đại diện"
-                            value="{{ old('representative_name', $company->representative_name ?? '') }}" />
-                        @error('representative_name')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="form-group row">
-                        <label for="representative_position" class="form-label">Chức vụ người đại diện</label>
-                        <input type="text" class="form-control @error('representative_position') is-invalid @enderror"
-                            id="representative_position" name="representative_position"
-                            placeholder="Nhập chức vụ người đại diện"
-                            value="{{ old('representative_position', $company->representative_position ?? '') }}" />
-                        @error('representative_position')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="form-group row">
-                        <label for="representative_phone" class="form-label">Số điện thoại người đại diện</label>
-                        <input type="text" class="form-control @error('representative_phone') is-invalid @enderror"
-                            id="representative_phone" name="representative_phone"
-                            placeholder="Nhập số điện thoại người đại diện"
-                            value="{{ old('representative_phone', $company->representative_phone ?? '') }}" />
-                        @error('representative_phone')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="form-group row">
-                        <label for="representative_email" class="form-label">Email người đại diện</label>
-                        <input type="email" class="form-control @error('representative_email') is-invalid @enderror"
-                            id="representative_email" name="representative_email"
-                            placeholder="Nhập email người đại diện"
-                            value="{{ old('representative_email', $company->representative_email ?? '') }}" />
-                        @error('representative_email')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
+                        </div>
+                    @endforeach
                 </div>
             </div>
+
 
             <!-- Buttons -->
             <div class="d-flex justify-content-end">

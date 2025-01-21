@@ -86,7 +86,7 @@ Route::middleware('auth')->group(function () {
             Route::get('{id}/show', [OrderController::class, 'show'])->name('show');
             Route::post('delete-{id}', [OrderController::class, 'delete'])->name('delete');
             Route::post('active-{id}', [OrderController::class, 'active'])->name('active');
-
+            Route::post('create-account-{id}', [OrderController::class, 'createAccount'])->name('create.account');
         });
 
         Route::prefix('hosting')->name('hosting.')->group(function () {
@@ -152,6 +152,8 @@ Route::middleware('auth')->group(function () {
 
         Route::prefix('email')->name('email.')->group(function () {
             Route::get('{email_type?}', [CustomerEmailController::class, 'index'])->name('index');
+            Route::get('vi/email-{id}', [CustomerEmailController::class, 'viemail'])->name('viemail');
+            Route::post('add-cart', [CustomerEmailController::class, 'addtocart'])->name('addtocart');
         });
 
         Route::prefix('order')->name('order.')->group(function () {
@@ -175,12 +177,19 @@ Route::middleware('auth')->group(function () {
         });
 
         Route::prefix('service')->name('service.')->group(function () {
-            Route::prefix('list-cloud')->name('cloud.')->group(function () {
-                Route::get('', [CustomerServiceController::class, 'listcloud'])->name('list.cloud');
-            });
-            Route::prefix('list-hosting')->name('hosting.')->group(function () {
-                Route::get('', [CustomerServiceController::class, 'listhosting'])->name('list.hosting');
-            });
+
+            Route::get('list-{type}', [CustomerServiceController::class, 'listServices'])->name('list.service');
+
+            // Route::prefix('list-cloud')->name('cloud.')->group(function () {
+            //     Route::get('', [CustomerServiceController::class, 'listcloud'])->name('list.cloud');
+            // });
+            // Route::prefix('list-hosting')->name('hosting.')->group(function () {
+            //     Route::get('', [CustomerServiceController::class, 'listhosting'])->name('list.hosting');
+            // });
+
+            // Route::prefix('list-email')->name('email.')->group(function () {
+            //     Route::get('', [CustomerServiceController::class, 'listemail'])->name('list.email');
+            // });
         });
 
 

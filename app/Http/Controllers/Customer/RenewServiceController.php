@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Cloud;
+use App\Models\Email;
 use App\Models\Hosting;
 use App\Models\OrderDetail;
 use App\Models\RenewService;
+use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,7 +19,7 @@ class RenewServiceController extends Controller
     public function addrenews($id)
     {
         // dd($id);
-        $detail = OrderDetail::find($id);
+        $detail = Service::find($id);
         $user = Auth::user();
         $cart = Cart::where('user_id', $user->id)->first();
         if ($cart) {
@@ -30,10 +32,13 @@ class RenewServiceController extends Controller
         }else if($detail->type == 'hosting'){
             $price = Hosting::find($detail->product_id)->price;
             $number = 12;
+        }else if($detail->type == 'email'){
+            $price = Email::find($detail->product_id)->price;
+            $number = 12;
         }
         RenewService::create(
             [
-                'orderdetail_id' => $id,
+                'service_id' => $id,
                 'email' => $user->email,
                 'product_id' => $detail->product_id,
                 'os_id' => $detail->os_id,

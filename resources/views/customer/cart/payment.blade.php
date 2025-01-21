@@ -14,10 +14,14 @@
                             $product = \App\Models\Hosting::find($item->product_id);
                             $backup = '';
                             $domain = $item->domain;
-                        } else {
+                        } else if($item->type == 'cloud') {
                             $product = \App\Models\Cloud::find($item->product_id);
                             $backup = ' - '.$item->os->name;
                             $domain = '';
+                        }else {
+                            $product = \App\Models\Email::find($item->product_id);
+                            $backup = '';
+                            $domain = $item->domain;
                         }
                         echo $product->package_name.$backup.' ( ' .$domain. ' )';
                     ?>

@@ -27,7 +27,7 @@ class CompanyRequest extends FormRequest
             'company_name'         => 'required|string|max:255',
             'company_address'      => 'required|string|max:255',
             'company_phone'        => 'required|numeric|regex:/^0[0-9]{9,10}$/', // Kiểm tra số điện thoại
-            'company_email'        => 'required|email|unique:companies,company_email',
+            'company_email'        => 'required|email|unique:company_config,company_email',
             'company_website'      => 'nullable|url',
             'tax_id'               => 'required|string|max:20',
             'vat_rate'             => 'required|numeric|min:0|max:100',

@@ -56,9 +56,9 @@
                                 <td>{{ $index + 1 }}</td>
                                 <td>
                                     @if ($order->order_type == 1)
-                                        Đăng ký mới
+                                    Đăng ký mới
                                     @else
-                                        Gia hạn
+                                    Gia hạn
                                     @endif
 
                                 </td>
@@ -66,14 +66,18 @@
                                     <?php
                                         if($item->type == 'hosting'){
                                             $product = \App\Models\Hosting::find($item->product_id);
-                                            $os = '';
                                             $backup = '';
-                                        } else {
+                                            $domain = $item->domain;
+                                        } else if($item->type == 'cloud') {
                                             $product = \App\Models\Cloud::find($item->product_id);
-                                            $os = ' - '.$item->os->name;
-                                            $backup =  $item->backup ? ' - Tự backup' : '';
+                                            $backup = ' - '.$item->os->name;
+                                            $domain = '';
+                                        }else {
+                                            $product = \App\Models\Email::find($item->product_id);
+                                            $backup = '';
+                                            $domain = $item->domain;
                                         }
-                                        $name =  $product->package_name.$os.$backup;
+                                        $name =  $product->package_name.$backup.' ( ' .$domain. ' )';
                                     ?>
                                     {{ $name }}
                                 </td>

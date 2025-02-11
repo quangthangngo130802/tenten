@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -45,4 +46,17 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    public function report(Throwable $exception)
+    {
+        Log::error('>>Exception occurred<<', [
+            'message' => $exception->getMessage(),
+            'file'    => $exception->getFile(),
+            'line'    => $exception->getLine(),
+        ]);
+
+        parent::report($exception);
+    }
+
+
 }

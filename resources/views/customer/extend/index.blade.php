@@ -20,13 +20,20 @@
                         } elseif ($item->type == 'email') {
                             $product = \App\Models\Email::find($item->product_id);
                             $backup = ' '; // Giả sử `email_service` là quan hệ tới thông tin dịch vụ email.
+                        }elseif ($item->type == 'domain') {
+                            $product_domain = $item->domain.$item->domain_extension;
+
                         }
-                        echo $product->package_name.$backup;
+                        if($item->type == 'domain'){
+                            echo $product_domain. ' ('.Str::ucfirst($item->type).') ';
+                        }else {
+                            echo $product->package_name.$backup .' ('.Str::ucfirst($item->type).') ';
+                        }
                     ?>
                 </p>
                 <select class="select-form time_type" data-id="{{ $item->id }}" {{ isset($id) ? 'disabled' : '' }}
                     style="width: 100px; text-align: center; padding: 5px 5px;" class="col-md-2">
-                    @if ($item->type === 'hosting')
+                    @if ($item->type === 'hosting' || $item->type === 'domain')
                     <option value="12" {{ $item->number == 12 ? 'selected' : '' }}>1 năm</option>
                     <option value="24" {{ $item->number == 24 ? 'selected' : '' }}>2 năm</option>
                     <option value="36" {{ $item->number == 36 ? 'selected' : '' }}>3 năm</option>
@@ -316,7 +323,7 @@
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             }).then(() => {
-                                window.location.href = APP_URL + '/customer/service/list-cloud';
+                                window.location.href = APP_URL + '/dashboard';
                             });
                         } else {
                             Swal.fire({

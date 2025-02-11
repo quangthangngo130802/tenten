@@ -18,17 +18,33 @@
                             $product = \App\Models\Cloud::find($item->product_id);
                             $backup = ' - '.$item->os->name;
                             $domain = '';
-                        }else {
+                        }else if($item->type == 'email'){
                             $product = \App\Models\Email::find($item->product_id);
                             $backup = '';
                             $domain = $item->domain;
+                        }else  {
+                            $product = $item->domain.$item->domain_extension;
+                            $backup = '';
+                            $domain = '';
                         }
-                        echo $product->package_name.$backup.' ( ' .$domain. ' )';
+                        if($item->type == 'domain'){
+                            echo  $product;
+                        }else {
+                            echo $product->package_name.$backup.' ( ' .$domain. ' )';
+                        }
+
                     ?>
                 </p>
                 <select disabled style="width: 100px; text-align: center; padding: 5px 5px;" class="col-md-1">
-                    <option>{{$item->number }} tháng</option>
+                    <option>
+                        @if ($item->number % 12 == 0)
+                        {{ $item->number / 12 }} năm
+                        @else
+                        {{ $item->number }} tháng
+                        @endif
+                    </option>
                 </select>
+  
                 <span class="fw-bold text-primary col-md-3 text-end">{{ number_format($item->price, 0, ',', '.') }}
                     đ</span>
             </div>

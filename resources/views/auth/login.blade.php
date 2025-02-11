@@ -282,7 +282,7 @@
 
                                 <div class="btn">
                                     <button type="submit" name="button"
-                                        class="loginButton loginButtonGg remove-msg before-login disabled_button"
+                                        class="loginButton loginButtonGg remove-msg before-login "
                                         id="submitBtn">Đăng nhập</button>
                                 </div>
                             </div>

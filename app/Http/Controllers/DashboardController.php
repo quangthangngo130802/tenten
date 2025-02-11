@@ -108,6 +108,11 @@ class DashboardController extends Controller
                 'active_count' => $result->where('type', 'email')->first()->active_count ?? 0,
                 'expiring_soon_count' => $result->where('type', 'email')->first()->expiring_soon_count ?? 0,
                 'expired_count' => $result->where('type', 'email')->first()->expired_count ?? 0,
+            ],
+            'domain' => [
+                'active_count' => $result->where('type', 'domain')->first()->active_count ?? 0,
+                'expiring_soon_count' => $result->where('type', 'domain')->first()->expiring_soon_count ?? 0,
+                'expired_count' => $result->where('type', 'domain')->first()->expired_count ?? 0,
             ]
         ];
 

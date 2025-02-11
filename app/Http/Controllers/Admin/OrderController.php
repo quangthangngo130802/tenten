@@ -108,16 +108,23 @@ class OrderController extends Controller
         if ($order->order_type == 2) {
             $renewService = $order->orderDetail;
             $renewService->each(function ($service) {
-                $orderdetail = OrderDetail::find($service->orderdetail_id);
-                $orderdetail->update([
-                    'price' => $orderdetail->price + $service->price,
-                    'number' => $orderdetail->number + $service->number
+                $service = Service::find($service->service_id);
+                $service->update([
+                    'price' => $service->price + $service->price,
+                    'number' => $service->number + $service->number
                 ]);
-                $ordernew = Order::find($orderdetail->order_id);
-                $ordernew->update([
-                    'amount' => $ordernew->orderDetail->sum('price'),
-                ]);
+
             });
+            $order->update([
+                'status' => 'active',
+                'active_at' => now(),
+            ]);
+
+            $order->orderDetail()->update([
+                'status' => 'active',
+                'active_at' => now(),
+            ]);
+            return redirect()->route('order.show', ['id' => $id])->with('success', 'Đơn hàng đã được kích hoạt');
         }
 
         $order->update([
@@ -135,13 +142,15 @@ class OrderController extends Controller
     public  function createAccount(Request $request, $id)
     {
         $orderDetail = OrderDetail::find($id);
-        // dd($orderDetail->order);
+        // dd($orderDetail);
+
         Service::create([
             'email' => $orderDetail->order->email ?? null,
             'product_id' => $orderDetail->product_id,
             'os_id' => $orderDetail->os_id,
             'type' => $orderDetail->type,
             'domain' => $orderDetail->domain,
+            'domain_extension' => $orderDetail->domain_extension,
             'price' => $orderDetail->price,
             'time_type' => $orderDetail->time_type,
             'number' => $orderDetail->number,
@@ -149,6 +158,7 @@ class OrderController extends Controller
             'status' => 'active',
             'active_at' => now(),
             'content' => $request->content,
+
         ]);
         $orderDetail->update([
             'status' => 'active'

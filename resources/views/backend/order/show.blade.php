@@ -74,12 +74,15 @@
                                             $product = \App\Models\Cloud::find($item->product_id);
                                             $backup = ' - '.$item->os->name;
                                             $domain = '';
-                                        }else {
+                                        }else if($item->type == 'email'){
                                             $product = \App\Models\Email::find($item->product_id);
                                             $backup = '';
                                             $domain = ' ( ' .$item->domain. ' )';
+                                        }else if($item->type == 'domain'){
+                                            $product_name =  $item->domain .$item->domain_extension;
                                         }
-                                        $name = '( ' . ucfirst($item->type) . ' ) '. $product->package_name.$backup.$domain;
+                                        $name = '( ' . ucfirst($item->type) . ' ) ' . (($item->type == 'domain') ? $product_name :$product->package_name . $backup . $domain );
+
                                     ?>
                                     {{ $name }}
                                 </td>

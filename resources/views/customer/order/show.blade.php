@@ -67,17 +67,20 @@
                                         if($item->type == 'hosting'){
                                             $product = \App\Models\Hosting::find($item->product_id);
                                             $backup = '';
-                                            $domain = $item->domain;
+                                            $domain = ' ( ' .$item->domain. ' )';
                                         } else if($item->type == 'cloud') {
                                             $product = \App\Models\Cloud::find($item->product_id);
                                             $backup = ' - '.$item->os->name;
                                             $domain = '';
-                                        }else {
+                                        }else if($item->type == 'email'){
                                             $product = \App\Models\Email::find($item->product_id);
                                             $backup = '';
-                                            $domain = $item->domain;
+                                            $domain = ' ( ' .$item->domain. ' )';
+                                        }else if($item->type == 'domain'){
+                                            $product =  $item->domain .$item->domain_extension;
                                         }
-                                        $name =  $product->package_name.$backup.' ( ' .$domain. ' )';
+                                        $name = '( ' . ucfirst($item->type) . ' ) ' . (($item->type != 'domain') ? $product->package_name . $backup . $domain : $product);
+
                                     ?>
                                     {{ $name }}
                                 </td>

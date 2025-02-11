@@ -35,6 +35,9 @@ class RenewServiceController extends Controller
         }else if($detail->type == 'email'){
             $price = Email::find($detail->product_id)->price;
             $number = 12;
+        }else if($detail->type == 'domain'){
+            $price = $detail->price*12/$detail->number;
+            $number = 12;
         }
         RenewService::create(
             [
@@ -45,7 +48,9 @@ class RenewServiceController extends Controller
                 'type' => $detail->type,
                 'number' => $number,
                 'price' => $price,
-                'backup' => $detail->backup
+                'backup' => $detail->backup,
+                'domain' => $detail->domain,
+                'domain_extension' => $detail->domain_extension
             ]
         );
 
@@ -54,6 +59,7 @@ class RenewServiceController extends Controller
 
     public function listrenews()
     {
+
         $user = Auth::user();
         $page = "Gia hạn";
         $title = "Gia hạn dịch vụ";

@@ -43,20 +43,24 @@
                                 $product = \App\Models\Email::find($item->product_id);
                                 echo $product->package_name . ' (Email)';
                                 echo '<div>
-                                        <span " data-id="' . $item->id . '">' . $item->domain. '</span>
-                                    </div> ';
-                                }
+                                    <span " data-id="' . $item->id . '">' . $item->domain. '</span>
+                                            </div> ';
+                            }elseif ($item->type == 'domain') {
+
+                                echo $item->domain .$item->domain_extension. ' (Domain)';
+
+                            }
                             @endphp
                         </td>
 
                         <td>
-                            <select class="select-form time_type" data-id="{{ $item->id }}">
-                                @for ($i = 1; $i <= 5; $i++) @php $months=$i * 12; @endphp <option value="{{ $months }}"
-                                    {{ $item->number == $months ? 'selected' : '' }}>
-                                    {{ $i }} năm
-                                    </option>
-                                    @endfor
-                            </select>
+                            <select class=" select-form time_type" data-id="{{ $item->id }}">
+                                    @for ($i = 1; $i <= 5; $i++) @php $months=$i * 12; @endphp <option
+                                        value="{{ $months }}" {{ $item->number == $months ? 'selected' : '' }}>
+                                        {{ $i }} năm
+                                        </option>
+                                        @endfor
+                                        </select>
                         </td>
 
                         <td class="price_new"> {{ number_format($item->price, 0, ',', '.') }} đ</td>

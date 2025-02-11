@@ -91,10 +91,16 @@ class CustomerServiceController extends Controller
     public function listServices(Request $request, $type, $date = null)
     {
         $title = "Quản lý dịch vụ " . ucfirst($type);
-        $email = Auth::user()->email;
+        $user = Auth::user();
+        $email = $user->email;
 
         if ($request->ajax()) {
-            $data = Service::where('status', 'active')->where('type', $type)->select('*');
+            if($user->role_id == 1){
+                $data = Service::where('status', 'active')->where('type', $type)->select('*');
+            }else{
+                $data = Service::where('status', 'active')->where('type', $type)->where('email', $email)->select('*');
+            }
+
 
             if ($date == 'expire_soon') {
                 $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) BETWEEN 1 AND 30');
@@ -115,9 +121,11 @@ class CustomerServiceController extends Controller
                         $model = Hosting::find($row->product_id);
                     } elseif ($type === 'email') {
                         $model = Email::find($row->product_id);
+                    }else if($type == 'domain'){
+                        $model = $row->domain.$row->domain_extension;
                     }
 
-                    return $model ? $model->package_name : 'N/A';
+                    return $type == 'domain' ? $model : ($model ? $model->package_name : 'N/A');
                 })
                 ->addColumn('enddate', function ($row) {
                     $activeAt = Carbon::parse($row->active_at);

@@ -14,6 +14,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\Customer\CloudController as CustomerCloudController;
 use App\Http\Controllers\Customer\CustomerServiceController;
+use App\Http\Controllers\Customer\DomainController as CustomerDomainController;
 use App\Http\Controllers\Customer\EmailController as CustomerEmailController;
 use App\Http\Controllers\Customer\HostingController as CustomerHostingController;
 use App\Http\Controllers\Customer\OrderController as CustomerOrderController;
@@ -190,6 +191,14 @@ Route::middleware('auth')->group(function () {
             // Route::prefix('list-email')->name('email.')->group(function () {
             //     Route::get('', [CustomerServiceController::class, 'listemail'])->name('list.email');
             // });
+        });
+
+        Route::prefix('domain')->name('domain.')->group(function () {
+            Route::get('', [CustomerDomainController::class, 'index'])->name('index');
+            Route::post('check', [CustomerDomainController::class, 'checkDomain'])->name('check.domain');
+            Route::post('cart', [CustomerDomainController::class, 'addToCart'])->name('addTo.cart');
+            Route::post('delete-cart', [CustomerDomainController::class, 'deleteToCart'])->name('deleteTo.cart');
+            Route::post('remove/{id}', [CustomerDomainController::class, 'delete']);
         });
 
 

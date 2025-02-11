@@ -143,6 +143,7 @@ class OrderController extends Controller
                     'price' => $detail->price,
                     'backup' => $detail->backup,
                     'number' => $detail->number,
+                    'domain_extension' => $detail->domain_extension
 
                 ]);
                 $detail->delete(); // Xóa chi tiết sau khi đã thêm vào order
@@ -372,12 +373,14 @@ class OrderController extends Controller
                 $order->orderDetail()->create([
                     'order_id' => $order->id,
                     'product_id' => $detail->product_id,
+                    'domain' => $detail->domain,
+                    'domain_extension' => $detail->domain_extension,
                     'os_id' => $detail->os_id,
                     'type' => $detail->type,
                     'price' => $detail->price,
                     'backup' => $detail->backup,
                     'number' => $detail->number,
-                    'orderdetail_id' => $detail->orderdetail_id
+                    'service_id' => $detail->service_id
                 ]);
                 $detail->delete(); // Xóa chi tiết sau khi đã thêm vào order
             });
@@ -483,7 +486,6 @@ class OrderController extends Controller
             }
         } else {
 
-
             $price =  RenewService::where('email', $user->email)->sum('price');
 
             if ($user->wallet >= $price) {
@@ -513,6 +515,8 @@ class OrderController extends Controller
                     $order->orderDetail()->create([
                         'order_id' => $order->id,
                         'product_id' => $detail->product_id,
+                        'domain' => $detail->domain,
+                        'domain_extension' => $detail->domain_extension,
                         'os_id' => $detail->os_id,
                         'type' => $detail->type,
                         'price' => $detail->price,

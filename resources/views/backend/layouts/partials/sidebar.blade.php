@@ -174,7 +174,7 @@
                     <div class="collapse" id="service_dk">
                         <ul class="nav nav-collapse">
                             <li>
-                                <a href="">
+                                <a href="{{ route('customer.domain.index') }}">
                                     <span class="sub-item">Tên miền</span>
                                 </a>
                             </li>
@@ -205,7 +205,7 @@
                     <div class="collapse" id="service_active">
                         <ul class="nav nav-collapse">
                             <li>
-                                <a href="{{ route('domain.index') }}">
+                                <a href="{{ route('customer.service.list.service', ['type' => 'domain']) }}">
                                     <span class="sub-item">Tên miền</span>
                                 </a>
                             </li>

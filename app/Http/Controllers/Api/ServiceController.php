@@ -18,7 +18,7 @@ class ServiceController extends Controller
         try {
 
             $service = Service::create([
-                'email' => $request->name,
+                'email' => $request->email,
                 'type' => 'hotel',
                 'domain' => $request->domain,
                 'active_at' => $request->active_at,

@@ -24,6 +24,7 @@ class ServiceController extends Controller
                 'active_at' => $request->active_at,
                 'number' => $request->number,
                 'status' =>  $request->status,
+                'price' => 0
             ]);
 
             return response()->json([

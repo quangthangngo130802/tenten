@@ -35,7 +35,8 @@ class CustomerController extends Controller
                 'phone_number' => $request->phone,
                 'password' => $request->password,
                 'province' => $request->province,
-                'is_hotel_account' => $request->is_hotel_account
+                'status' => 'active',
+                'is_hotel_account' => 1
             ]);
 
             return response()->json([

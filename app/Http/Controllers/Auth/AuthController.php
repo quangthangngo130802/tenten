@@ -33,19 +33,28 @@ class AuthController extends Controller
 
     public function authenticate(LoginUserRequest $request)
     {
-
-        $credentials = $request->only(['username', 'password']);
+        $loginField = filter_var($request->input('username'), FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        $credentials = [
+            $loginField => $request->input('username'),
+            'password'  => $request->input('password'),
+        ];
         $remember = $request->boolean('remember');
 
+        $user = User::where($loginField, $credentials[$loginField])->first();
 
-        $user = User::where('username', $credentials['username'])->first();
+        // Kiểm tra nếu tài khoản không tồn tại
+        if (!$user) {
+            toastr()->error('Tài khoản hoặc mật khẩu không chính xác!');
+            return back();
+        }
+
         // Kiểm tra nếu tài khoản không được kích hoạt
         if ($user->status !== 'active') {
             toastr()->error('Tài khoản của bạn chưa được kích hoạt. Vui lòng liên hệ quản trị viên.');
             return back();
         }
 
-        // Thực hiện đăng nhập nếu thông tin hợp lệ
+        // Thực hiện đăng nhập
         if (auth()->attempt($credentials, $remember)) {
             toastr()->success('Đăng nhập thành công.');
             return redirect()->route('dashboard');
@@ -54,6 +63,7 @@ class AuthController extends Controller
             return back();
         }
     }
+
 
     public function logout()
     {

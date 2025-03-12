@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserEditRequest;
 use App\Http\Requests\UserRequest;
+use App\Imports\UsersImport;
 use App\Mail\CreateUserEmail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\DataTables;
 
 class UserController extends Controller
@@ -65,7 +67,7 @@ class UserController extends Controller
 
         if (!is_null($credentials['password'] ?? null)) {
             $credentials['password'] = bcrypt($credentials['password']);
-        }else{
+        } else {
             unset($credentials['password']);
         }
 
@@ -89,5 +91,21 @@ class UserController extends Controller
         Mail::to($credentials['email'])->send(new CreateUserEmail($data));
         toastr()->success('Thêm thành công.');
         return redirect()->route('user.index');
+    }
+
+
+    public function import(Request $request)
+    {
+        // dd($request->all());
+        // Kiểm tra file có hợp lệ không
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv'
+        ]);
+
+        // Import dữ liệu từ file
+        Excel::import(new UsersImport, $request->file('file'));
+
+        // Trả về thông báo thành công
+        return redirect()->route('user.index')->with('success', 'Dữ liệu đã được import thành công!');
     }
 }

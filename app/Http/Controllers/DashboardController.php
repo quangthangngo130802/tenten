@@ -35,13 +35,13 @@ class DashboardController extends Controller
                 ->count();
         } else {
             $nopayment = Order::where('status', 'nopayment')->where('email', $user->email)->get();
-            $orderactive = Service::where('status', 'active')
+            $orderactive = Service::where('status', 'active')->where('email', $user->email)
                 // ->whereHas('order', function ($query) use ($user) {
                 //     $query->where('email', $user->email)->where('order_type', 1);
                 // })
                 ->count();
 
-            $serviceRenewCount = Service::where('status', 'active')
+            $serviceRenewCount = Service::where('status', 'active')->where('email', $user->email)
                 // ->whereHas('order', function ($query) use ($user) {
                 //     $query->where('email', $user->email)->where('order_type', 1);
                 // })
@@ -68,13 +68,11 @@ class DashboardController extends Controller
     function getNearExpirationOrders($user)
     {
         $result = Service::query()
-            ->where('status', 'active')
-            // ->whereNull('orderdetail_id')
-            // ->when($user->role_id != 1, function ($query) use ($user) {
-            //     $query->whereHas('order', function ($subQuery) use ($user) {
-            //         $subQuery->where('email', 'like', $user->email);
-            //     });
-            // })
+            // ->where('status', 'active')
+            // // ->whereNull('orderdetail_id')
+            ->when($user->role_id != 1, function ($query) use ($user) {
+                $query->where('email', $user->email);
+            })
             ->selectRaw("
                     type,
                         COUNT(*) as active_count,  -- Đếm tất cả bản ghi có status = 'active'

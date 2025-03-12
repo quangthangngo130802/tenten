@@ -23,7 +23,17 @@ class LoginUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username'          => 'required|exists:users,username',
+            'username' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    $exists = \App\Models\User::where('username', $value)
+                        ->orWhere('email', $value)
+                        ->exists();
+                    if (!$exists) {
+                        $fail('Tài khoản không tồn tại.');
+                    }
+                }
+            ],
             'password'       => 'required|min:6|max:20',
             'g-recaptcha-response' => 'required'
         ];

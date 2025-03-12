@@ -21,6 +21,12 @@
         </div>
     </div>
     <div class="category-list">
+        <div>
+            <a href="{{ route('service.add',['type' => 'hosting']) }}" class="btn btn-primary mb-3" >
+                <i class="fas fa-plus"></i> Thêm dịch vụ
+            </a>
+        </div>
+
         <table class="table table-striped table-hover" id="categoryTable">
             <thead>
                 <tr>
@@ -184,11 +190,11 @@
                         targets: 0
                     },
                     {
-                        width: '20%',
+                        width: '15%',
                         targets: 1
                     },
                     {
-                        width: '15%',
+                        width: '11%',
                         targets: 2
                     },
                     {
@@ -204,10 +210,10 @@
                         width: '15%',
                         targets: 5
                     },
-                    // {
-                    //     width: '20%',
-                    //     targets: 6
-                    // },
+                    {
+                        width: '15%',
+                        targets: 6
+                    },
                     {
                         width: '20%',
                         targets: 7
@@ -215,41 +221,27 @@
 
 
                 ],
-                pagingType: "full_numbers", // Kiểu phân trang
-                language: {
-                     paginate: {
-                        previous: '&laquo;', // Nút trước
-                        next: '&raquo;' // Nút sau
-                    },
-                    lengthMenu: "Hiển thị _MENU_ mục mỗi trang",
-                    zeroRecords: "Không tìm thấy dữ liệu",
-                    info: "Hiển thị _START_ đến _END_ của _TOTAL_ mục",
-                    infoEmpty: "Không có dữ liệu để hiển thị",
-                    infoFiltered: "(lọc từ _MAX_ mục)"
-                },
-                dom: '<"row"<"col-md-6"l><"col-md-6"f>>t<"row"<"col-md-6"i><"col-md-6"p>>',
-                lengthMenu: [10, 25, 50, 100],
+                // pagingType: "full_numbers",
+                // language: {
+                //      paginate: {
+                //         previous: '&laquo;',
+                //         next: '&raquo;'
+                //     },
+                //     lengthMenu: "Hiển thị _MENU_ mục mỗi trang",
+                //     zeroRecords: "Không tìm thấy dữ liệu",
+                //     info: "Hiển thị _START_ đến _END_ của _TOTAL_ mục",
+                //     infoEmpty: "Không có dữ liệu để hiển thị",
+                //     infoFiltered: "(lọc từ _MAX_ mục)"
+                // },
+                // dom: '<"row"<"col-md-6"l><"col-md-6"f>>t<"row"<"col-md-6"i><"col-md-6"p>>',
+                // lengthMenu: [10, 25, 50, 100],
 
             });
-            // $('#categoryTable').on('click', '.action', function(e) {
-            //     e.stopPropagation();
 
-            //     const $currentMenu = $(this).siblings('.menu-action');
-
-            //     $('.menu-action').not($currentMenu).hide();
-
-            //     $currentMenu.toggle();
-            // });
-
-            // $(document).on('click', function() {
-            //     $('.menu-action').hide();
-            // });
         });
 
 
 </script>
-
-
 
 <script src="https://cdn.ckeditor.com/4.19.1/standard-all/ckeditor.js"></script>
 <script src="https://cdn.ckeditor.com/ckeditor4/ckeditor.js"></script>

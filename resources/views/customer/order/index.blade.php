@@ -138,20 +138,20 @@
 
                 ],
 
-                pagingType: "full_numbers", // Kiểu phân trang
-                language: {
-                     paginate: {
-                        previous: '&laquo;', // Nút trước
-                        next: '&raquo;' // Nút sau
-                    },
-                    lengthMenu: "Hiển thị _MENU_ mục mỗi trang",
-                    zeroRecords: "Không tìm thấy dữ liệu",
-                    info: "Hiển thị _START_ đến _END_ của _TOTAL_ mục",
-                    infoEmpty: "Không có dữ liệu để hiển thị",
-                    infoFiltered: "(lọc từ _MAX_ mục)"
-                },
-                dom: '<"row"<"col-md-6"l><"col-md-6"f>>t<"row"<"col-md-6"i><"col-md-6"p>>',
-                lengthMenu: [10, 25, 50, 100],
+                // pagingType: "full_numbers", // Kiểu phân trang
+                // language: {
+                //      paginate: {
+                //         previous: '&laquo;', // Nút trước
+                //         next: '&raquo;' // Nút sau
+                //     },
+                //     lengthMenu: "Hiển thị _MENU_ mục mỗi trang",
+                //     zeroRecords: "Không tìm thấy dữ liệu",
+                //     info: "Hiển thị _START_ đến _END_ của _TOTAL_ mục",
+                //     infoEmpty: "Không có dữ liệu để hiển thị",
+                //     infoFiltered: "(lọc từ _MAX_ mục)"
+                // },
+                // dom: '<"row"<"col-md-6"l><"col-md-6"f>>t<"row"<"col-md-6"i><"col-md-6"p>>',
+                // lengthMenu: [10, 25, 50, 100],
             });
 
             $(document).on('click', '.clickpayment', function (e) {

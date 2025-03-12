@@ -121,6 +121,11 @@
                                     <span class="sub-item">Cloud</span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('service.hotel.list.hotel') }}">
+                                    <span class="sub-item">Khách sạn</span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </li>

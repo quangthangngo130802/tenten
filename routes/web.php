@@ -35,6 +35,7 @@ use Symfony\Component\HttpKernel\Profiler\Profile;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
 Route::middleware('guest')->group(function () {
     Route::get('', [AuthController::class, 'login'])->name('login');
     Route::post('', [AuthController::class, 'authenticate']);
@@ -43,11 +44,10 @@ Route::middleware('guest')->group(function () {
     Route::get('reset-password', [AuthController::class, 'resetpass'])->name('resetpass');
     Route::post('reset-password', [AuthController::class, 'sendResetPassword'])->name('submit.resetpass');
     Route::get('/activate-account/{token}', [AuthController::class, 'activateAccount'])->name('activate.account');
-
 });
 
-Route::middleware('auth')->group(function () {
-    Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+Route::middleware(['auth', 'profile.updated'])->group(function () {
+
 
     Route::get('dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
     Route::get('user-service', [DashboardController::class, 'userService'])->name('user.service');
@@ -57,7 +57,6 @@ Route::middleware('auth')->group(function () {
         Route::post('', [PaymentController::class, 'createPayment'])->name('recharge.add');
         Route::get('cancel', [PaymentController::class, 'cancelUrl'])->name('recharge.cancel');
         Route::get('return/{amount}', [PaymentController::class, 'returnUrl'])->name('recharge.return');
-
     });
 
 
@@ -65,9 +64,10 @@ Route::middleware('auth')->group(function () {
 
 
         Route::prefix('user')->name('user.')->group(function () {
+            Route::post('/import', [UserController::class, 'import'])->name('import.users');
             Route::get('', [UserController::class, 'index'])->name('index');
             Route::get('create', [UserController::class, 'create'])->name('create');
-            Route::post('', [UserController::class,'store'])->name('store');
+            Route::post('', [UserController::class, 'store'])->name('store');
             Route::get('{id}/edit', [UserController::class, 'edit'])->name('edit');
             Route::put('{id}/edit', [UserController::class, 'update'])->name('update');
             Route::post('{id}', [ClientController::class, 'delete'])->name('delete');
@@ -76,7 +76,7 @@ Route::middleware('auth')->group(function () {
         Route::prefix('client')->name('client.')->group(function () {
             Route::get('', [ClientController::class, 'index'])->name('index');
             Route::get('create', [ClientController::class, 'create'])->name('create');
-            Route::post('', [ClientController::class,'store'])->name('store');
+            Route::post('', [ClientController::class, 'store'])->name('store');
             Route::get('{id}/edit', [ClientController::class, 'edit'])->name('edit');
             Route::put('{id}/edit', [ClientController::class, 'update'])->name('update');
             Route::post('{id}', [ClientController::class, 'delete'])->name('delete');
@@ -93,7 +93,7 @@ Route::middleware('auth')->group(function () {
         Route::prefix('hosting')->name('hosting.')->group(function () {
             Route::get('', [HostingController::class, 'index'])->name('index');
             Route::get('create', [HostingController::class, 'create'])->name('create');
-            Route::post('', [HostingController::class,'store'])->name('store');
+            Route::post('', [HostingController::class, 'store'])->name('store');
             Route::get('{id}/edit', [HostingController::class, 'edit'])->name('edit');
             Route::put('{id}/edit', [HostingController::class, 'update'])->name('update');
             Route::post('delete-{id}', [HostingController::class, 'delete'])->name('delete');
@@ -101,7 +101,7 @@ Route::middleware('auth')->group(function () {
         Route::prefix('cloud')->name('cloud.')->group(function () {
             Route::get('add', [CloudController::class, 'create'])->name('create');
             Route::get('{type_id?}', [CloudController::class, 'index'])->name('index');
-            Route::post('', [CloudController::class,'store'])->name('store');
+            Route::post('', [CloudController::class, 'store'])->name('store');
             Route::get('{id}/edit', [CloudController::class, 'edit'])->name('edit');
             Route::put('{id}/edit', [CloudController::class, 'update'])->name('update');
             Route::post('{id}', [CloudController::class, 'delete'])->name('delete');
@@ -110,7 +110,7 @@ Route::middleware('auth')->group(function () {
         Route::prefix('email')->name('email.')->group(function () {
             Route::get('add', [EmailController::class, 'create'])->name('create');
             Route::get('{type_id?}', [EmailController::class, 'index'])->name('index');
-            Route::post('', [EmailController::class,'store'])->name('store');
+            Route::post('', [EmailController::class, 'store'])->name('store');
             Route::get('{id}/edit', [EmailController::class, 'edit'])->name('edit');
             Route::put('{id}/edit', [EmailController::class, 'update'])->name('update');
             Route::post('{id}', [EmailController::class, 'delete'])->name('delete');
@@ -131,6 +131,13 @@ Route::middleware('auth')->group(function () {
             Route::prefix('list-hosting')->name('hosting.')->group(function () {
                 Route::get('{date?}', [ServiceActiveController::class, 'listhosting'])->name('list.hosting');
             });
+
+            Route::prefix('list-hotel')->name('hotel.')->group(function () {
+                Route::get('{date?}', [ServiceActiveController::class, 'listhotel'])->name('list.hotel');
+            });
+
+            Route::get('add-service-{type}', [ServiceActiveController::class, 'addForm'])->name('add');
+            Route::post('add-service-{type}', [ServiceActiveController::class, 'addSubmit'])->name('add.submit');
         });
 
         Route::prefix('company')->name('company.')->group(function () {
@@ -168,7 +175,6 @@ Route::middleware('auth')->group(function () {
             Route::post('vi/pr-code/enews/{id?}', [CustomerOrderController::class, 'paymentenewsSuccess'])->name('create.payment.enews.success');
             Route::post('thanh-toan/gia-han/{id?}', [CustomerOrderController::class, 'thanhtoangiahan'])->name('thanhtoan.giahan');
             Route::get('renew-show/{id?}', [CustomerOrderController::class, 'renewaddorder'])->name('renew.payment');
-
         });
         Route::prefix('cart')->name('cart.')->group(function () {
             // Route::get('', [CartController::class, 'listcart'])->name('listcart');
@@ -200,15 +206,12 @@ Route::middleware('auth')->group(function () {
             Route::post('delete-cart', [CustomerDomainController::class, 'deleteToCart'])->name('deleteTo.cart');
             Route::post('remove/{id}', [CustomerDomainController::class, 'delete']);
         });
-
-
-
-
     });
-
+});
+Route::middleware('auth')->group(function () {
     Route::get('profile', [ProfileController::class, 'profile'])->name('profile');
     Route::post('profile', [ProfileController::class, 'updateprofile'])->name('profile.update');
-
+    Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 });
 
 
@@ -234,8 +237,3 @@ Route::post('/renews-update-time', [RenewServiceController::class, 'updatetime']
 Route::get('service/getContent/{id}', [ServiceActiveController::class, 'getContentService']);
 Route::post('/service/saveContent', [ServiceActiveController::class, 'saveContent']);
 Route::post('/save-domain', [CartController::class, 'saveDomain'])->name('save-domain');
-
-
-
-
-

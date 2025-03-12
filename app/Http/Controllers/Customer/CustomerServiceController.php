@@ -141,8 +141,12 @@ class CustomerServiceController extends Controller
                         return $expirationDate->format('Y-m-d') . '<p class="endday">( Còn thời hạn ' . $daysLeft . ' ngày )</p>';
                     }
 
-                    return $expirationDate->format('Y-m-d');
-                })->rawColumns(['enddate'])
+                    return $expirationDate->format('d-m-Y');
+                })->rawColumns(['active_at'])
+                ->addColumn('active_at', function ($row) {
+                    $activeAt = Carbon::parse($row->active_at);
+                    return $activeAt->format('d-m-Y');
+                })->rawColumns(['active_at'])
                 ->editColumn('active', function ($row) {
                     if ($row->status == 'active') {
                         return '<div class="status active">

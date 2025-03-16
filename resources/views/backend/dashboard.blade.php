@@ -18,7 +18,7 @@
 }
 </style>
 <div class=" mt-4">
-    <h2 class="text-center bg-primary text-white py-2 mb-4">Hiện trạng tài khoản của bạn</h2>
+    {{-- <h2 class="text-center bg-primary text-white py-2 mb-4">Hiện trạng tài khoản của bạn</h2> --}}
 
     <div class="row text-center">
         @php

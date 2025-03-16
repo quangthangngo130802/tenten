@@ -39,13 +39,14 @@
         <table class="table table-striped table-hover" id="categoryTable">
             <thead>
                 <tr>
+                    <th>STT</th>
                     <th>Tên gói</th>
                     <th>Dung lượng</th>
                     <th>Địa chỉ Email</th>
-                    <th>Số lượng email gửi đi/ngày  </th>
-                    <th>Số lượng email gửi đi/tháng</th>
-                    <th>Tổng dung lượng file đính kèm/tháng (GB)</th>
-                    <th>Giá theo tháng</th>
+                    <th>Email gửi đi/ngày  </th>
+                    <th>Email gửi đi/tháng</th>
+                    <th>File đính kèm/tháng (GB)</th>
+                    <th>Giá/tháng</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -107,6 +108,15 @@
             ajax: APP_URL + '/customer/email/' + typeId,
             order: [], // Vô hiệu hóa sắp xếp mặc định
             columns: [
+                {
+                    data: null, // Chúng ta sẽ thêm số thứ tự thủ công
+                    name: 'DT_RowIndex',
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, row, meta) {
+                        return meta.row + 1; // Lấy chỉ số hàng +1 để hiển thị số thứ tự
+                    }
+                },
                 { data: 'package_name', name: 'package_name', orderable: false },
                 { data: 'storage', name: 'storage', orderable: false },
                 { data: 'number_email', name: 'number_email', orderable: false },
@@ -117,27 +127,28 @@
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ],
             columnDefs: [
-                { width: '15%', targets: 0 },
-                { width: '10%', targets: 1 },
-                { width: '12%', targets: 2 },
-                { width: '15%', targets: 3 },
-                { width: '18%', targets: 4 },
-                { width: '18%', targets: 5 },
-                { width: '18%', targets: 6 },
-                { width: '15%', targets: 7 }
+                { width: '5%', targets: 0 },
+                { width: '13%', targets: 1 },
+                { width: '10%', targets: 2 },
+                { width: '12%', targets: 3 },
+                { width: '12%', targets: 4 },
+                { width: '10%', targets: 5 },
+                { width: '14%', targets: 6 },
+                { width: '12%', targets: 7 },
+                { width: '20%', targets: 8 }
             ],
             // pagingType: "full_numbers",
-            // language: {
-            //     paginate: {
-            //         previous: '&laquo;',
-            //         next: '&raquo;'
-            //     },
-            //     lengthMenu: "Hiển thị _MENU_ mục mỗi trang",
-            //     zeroRecords: "Không tìm thấy dữ liệu",
-            //     info: "Hiển thị _START_ đến _END_ của _TOTAL_ mục",
-            //     infoEmpty: "Không có dữ liệu để hiển thị",
-            //     infoFiltered: "(lọc từ _MAX_ mục)"
-            // },
+            language: {
+                paginate: {
+                    previous: '&laquo;',
+                    next: '&raquo;'
+                },
+                lengthMenu: "Hiển thị _MENU_ mục mỗi trang",
+                zeroRecords: "Không tìm thấy dữ liệu",
+                info: "Hiển thị _START_ đến _END_ của _TOTAL_ mục",
+                infoEmpty: "Không có dữ liệu để hiển thị",
+                infoFiltered: "(lọc từ _MAX_ mục)"
+            },
             // dom: '<"row"<"col-md-6"l><"col-md-6"f>>t<"row"<"col-md-6"i><"col-md-6"p>>',
             // lengthMenu: [10, 25, 50, 100],
         });

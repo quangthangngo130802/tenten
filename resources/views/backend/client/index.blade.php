@@ -4,7 +4,11 @@
     <div class="content">
         <!-- Bảng danh sách danh mục -->
         <div class="category-list">
+            <div class="card-tools d-flex justify-content-end ">
 
+                <a href="{{ route('client.create') }}" class="btn btn-primary btn-sm">Thêm mới (+)</a>
+
+            </div>
             <div style="overflow-x: auto;">
                 <table class="table table-striped table-hover" id="categoryTable">
                     <thead>
@@ -13,7 +17,7 @@
                             <th>Họ và tên</th>
                             <th>Email</th>
                             <th>Điện thoại</th>
-                            <th>CMND/CCCD</th>
+                            <th>Trạng thái</th>
                             {{-- <th>Địa chỉ</th> --}}
                             <th>Action</th>
                         </tr>
@@ -62,6 +66,57 @@
             display: flex;
             justify-content: space-around;
         }
+
+        th,
+        td {
+            text-align: center !important;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 12px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: capitalize;
+            line-height: 1.5;
+            white-space: nowrap;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .status .icon-check,
+        .status .icon-warning {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+
+        .status.active {
+            background-color: #e6f4ea;
+            color: #2b8a3e;
+            border: 1px solid #cce7d0;
+        }
+
+        .status.active .icon-check {
+            background-image: url('https://cdn-icons-png.flaticon.com/512/845/845646.png');
+        }
+
+        .status.paused {
+            background-color: #fdecea;
+            color: #d93025;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status.paused .icon-warning {
+            background-image: url('https://cdn-icons-png.flaticon.com/512/1828/1828843.png');
+        }
     </style>
 @endpush
 
@@ -81,34 +136,35 @@
                     },
                     {
                         data: 'full_name',
-                        name: 'full_name'
+                        name: 'full_name',
+                        orderable: false,
+
                     },
                     {
                         data: 'email',
-                        name: 'email'
+                        name: 'email',
+                        orderable: false,
                     },
                     {
                         data: 'phone_number',
-                        name: 'phone_number'
+                        name: 'phone_number',
+                        orderable: false,
                     },
 
                     {
-                        data: 'identity_number',
-                        name: 'identity_number'
+                        data: 'status',
+                        name: 'status',
+                        orderable: false,
                     },
-                    // {
-                    //     data: 'address_detail',
-                    //     name: 'address_detail'
-                    // },
+
                     {
                         data: 'action',
                         name: 'action',
                         orderable: false,
-                        searchable: false
                     }
                 ],
                 columnDefs: [{
-                        width: '8%',
+                        width: '5%',
                         targets: 0
                     },
                     {
@@ -125,42 +181,31 @@
                     },
 
                     {
-                        width: '20%',
+                        width: '10%',
                         targets: 4
                     },
                     {
-                        width: '20%',
+                        width: '15%',
                         targets: 5
                     },
 
                 ],
-                // pagingType: "full_numbers", // Kiểu phân trang
-                // // fixedHeader: true, // Giữ cố định tiêu đề và phần tìm kiếm
-                // // scrollX: true,
-                // language: {
-                //     paginate: {
-                //         previous: '&laquo;', // Nút trước
-                //         next: '&raquo;' // Nút sau
-                //     },
-                //     lengthMenu: "Hiển thị _MENU_ mục mỗi trang",
-                //     zeroRecords: "Không tìm thấy dữ liệu",
-                //     info: "Hiển thị _START_ đến _END_ của _TOTAL_ mục",
-                //     infoEmpty: "Không có dữ liệu để hiển thị",
-                //     infoFiltered: "(lọc từ _MAX_ mục)"
-                // },
+                order: [],
+                pagingType: "full_numbers", // Kiểu phân trang
+                language: {
+                    paginate: {
+                        previous: '&laquo;', // Nút trước
+                        next: '&raquo;' // Nút sau
+                    },
+                    lengthMenu: "Hiển thị _MENU_ mục mỗi trang",
+                    zeroRecords: "Không tìm thấy dữ liệu",
+                    info: "Hiển thị _START_ đến _END_ của _TOTAL_ mục",
+                    infoEmpty: "Không có dữ liệu để hiển thị",
+                    infoFiltered: "(lọc từ _MAX_ mục)"
+                },
                 // dom: '<"row"<"col-md-6"l><"col-md-6"f>>t<"row"<"col-md-6"i><"col-md-6"p>>',
                 // lengthMenu: [10, 25, 50, 100],
             });
-        });
-
-        $(document).ready(function() {
-            $(".dt-search").after(`
-        <div class="card-tools " style="display: inline-block; margin-left: 15px;">
-
-            <a href="{{ route('client.create') }}" class="btn btn-primary btn-sm">Thêm mới (+)</a>
-
-        </div>
-    `);
         });
 
 

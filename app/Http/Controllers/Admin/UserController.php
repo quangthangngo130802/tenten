@@ -20,7 +20,7 @@ class UserController extends Controller
         $title = "Tài khoản";
         if ($request->ajax()) {
 
-            $data = User::select('*');
+            $data = User::where('role_id', '=', 1)->orderBy('updated_at', 'desc')->select('*');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {

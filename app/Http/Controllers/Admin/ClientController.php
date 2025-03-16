@@ -29,8 +29,19 @@ class ClientController extends Controller
                     // Nối các giá trị thành một chuỗi
                     return trim("$address, $ward, $district, $province", ', ');
                 })
+                ->editColumn('status', function ($row) {
+                    if ($row->status == 'active') {
+                        return '<div class="status active">
+                                    <span class="icon-check"></span> Hoạt động
+                                </div>';
+                    } else {
+                        return '<div class="status paused">
+                                    <span class="icon-warning"></span> Tạm dừng
+                                </div>';
+                    }
+                })
                 ->addColumn('action', function ($row) {
-                    return '<div style="display: flex;">
+                    return '<div>
                                 <a href="' . route('client.edit', $row->id) . '" class="btn btn-primary btn-sm edit">
                                     <i class="fas fa-edit btn-edit" title="Sửa"></i>
                                 </a>
@@ -43,7 +54,7 @@ class ClientController extends Controller
 
                                 </form>
                             </div>';
-                })->rawColumns(['action'])
+                })->rawColumns(['action', 'status'])
                 ->make(true);
         }
         $page = 'Khách hàng';
@@ -69,9 +80,14 @@ class ClientController extends Controller
 
     public function update(ClientRequest $request, $id)
     {
+        // dd($request->toArray());
         $user = User::find($id);
         $credentials = $request->validated();
-
+        if ($request->password) {
+            $credentials['password'] = bcrypt($request->password);
+        } else {
+            unset($credentials['password']);
+        }
         $user->update($credentials);
         toastr()->success('Cập nhật thành công.');
         return redirect()->route('client.index');
@@ -80,9 +96,10 @@ class ClientController extends Controller
     public function store(ClientRequest $request)
     {
         $credentials = $request->validated();
+        $credentials['password'] = bcrypt(123456);
         User::create($credentials);
         toastr()->success('Thêm thành công.');
-        return redirect()->route('user.index');
+        return redirect()->route('client.index');
     }
 
     public function delete($id)

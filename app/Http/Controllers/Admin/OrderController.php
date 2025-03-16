@@ -22,7 +22,7 @@ class OrderController extends Controller
         $title = "Đơn hàng";
 
         if ($request->ajax()) {
-            $data = Order::where('status', $status)->orderBy('created_at', 'desc')->select('*');
+            $data = Order::where('status', $status)->select('*');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->editColumn('code', function ($row) {
@@ -43,15 +43,11 @@ class OrderController extends Controller
                                 ? '<span style="color: blue;">Đang chờ cấp tài khoản</span>'
                                 : '<span style="color: red;">Chưa thanh toán</span>'));
                 })
-                ->editColumn('payment', function ($row) {
-                    return number_format($row->payment);
-                })
-                // ->editColumn('detail', function ($row) {
-                //     return '<a href="' . route('order.show', $row->id) . '" class="btn btn-primary btn-sm edit"> Chi tiết </a>';
-                // })->rawColumns(['detail'])
-                ->addColumn('action', function ($row) {
+                ->editColumn('created_at', function ($row) {
+                    return Carbon::parse($row->created_at)->format('d-m-Y H:i');
+                })->addColumn('action', function ($row) {
                     return $row->status == 'payment'
-                        ? '<div style="display: flex;">
+                        ? '<div >
                             <a href="#" class="btn btn-orange btn-sm delete"
                                 onclick="confirmActive(event, ' . $row->id . ')">
                                Duyệt
@@ -61,7 +57,7 @@ class OrderController extends Controller
                             </form>
                         </div>'
                         : ($row->status == 'pending'
-                            ? '<div style="display: flex;">
+                            ? '<div >
                                     <a href="#" class="btn btn-orange btn-sm delete"
                                         onclick="confirmActive(event, ' . $row->id . ')">
                                     Cấp tài khoản
@@ -70,7 +66,7 @@ class OrderController extends Controller
                                         ' . csrf_field() . '
                                     </form>
                                 </div>'
-                            : '<div style="display: flex;">
+                            : '<div>
                                 <a href="#" class="btn btn-danger btn-sm delete"
                                     onclick="confirmDelete(event, ' . $row->id . ')">
                                     <i class="fas fa-trash btn-delete" title="Xóa"></i>

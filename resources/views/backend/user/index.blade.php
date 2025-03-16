@@ -30,6 +30,17 @@
             </div>
 
             <div style="overflow-x: auto;">
+                <div class="card-tools" style="display:flex; justify-content: end">
+                    <!-- Nút Thêm mới -->
+                    <a href="{{ route('user.create') }}" class="btn btn-primary btn-sm" style="margin-right: 10px;">
+                        Thêm mới (+)
+                    </a>
+
+                    <!-- Nút Import Excel -->
+                    <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importModal">
+                        Import Excel
+                    </button>
+                </div>
                 <table class="table table-striped table-hover" id="categoryTable">
                     <thead>
                         <tr>
@@ -81,6 +92,9 @@
             display: flex;
             justify-content: space-around;
         }
+        th, td{
+            text-align: center!important;
+        }
     </style>
 @endpush
 
@@ -100,20 +114,24 @@
                     },
                     {
                         data: 'full_name',
-                        name: 'full_name'
+                        name: 'full_name',
+                        orderable: false,
                     },
                     {
                         data: 'email',
-                        name: 'email'
+                        name: 'email',
+                        orderable: false,
                     },
                     {
                         data: 'phone_number',
-                        name: 'phone_number'
+                        name: 'phone_number',
+                        orderable: false,
                     },
 
                     {
                         data: 'username',
-                        name: 'username'
+                        name: 'username',
+                        orderable: false,
                     },
                     {
                         data: 'action',
@@ -149,18 +167,19 @@
                     },
 
                 ],
+                order: [],
                 // pagingType: "full_numbers", // Kiểu phân trang
-                // language: {
-                //     paginate: {
-                //         previous: '&laquo;', // Nút trước
-                //         next: '&raquo;' // Nút sau
-                //     },
-                //     lengthMenu: "Hiển thị _MENU_ mục mỗi trang",
-                //     zeroRecords: "Không tìm thấy dữ liệu",
-                //     info: "Hiển thị _START_ đến _END_ của _TOTAL_ mục",
-                //     infoEmpty: "Không có dữ liệu để hiển thị",
-                //     infoFiltered: "(lọc từ _MAX_ mục)"
-                // },
+                language: {
+                    paginate: {
+                        previous: '&laquo;', // Nút trước
+                        next: '&raquo;' // Nút sau
+                    },
+                    lengthMenu: "Hiển thị _MENU_ mục mỗi trang",
+                    zeroRecords: "Không tìm thấy dữ liệu",
+                    info: "Hiển thị _START_ đến _END_ của _TOTAL_ mục",
+                    infoEmpty: "Không có dữ liệu để hiển thị",
+                    infoFiltered: "(lọc từ _MAX_ mục)"
+                },
                 // dom: '<"row"<"col-md-6"l><"col-md-6"f>>t<"row"<"col-md-6"i><"col-md-6"p>>',
                 // lengthMenu: [10, 25, 50, 100],
                 // scrollCollapse: true,
@@ -185,21 +204,5 @@
                 }
             });
         }
-
-        $(document).ready(function() {
-            $(".dt-search").after(`
-                <div class="card-tools" style="display: inline-block; margin-left: 15px;">
-                    <!-- Nút Thêm mới -->
-                    <a href="http://127.0.0.1:9000/admin/user/create" class="btn btn-primary btn-sm" style="margin-right: 10px;">
-                        Thêm mới (+)
-                    </a>
-
-                    <!-- Nút Import Excel -->
-                    <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importModal">
-                        Import Excel
-                    </button>
-                </div>
-            `);
-        });
     </script>
 @endpush

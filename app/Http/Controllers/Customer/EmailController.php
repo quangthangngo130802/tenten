@@ -19,7 +19,7 @@ class EmailController extends Controller
             $data = Email::where('email_type',$email_type)->select('*');
             return DataTables::of($data)
                 ->addColumn('action', function ($row) {
-                    return '<div style="display: flex;">
+                    return '<div >
                     <a data-id="' . $row->id . '" data-type="cloud" class="btn btn-primary btn-sm edit" href="' . route('customer.email.viemail', ['id' => $row->id]) . '">
                         Mua ngay
                     </a>

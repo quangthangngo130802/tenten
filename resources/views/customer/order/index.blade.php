@@ -38,7 +38,7 @@
     }
 
     td, th{
-        text-align: center;
+        text-align: center !important;
     }
 
 
@@ -82,20 +82,19 @@
                     },
                     {
                         data: 'code',
-                        name: 'code'
+                        name: 'code',
+                        orderable: false,
                     },
-                    // {
-                    //     data: 'detail',
-                    //     name: 'id'
-                    // },
                     {
                         data: 'amount',
-                        name: 'amount'
+                        name: 'amount',
+                        orderable: false,
                     },
 
                     {
                         data: 'status',
-                        name: 'status'
+                        name: 'status',
+                        orderable: false,
                     },
                     {
                         data: 'created_at',
@@ -110,19 +109,19 @@
 
                 ],
                 columnDefs: [{
-                        width: '10%',
+                        width: '5%',
                         targets: 0
                     },
                     {
-                        width: '18%',
+                        width: '20%',
                         targets: 1
                     },
                     {
-                        width: '20%',
+                        width: '15%',
                         targets: 2
                     },
                     {
-                        width: '20%',
+                        width: '24%',
                         targets: 3
                     },
 
@@ -137,19 +136,19 @@
 
 
                 ],
-
+                    order: [],
                 // pagingType: "full_numbers", // Kiểu phân trang
-                // language: {
-                //      paginate: {
-                //         previous: '&laquo;', // Nút trước
-                //         next: '&raquo;' // Nút sau
-                //     },
-                //     lengthMenu: "Hiển thị _MENU_ mục mỗi trang",
-                //     zeroRecords: "Không tìm thấy dữ liệu",
-                //     info: "Hiển thị _START_ đến _END_ của _TOTAL_ mục",
-                //     infoEmpty: "Không có dữ liệu để hiển thị",
-                //     infoFiltered: "(lọc từ _MAX_ mục)"
-                // },
+                language: {
+                     paginate: {
+                        previous: '&laquo;', // Nút trước
+                        next: '&raquo;' // Nút sau
+                    },
+                    lengthMenu: "Hiển thị _MENU_ mục mỗi trang",
+                    zeroRecords: "Không tìm thấy dữ liệu",
+                    info: "Hiển thị _START_ đến _END_ của _TOTAL_ mục",
+                    infoEmpty: "Không có dữ liệu để hiển thị",
+                    infoFiltered: "(lọc từ _MAX_ mục)"
+                },
                 // dom: '<"row"<"col-md-6"l><"col-md-6"f>>t<"row"<"col-md-6"i><"col-md-6"p>>',
                 // lengthMenu: [10, 25, 50, 100],
             });

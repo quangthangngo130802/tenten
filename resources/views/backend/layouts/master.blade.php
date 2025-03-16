@@ -57,7 +57,7 @@
 
             <div class="container">
                 <div class="page-inner">
-                    <div class="page-header">
+                    {{-- <div class="page-header">
                         <ul class="breadcrumbs mb-3">
                             <li class="nav-home">
                                 <a href="{{ route('dashboard') }}">
@@ -67,21 +67,21 @@
                             <li class="separator">
                                 <i class="icon-arrow-right"></i>
                             </li>
-                            {{-- <li class="nav-item">
+                            <li class="nav-item">
 
                                 <a href="">{{ isset($page) ? $page : 'Dashboard' }}</a>
 
                             </li>
                             <li class="separator">
                                 <i class="icon-arrow-right"></i>
-                            </li> --}}
+                            </li>
                             <li class="nav-item">
 
                                 <a href="">{{ isset($title) ? $title : 'Dashboard' }}</a>
 
                             </li>
                         </ul>
-                    </div>
+                    </div> --}}
 
                     @yield('content')
 

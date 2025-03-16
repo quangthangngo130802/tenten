@@ -96,7 +96,7 @@
 
         td,
         th {
-            text-align: center;
+            text-align: center !important;
         }
 
         .popup {
@@ -153,11 +153,13 @@
                     },
                     {
                         data: 'user_info',
-                        name: 'id'
+                        name: 'id',
+                        orderable: false,
                     },
                     {
                         data: 'domain',
-                        name: 'domain'
+                        name: 'domain',
+                        orderable: false,
                     },
 
                     {
@@ -171,7 +173,8 @@
                     },
                     {
                         data: 'active',
-                        name: 'status'
+                        name: 'status',
+                        orderable: false,
 
                     },
                     {
@@ -182,12 +185,13 @@
                     }
                 ],
                 columnDefs: [{
-                        width: '8%',
+                        width: '5%',
                         targets: 0
                     },
                     {
                         width: '20%',
-                        targets: 1
+                        targets: 1,
+
                     },
                     {
                         width: '15%',
@@ -208,6 +212,19 @@
                     },
 
                 ],
+                order: [],
+                pagingType: "full_numbers", // Kiểu phân trang
+                language: {
+                    paginate: {
+                        previous: '&laquo;', // Nút trước
+                        next: '&raquo;' // Nút sau
+                    },
+                    lengthMenu: "Hiển thị _MENU_ mục mỗi trang",
+                    zeroRecords: "Không tìm thấy dữ liệu",
+                    info: "Hiển thị _START_ đến _END_ của _TOTAL_ mục",
+                    infoEmpty: "Không có dữ liệu để hiển thị",
+                    infoFiltered: "(lọc từ _MAX_ mục)"
+                },
 
 
             });

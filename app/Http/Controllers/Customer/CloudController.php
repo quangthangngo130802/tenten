@@ -27,7 +27,7 @@ class CloudController extends Controller
                     return number_format($row->total_cost);
                 })
                 ->addColumn('action', function ($row) {
-                    return '<div style="display: flex;">
+                    return '<div >
                                 <a data-id="' . $row->id . '" data-type="cloud" class="btn btn-primary btn-sm edit" href="' . route('customer.cloud.vicloud', ['id' => $row->id]) . '">
                                     Mua ngay
                                 </a>

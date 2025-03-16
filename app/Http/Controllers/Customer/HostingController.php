@@ -19,7 +19,7 @@ class HostingController extends Controller
                     return number_format($row->price);
                 })
                 ->addColumn('action', function ($row) {
-                    return '<div style="display: flex;">
+                    return '<div>
                                 <a  data-id = '.$row->id.' data-type = "hosting" class="btn btn-primary btn-sm edit buy-now-btn">
                                     Mua ngay
                                 </a>

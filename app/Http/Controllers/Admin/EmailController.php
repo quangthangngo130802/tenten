@@ -16,6 +16,9 @@ class EmailController extends Controller
         if ($request->ajax()) {
             $data = Email::where('email_type',$type_id)->select('*');
             return DataTables::of($data)
+                ->editColumn('price', function ($row) {
+                    return number_format($row->price);
+                })
                 ->addColumn('action', function ($row) {
                     return '<div style="display: flex;">
                                 <a href="' . route('email.edit', $row->id) . '" class="btn btn-primary btn-sm edit">

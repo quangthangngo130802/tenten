@@ -17,18 +17,18 @@ class ClientRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'username' => 'required|string|unique:users,username,' . $this->id,
             'full_name' => 'required|string|max:255',
             'gender' => 'required|in:male,female,other',
             'birth_date' => 'required|date',
             'identity_number' => 'required|string|max:20|unique:users,identity_number,' . $this->id,
             'tax_code' => 'nullable|string|max:20|unique:users,tax_code,' . $this->id,
-            'province' => 'required|string|max:255',
-            'district' => 'required|string|max:255',
-            'ward' => 'required|string|max:255',
-            'address' => 'required|string|max:500',
+            // 'province' => 'nullable|string|max:255',
+            // 'district' => 'nullable|string|max:255',
+            // 'ward' => 'nullable|string|max:255',
+            // 'address' => 'nullable|string|max:500',
             'phone_number' => 'required|string|max:15|unique:users,phone_number,' . $this->id,
             'email' => 'required|string|email|max:255|unique:users,email,' . $this->id,
-
         ];
     }
 
@@ -50,11 +50,10 @@ class ClientRequest extends FormRequest
             'birth_date' => 'Ngày sinh',
             'identity_number' => 'CMND/CCCD/Hộ chiếu',
             'tax_code' => 'Mã số thuế',
-            'country' => 'Quốc gia',
-            'province' => 'Tỉnh/Thành phố',
-            'district' => 'Quận/Huyện',
-            'ward' => 'Xã/Phường',
-            'address' => 'Địa chỉ',
+            // 'province' => 'Tỉnh/Thành phố',
+            // 'district' => 'Quận/Huyện',
+            // 'ward' => 'Xã/Phường',
+            // 'address' => 'Địa chỉ',
             'phone_number' => 'Số điện thoại',
             'email' => 'Email',
             'role_id' => 'Vai trò',

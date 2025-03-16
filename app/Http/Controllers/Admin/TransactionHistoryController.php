@@ -18,7 +18,7 @@ class TransactionHistoryController extends Controller
         $user = Auth::user(); // Lấy thông tin người dùng hiện tại
 
         if ($request->ajax()) {
-            $data = TransactionHistory::with('user') ->orderBy('created_at', 'desc')
+            $data = TransactionHistory::with('user')
                 ->select('transaction_histories.*');
             if ($user->role_id != 1) {
                 $data = $data->where('user_id', $user->id);
@@ -64,7 +64,6 @@ class TransactionHistoryController extends Controller
                 ->rawColumns(['action', 'detail', 'amount', 'user_id'])
                 ->make(true);
         }
-
         $page = 'Lịch sử ';
         return view('backend.history.index', compact('title', 'page'));
     }

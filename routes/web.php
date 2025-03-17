@@ -187,16 +187,8 @@ Route::middleware(['auth', 'profile.updated'])->group(function () {
 
             Route::get('list-{type}', [CustomerServiceController::class, 'listServices'])->name('list.service');
 
-            // Route::prefix('list-cloud')->name('cloud.')->group(function () {
-            //     Route::get('', [CustomerServiceController::class, 'listcloud'])->name('list.cloud');
-            // });
-            // Route::prefix('list-hosting')->name('hosting.')->group(function () {
-            //     Route::get('', [CustomerServiceController::class, 'listhosting'])->name('list.hosting');
-            // });
+            Route::get('list-hotel', [CustomerServiceController::class, 'listHotel'])->name('list.hotel');
 
-            // Route::prefix('list-email')->name('email.')->group(function () {
-            //     Route::get('', [CustomerServiceController::class, 'listemail'])->name('list.email');
-            // });
         });
 
         Route::prefix('domain')->name('domain.')->group(function () {

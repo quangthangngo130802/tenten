@@ -93,6 +93,9 @@ class CustomerServiceController extends Controller
         $title = "Quản lý dịch vụ " . ucfirst($type);
         $user = Auth::user();
         $email = $user->email;
+        if($type == 'hotel'){
+            return $this->listhotel($request);
+        }
 
         if ($request->ajax()) {
             if($user->role_id == 1){
@@ -179,5 +182,69 @@ class CustomerServiceController extends Controller
 
         $page = "Quản lý dịch vụ " . ucfirst($type);
         return view('customer.service.list', compact('title', 'page', 'type', 'date'));
+    }
+
+    public function listhotel(Request $request, $date = null)
+    {
+        $user = Auth::user();
+        $title = "Quản lý dịch vụ Khách sạn";
+
+        if ($request->ajax()) {
+            $data = Service::where('status', 'active')->where('type', 'hotel')->where('email', $user->email) ->select('*');
+            if ($date == 'expire_soon') {
+                $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) BETWEEN 1 AND 30');
+            }
+            if ($date == 'expire') {
+                $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) < 0');
+            }
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('user_info', function ($row) {
+                    return $row->email;
+                })
+                ->addColumn('enddate', function ($row) {
+                    $activeAt = Carbon::parse($row->active_at);
+                    $expirationDate = $activeAt->addMonths($row->number);
+
+                    if ($expirationDate->isPast()) {
+                        $daysOverdue = $expirationDate->diffInDays(Carbon::now());
+                        return $expirationDate->format('Y-m-d') . '<p class="endday">( Đã hết hạn - ' . $daysOverdue . ' ngày )</p>';
+                    }
+
+                    $daysLeft = $expirationDate->diffInDays(Carbon::now());
+                    if ($daysLeft < 30) {
+                        return $expirationDate->format('Y-m-d') . '<p class="endday">( Còn thời hạn ' . $daysLeft . ' ngày )</p>';
+                    }
+
+                    return $expirationDate->format('Y-m-d');
+                })->rawColumns(['enddate'])
+                ->editColumn('active', function ($row) {
+                    if ($row->status == 'active') {
+                        return '<div class="status active">
+                                    <span class="icon-check"></span> Hoạt động
+                                </div>';
+                    } else {
+                        return '<div class="status paused">
+                                    <span class="icon-warning"></span> Tạm dừng
+                                </div>';
+                    }
+                })->rawColumns(['active'])
+                ->editColumn('giahan', function ($row) {
+                    return '<a href="' . route('order.show', $row->id) . '" class="btn btn-primary btn-sm edit"> Gia hạn </a>';
+                })->rawColumns(['giahan'])
+                ->addColumn('action', function ($row) {
+                    return '
+                    <div class="dropdown">
+                        <!-- Icon hiển thị modal -->
+                        <span style="font-size:26px; cursor:pointer;" class="action"
+                            onclick="openModal(' . $row->id . ')">
+                            <i class="fas fa-cog"></i>
+                        </span>
+                    </div>';
+                })->rawColumns(['action', 'giahan', 'enddate', 'active', 'user_info'])
+                ->make(true);
+        }
+        $page = 'Quản lý dịch vụ khách sạn';
+        return view('customer.service.listhotel', compact('title', 'page', 'date'));
     }
 }

@@ -1294,13 +1294,15 @@ body {
 }
 .sidebar .nav-collapse li a .sub-item:before,
 .sidebar[data-background-color="white"] .nav-collapse li a .sub-item:before {
-    content: "";
+    content: "➤"; /* Mã Unicode cho icon "angle-right" */
     height: 4px;
     width: 4px;
-    background: rgba(131, 132, 138, 0.89);
+    font-size: 10px;
+    /* background: rgba(131, 132, 138, 0.89); */
     position: absolute;
     left: -15px;
-    top: 50%;
+    margin-right: 10px;
+    top: 22%;
     transform: translateY(-50%);
     border-radius: 100%;
 }

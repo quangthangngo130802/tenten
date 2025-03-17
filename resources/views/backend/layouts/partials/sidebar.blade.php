@@ -6,6 +6,15 @@
     .sidebar-wrapper {
         background-color: #005aa1 no-repeat !important;
     }
+    .nav-collapse{
+        padding: 0px 0px 0px 13px;
+    }
+    .sub-item{
+        font-size: 14px !important;
+    }
+    .sub-item span{
+        margin-left: 14px;
+    }
 
     #sidebar ul li a,
     #sidebar ul li p,
@@ -66,21 +75,21 @@
                             id="config">
                             <ul class="nav nav-collapse">
                                 <li class="{{ request()->routeIs('company.index') ? 'active' : '' }}">
-                                    <a href="{{ route('company.index') }}"><span class="sub-item">Công ty</span></a>
+                                    <a href="{{ route('company.index') }}"><span class="sub-item"><span>Công ty</span></span></a>
                                 </li>
                                 <li class="{{ request()->routeIs('user.index') ? 'active' : '' }}">
-                                    <a href="{{ route('user.index') }}"><span class="sub-item">Tài khoản nhân
-                                            sự</span></a>
+                                    <a href="{{ route('user.index') }}"><span class="sub-item"><span>Tài khoản nhân
+                                        sự</span></span></a>
                                 </li>
                             </ul>
                         </div>
                     </li>
 
-                    <!-- Quản lý khách hàng -->
+                    <!-- Quản lý khách -->
                     <li class="nav-item {{ request()->routeIs('client.index') ? 'active' : '' }}">
                         <a href="{{ route('client.index') }}">
                             <i class="fas fa-user"></i>
-                            <p>Quản lý khách hàng</p>
+                            <p>Quản lý khách</p>
                         </a>
                     </li>
 
@@ -96,17 +105,17 @@
                             id="service">
                             <ul class="nav nav-collapse">
                                 <li class="{{ request()->routeIs('domain.price') ? 'active' : '' }}">
-                                    <a href="{{ route('domain.price') }}"><span class="sub-item">Tên miền</span></a>
+                                    <a href="{{ route('domain.price') }}"><span class="sub-item"><span>Tên miền</span></span></a>
                                 </li>
                                 <li class="{{ request()->routeIs('hosting.index') ? 'active' : '' }}">
-                                    <a href="{{ route('hosting.index') }}"><span class="sub-item">Hosting</span></a>
+                                    <a href="{{ route('hosting.index') }}"><span class="sub-item"><span>Hosting</span></span></a>
                                 </li>
                                 <li class="{{ request()->routeIs('email.index') ? 'active' : '' }}">
-                                    <a href="{{ route('email.index', ['type_id' => 1]) }}"><span class="sub-item">Email
-                                            Server</span></a>
+                                    <a href="{{ route('email.index', ['type_id' => 1]) }}"><span class="sub-item"><span>Email
+                                        Server</span></span></a>
                                 </li>
                                 <li class="{{ request()->routeIs('cloud.index') ? 'active' : '' }}">
-                                    <a href="{{ route('cloud.index') }}"><span class="sub-item">Cloud</span></a>
+                                    <a href="{{ route('cloud.index') }}"><span class="sub-item"><span>Cloud</span></span></a>
                                 </li>
                             </ul>
                         </div>
@@ -125,27 +134,27 @@
                             <ul class="nav nav-collapse">
                                 <li class="{{ request()->routeIs('domain.index') ? 'active' : '' }}">
                                     <a href="{{ route('domain.index') }}">
-                                        <span class="sub-item">Tên miền</span>
+                                        <span class="sub-item"><span>Tên miền</span></span>
                                     </a>
                                 </li>
                                 <li class="{{ request()->routeIs('service.hosting.list.hosting') ? 'active' : '' }}">
                                     <a href="{{ route('service.hosting.list.hosting') }}">
-                                        <span class="sub-item">Hosting</span>
+                                        <span class="sub-item"><span>Hosting</span></span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#">
-                                        <span class="sub-item">Email Server</span>
+                                        <span class="sub-item"><span>Email Server<</span></span>
                                     </a>
                                 </li>
                                 <li class="{{ request()->routeIs('service.cloud.list.cloud') ? 'active' : '' }}">
                                     <a href="{{ route('service.cloud.list.cloud') }}">
-                                        <span class="sub-item">Cloud</span>
+                                        <span class="sub-item"><span>Cloud</span></span>
                                     </a>
                                 </li>
                                 <li class="{{ request()->routeIs('service.hotel.list.hotel') ? 'active' : '' }}">
                                     <a href="{{ route('service.hotel.list.hotel') }}">
-                                        <span class="sub-item">Khách sạn</span>
+                                        <span class="sub-item"><span>Khách sạn</span></span>
                                     </a>
                                 </li>
                             </ul>
@@ -162,22 +171,22 @@
                             <ul class="nav nav-collapse">
                                 <li class="{{ request()->get('status') == 'nopayment' ? 'active' : '' }}">
                                     <a href="{{ route('order.index', ['status' => 'nopayment']) }}">
-                                        <span class="sub-item">Đơn hàng chưa thanh toán</span>
+                                        <span class="sub-item"><span>Đơn chưa thanh toán</span></span>
                                     </a>
                                 </li>
                                 <li class="{{ request()->get('status') == 'payment' ? 'active' : '' }}">
                                     <a href="{{ route('order.index', ['status' => 'payment']) }}">
-                                        <span class="sub-item">Đơn hàng đã thanh toán</span>
+                                        <span class="sub-item"><span>Đơn đã thanh toán</span></span>
                                     </a>
                                 </li>
                                 <li class="{{ request()->get('status') == 'pending' ? 'active' : '' }}">
                                     <a href="{{ route('order.index', ['status' => 'pending']) }}">
-                                        <span class="sub-item">Đơn hàng chờ cấp tài khoản</span>
+                                        <span class="sub-item"><span>Đơn chờ cấp tài khoản</span></span>
                                     </a>
                                 </li>
                                 <li class="{{ request()->get('status') == 'active' ? 'active' : '' }}">
                                     <a href="{{ route('order.index', ['status' => 'active']) }}">
-                                        <span class="sub-item">Đơn hàng đã kích hoạt</span>
+                                        <span class="sub-item"><span>Đơn đã kích hoạt</span></span>
                                     </a>
                                 </li>
                             </ul>
@@ -196,20 +205,20 @@
                             id="service_dk">
                             <ul class="nav nav-collapse">
                                 <li class="{{ request()->routeIs('customer.domain.index') ? 'active' : '' }}">
-                                    <a href="{{ route('customer.domain.index') }}"><span class="sub-item">Tên
-                                            miền</span></a>
+                                    <a href="{{ route('customer.domain.index') }}"><span class="sub-item">
+                                        <span>Tên miền</span></span></a>
                                 </li>
                                 <li class="{{ request()->routeIs('customer.hosting.index') ? 'active' : '' }}">
                                     <a href="{{ route('customer.hosting.index') }}"><span
-                                            class="sub-item">Hosting</span></a>
+                                            class="sub-item"><span>Hosting</span></span></a>
                                 </li>
                                 <li class="{{ request()->routeIs('customer.email.index') ? 'active' : '' }}">
                                     <a href="{{ route('customer.email.index', ['email_type' => 1]) }}"><span
-                                            class="sub-item">Email Server</span></a>
+                                            class="sub-item"><span>Email Server</span></span></a>
                                 </li>
                                 <li class="{{ request()->routeIs('customer.cloud.index') ? 'active' : '' }}">
                                     <a href="{{ route('customer.cloud.index') }}"><span
-                                            class="sub-item">Cloud</span></a>
+                                            class="sub-item"><span>Cloud</span></span></a>
                                 </li>
                             </ul>
                         </div>
@@ -227,22 +236,28 @@
                             <ul class="nav nav-collapse">
                                 <li class="{{ request()->get('type') == 'domain' ? 'active' : '' }}">
                                     <a href="{{ route('customer.service.list.service', ['type' => 'domain']) }}">
-                                        <span class="sub-item">Tên miền</span>
+                                        <span class="sub-item"><span>Domain</span></span>
                                     </a>
                                 </li>
                                 <li class="{{ request()->get('type') == 'hosting' ? 'active' : '' }}">
                                     <a href="{{ route('customer.service.list.service', ['type' => 'hosting']) }}">
-                                        <span class="sub-item">Hosting</span>
+                                        <span class="sub-item"><span>Hosting</span></span>
                                     </a>
                                 </li>
                                 <li class="{{ request()->get('type') == 'email' ? 'active' : '' }}">
                                     <a href="{{ route('customer.service.list.service', ['type' => 'email']) }}">
-                                        <span class="sub-item">Email Server</span>
+                                        <span class="sub-item"><span>Email Server</span></span>
                                     </a>
                                 </li>
                                 <li class="{{ request()->get('type') == 'cloud' ? 'active' : '' }}">
                                     <a href="{{ route('customer.service.list.service', ['type' => 'cloud']) }}">
-                                        <span class="sub-item">Cloud</span>
+                                        <span class="sub-item"><span>Cloud</span></span>
+                                    </a>
+                                </li>
+
+                                <li class="{{ request()->get('type') == 'hotel' ? 'active' : '' }}">
+                                    <a href="{{ route('customer.service.list.hotel') }}">
+                                        <span class="sub-item"><span>Khách sạn</span></span>
                                     </a>
                                 </li>
                             </ul>
@@ -261,17 +276,17 @@
                             <ul class="nav nav-collapse">
                                 <li class="{{ request()->get('status') == 'nopayment' ? 'active' : '' }}">
                                     <a href="{{ route('customer.order.index', ['status' => 'nopayment']) }}">
-                                        <span class="sub-item">Đơn hàng chưa thanh toán</span>
+                                        <span class="sub-item"><span>Đơn chưa thanh toán</span></span>
                                     </a>
                                 </li>
                                 <li class="{{ request()->get('status') == 'payment' ? 'active' : '' }}">
                                     <a href="{{ route('customer.order.index', ['status' => 'payment']) }}">
-                                        <span class="sub-item">Đơn hàng đã thanh toán</span>
+                                        <span class="sub-item"><span>Đơn đã thanh toán</span></span>
                                     </a>
                                 </li>
                                 <li class="{{ request()->get('status') == 'active' ? 'active' : '' }}">
                                     <a href="{{ route('customer.order.index', ['status' => 'active']) }}">
-                                        <span class="sub-item">Đơn hàng đã kích hoạt</span>
+                                        <span class="sub-item"><span>Đơn đã kích hoạt</span></span>
                                     </a>
                                 </li>
                             </ul>

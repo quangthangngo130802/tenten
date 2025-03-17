@@ -1,16 +1,21 @@
 <style>
-    .nav-collapse{
+    .nav-collapse {
         margin-bottom: 0px !important;
     }
-    .sidebar-wrapper{
+
+    .sidebar-wrapper {
         background-color: #005aa1 no-repeat !important;
     }
-    ul li a, ul li p, ul h4,  ul li i, ul li span{
+
+    #sidebar ul li a,
+    #sidebar ul li p,
+    #sidebar ul h4,
+    #sidebar ul li i,
+    #sidebar ul li span {
         color: #ffffff !important;
     }
-
 </style>
-<div class="sidebar" data-background-color="dark">
+<div class="sidebar" data-background-color="dark" id="sidebar">
     <div class="sidebar-logo">
         <!-- Logo Header -->
         <div class="logo-header" data-background-color="white">
@@ -286,8 +291,8 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function () {
-            $(".nav-item > a").click(function (e) {
+        $(document).ready(function() {
+            $(".nav-item > a").click(function(e) {
                 // Nếu menu đang mở, thì không làm gì
                 if ($(this).next(".collapse").hasClass("show")) {
                     return;

@@ -30,6 +30,7 @@ class UserEditRequest extends FormRequest
             'address' => 'nullable|string|max:500',
             'phone_number' => 'required|string|max:15|unique:users,phone_number,' . $this->id,
             'role_id' => 'required|integer',
+            'status' => 'required'
         ];
     }
 
@@ -57,6 +58,7 @@ class UserEditRequest extends FormRequest
             'address' => 'Địa chỉ',
             'phone_number' => 'Số điện thoại',
             'role_id' => 'Vai trò',
+            'stauts' => 'Trạng thái'
         ];
     }
 }

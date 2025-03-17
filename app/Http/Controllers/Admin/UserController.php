@@ -23,21 +23,25 @@ class UserController extends Controller
             $data = User::where('role_id', '=', 1)->orderBy('updated_at', 'desc')->select('*');
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->editColumn('status', function ($row) {
+                    if ($row->status == 'active') {
+                        return '<div class="status active">
+                                    <span class="icon-check"></span> Hoạt động
+                                </div>';
+                    } else {
+                        return '<div class="status paused">
+                                    <span class="icon-warning"></span> Tạm dừng
+                                </div>';
+                    }
+                })
                 ->addColumn('action', function ($row) {
-                    return '<div style="display: flex;">
+                    return '<div style="">
                                 <a href="' . route('user.edit', $row->id) . '" class="btn btn-primary btn-sm edit">
                                     <i class="fas fa-edit btn-edit" title="Sửa"></i>
                                 </a>
-                                <a href="#" class="btn btn-danger btn-sm delete"
-                                onclick="confirmDelete(event, ' . $row->id . ')">
-                                    <i class="fas fa-trash btn-delete" title="Xóa"></i>
-                                </a>
-                                <form id="delete-form-' . $row->id . '" action="' . route('user.delete', $row->id) . '" method="POST" style="display:none;">
-                                    ' . csrf_field() . '
-
-                                </form>
+                                
                             </div>';
-                })->rawColumns(['action'])
+                })->rawColumns(['action', 'status'])
                 ->make(true);
         }
         $page = 'Tài khoản';
@@ -88,7 +92,7 @@ class UserController extends Controller
             'username' => $credentials['username'],
         ];
 
-        Mail::to($credentials['email'])->send(new CreateUserEmail($data));
+        Mail::to($credentials['email'])->queue(new CreateUserEmail($data));
         toastr()->success('Thêm thành công.');
         return redirect()->route('user.index');
     }

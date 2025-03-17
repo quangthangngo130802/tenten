@@ -37,7 +37,8 @@
                     </a>
 
                     <!-- Nút Import Excel -->
-                    <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#importModal">
+                    <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal"
+                        data-bs-target="#importModal">
                         Import Excel
                     </button>
                 </div>
@@ -49,6 +50,7 @@
                             <th>Email</th>
                             <th>Điện thoại</th>
                             <th>Username</th>
+                            <th>Trạng thái</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -92,8 +94,56 @@
             display: flex;
             justify-content: space-around;
         }
-        th, td{
-            text-align: center!important;
+
+        th,
+        td {
+            text-align: center !important;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 12px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: capitalize;
+            line-height: 1.5;
+            white-space: nowrap;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .status .icon-check,
+        .status .icon-warning {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+
+        .status.active {
+            background-color: #e6f4ea;
+            color: #2b8a3e;
+            border: 1px solid #cce7d0;
+        }
+
+        .status.active .icon-check {
+            background-image: url('https://cdn-icons-png.flaticon.com/512/845/845646.png');
+        }
+
+        .status.paused {
+            background-color: #fdecea;
+            color: #d93025;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status.paused .icon-warning {
+            background-image: url('https://cdn-icons-png.flaticon.com/512/1828/1828843.png');
         }
     </style>
 @endpush
@@ -127,10 +177,14 @@
                         name: 'phone_number',
                         orderable: false,
                     },
-
                     {
                         data: 'username',
                         name: 'username',
+                        orderable: false,
+                    },
+                    {
+                        data: 'status',
+                        name: 'status',
                         orderable: false,
                     },
                     {
@@ -149,21 +203,25 @@
                         targets: 1
                     },
                     {
-                        width: '20%',
-                        targets: 1
+                        width: '15%',
+                        targets: 2
                     },
                     {
-                        width: '15%',
-                        targets: 1
+                        width: '12%',
+                        targets: 3
                     },
 
                     {
-                        width: '20%',
-                        targets: 1
+                        width: '15%',
+                        targets: 4
                     },
                     {
                         width: '15%',
-                        targets: 1
+                        targets: 5
+                    },
+                    {
+                        width: '10%',
+                        targets: 6
                     },
 
                 ],

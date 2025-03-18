@@ -123,13 +123,13 @@
 
                     <!-- Quản lý dịch vụ được đăng ky -->
                     <li
-                        class="nav-item {{ request()->routeIs('domain.index', 'service.hosting.list.hosting', 'service.cloud.list.cloud', 'service.hotel.list.hotel') ? 'active' : '' }}">
+                        class="nav-item {{ request()->routeIs('domain.index', 'service.hosting.list.hosting', 'service.cloud.list.cloud', 'service.hotel.list.hotel', 'qrcode.index') ? 'active' : '' }}">
                         <a data-bs-toggle="collapse" href="#service_active">
                             <i class="fas fa-check-circle"></i>
                             <p>Dịch vụ được đăng ký</p>
                             <span class="caret"></span>
                         </a>
-                        <div class="collapse {{ request()->routeIs('domain.index', 'service.hosting.list.hosting', 'service.cloud.list.cloud', 'service.hotel.list.hotel') ? ' show' : '' }}"
+                        <div class="collapse {{ request()->routeIs('domain.index', 'service.hosting.list.hosting', 'service.cloud.list.cloud', 'service.hotel.list.hotel', 'qrcode.index') ? ' show' : '' }}"
                             id="service_active">
                             <ul class="nav nav-collapse">
                                 <li class="{{ request()->routeIs('domain.index') ? 'active' : '' }}">
@@ -156,6 +156,11 @@
                                     <a href="{{ route('service.hotel.list.hotel') }}">
                                         <span class="sub-item"><span>Khách sạn</span></span>
                                     </a>
+                                </li>
+
+                                <li class="{{ request()->routeIs('qrcode.index') ? 'active' : '' }}">
+                                    <a href="{{ route('qrcode.index') }}"><span
+                                            class="sub-item"><span>Qr Code</span></span></a>
                                 </li>
                             </ul>
                         </div>
@@ -195,13 +200,13 @@
                 @else
                     <!-- Đăng ký dịch vụ -->
                     <li
-                        class="nav-item {{ request()->routeIs('customer.domain.index', 'customer.hosting.index', 'customer.email.index', 'customer.cloud.index') ? 'active' : '' }}">
+                        class="nav-item {{ request()->routeIs('customer.domain.index', 'customer.hosting.index', 'customer.email.index', 'customer.cloud.index', 'qrcode.create') ? 'active' : '' }}">
                         <a data-bs-toggle="collapse" href="#service_dk">
                             <i class="fas fa-plus-square"></i>
                             <p>Đăng ký dịch vụ</p>
                             <span class="caret"></span>
                         </a>
-                        <div class="collapse {{ request()->routeIs('customer.domain.index', 'customer.hosting.index', 'customer.email.index', 'customer.cloud.index') ? 'show' : '' }}"
+                        <div class="collapse {{ request()->routeIs('customer.domain.index', 'customer.hosting.index', 'customer.email.index', 'customer.cloud.index', 'qrcode.create') ? 'show' : '' }}"
                             id="service_dk">
                             <ul class="nav nav-collapse">
                                 <li class="{{ request()->routeIs('customer.domain.index') ? 'active' : '' }}">
@@ -220,18 +225,23 @@
                                     <a href="{{ route('customer.cloud.index') }}"><span
                                             class="sub-item"><span>Cloud</span></span></a>
                                 </li>
+
+                                <li class="{{ request()->routeIs('qrcode.create') ? 'active' : '' }}">
+                                    <a href="{{ route('qrcode.create') }}"><span
+                                            class="sub-item"><span>Qr Code</span></span></a>
+                                </li>
                             </ul>
                         </div>
                     </li>
 
                     <!-- Dịch vụ được đăng ký -->
-                    <li class="nav-item {{ request()->routeIs('customer.service.list.service') ? 'active' : '' }}">
+                    <li class="nav-item {{ request()->routeIs('customer.service.list.service', 'qrcode.index') ? 'active' : '' }}">
                         <a data-bs-toggle="collapse" href="#service_active">
                             <i class="fas fa-check-circle"></i>
                             <p>Dịch vụ được đăng ký</p>
                             <span class="caret"></span>
                         </a>
-                        <div class="collapse {{ request()->routeIs('customer.service.list.service') ? 'show' : '' }}"
+                        <div class="collapse {{ request()->routeIs('customer.service.list.service', 'qrcode.index') ? 'show' : '' }}"
                             id="service_active">
                             <ul class="nav nav-collapse">
                                 <li class="{{ request()->get('type') == 'domain' ? 'active' : '' }}">
@@ -259,6 +269,11 @@
                                     <a href="{{ route('customer.service.list.hotel') }}">
                                         <span class="sub-item"><span>Khách sạn</span></span>
                                     </a>
+                                </li>
+
+                                <li class="{{ request()->routeIs('qrcode.index') ? 'active' : '' }}">
+                                    <a href="{{ route('qrcode.index') }}"><span
+                                            class="sub-item"><span>Qr Code</span></span></a>
                                 </li>
                             </ul>
                         </div>

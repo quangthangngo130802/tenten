@@ -22,6 +22,7 @@ use App\Http\Controllers\Customer\RenewServiceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\QrCodeController;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
@@ -220,6 +221,20 @@ Route::prefix('history')->name('history.')->group(function () {
     Route::get('{status?}', [TransactionHistoryController::class, 'index'])->name('index');
     Route::get('{id}/show', [TransactionHistoryController::class, 'show'])->name('show');
 });
+
+Route::prefix('qrcode')->name('qrcode.')->group(function () {
+    Route::get('create', [QrCodeController::class, 'create'])->name('create');
+    Route::get('edit/{id}', [QrCodeController::class, 'edit'])->name('edit');
+    Route::get('', [QrCodeController::class, 'index'])->name('index');
+    Route::post('/imageurl', [QrCodeController::class, 'imageurl'])->name('imageurl');
+    Route::post('/save/{id?}', [QrCodeController::class, 'save'])->name('save');
+
+    Route::post('/delete/{id}', [QrCodeController::class, 'delete'])->name('delete');
+});
+
+
+
+
 
 Route::post('/clear-pdf-session', [CustomerOrderController::class, 'clearPdfSession'])->name('clear.pdf.session');
 

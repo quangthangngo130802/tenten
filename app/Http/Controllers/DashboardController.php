@@ -15,8 +15,8 @@ class DashboardController extends Controller
     //
     public function dashboard()
     {
-        $page = 'Dashboard';
-        $title = 'Dashboard';
+        $page = 'Hệ Thống Quản Lý SGO Việt Nam';
+        $title = 'Hệ Thống Quản Lý SGO Việt Nam';
         $user = Auth::user();
         if ($user->role_id == 1) {
             $nopayment = Order::where('status', 'nopayment')->get();

@@ -144,7 +144,7 @@
                                 </li>
                                 <li>
                                     <a href="#">
-                                        <span class="sub-item"><span>Email Server<</span></span>
+                                        <span class="sub-item"><span>Email Server</span></span>
                                     </a>
                                 </li>
                                 <li class="{{ request()->routeIs('service.cloud.list.cloud') ? 'active' : '' }}">

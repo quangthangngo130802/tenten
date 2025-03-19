@@ -233,7 +233,9 @@ Route::prefix('qrcode')->name('qrcode.')->group(function () {
 });
 
 
-
+route::get('redirect-url/{url}', function($url){
+    header('location: '. $url);exit;
+})->name('redirect-url');
 
 
 Route::post('/clear-pdf-session', [CustomerOrderController::class, 'clearPdfSession'])->name('clear.pdf.session');

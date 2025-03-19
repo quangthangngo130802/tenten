@@ -59,7 +59,10 @@ class QrCodeController extends Controller
     {
         Log::info($request->all());
 
-        $encodedLink = urlencode($request->qr_link);
+        $url = route('redirect-url', $request->qr_link);
+
+        $encodedLink = urlencode( $url);
+
         $qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={$encodedLink}";
 
         return response()->json([
@@ -70,7 +73,9 @@ class QrCodeController extends Controller
     }
     public function save(Request $request, $id = null)
     {
-        $encodedLink = urlencode($request->qr_link);
+        $url = route('redirect-url', $request->qr_link);
+
+        $encodedLink = urlencode( $url);
         $qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={$encodedLink}";
         $qrcode = null;
         $user = Auth::user();

@@ -65,13 +65,13 @@
 
                 @if (Auth::user()->role_id == 1)
                     <!-- Cấu hình -->
-                    <li class="nav-item {{ request()->routeIs('company.index', 'user.index') ? 'active' : '' }}">
+                    <li class="nav-item {{ request()->routeIs('company.index', 'user.index', 'smtp.email', 'smtp.template') ? 'active' : '' }}">
                         <a data-bs-toggle="collapse" href="#config">
                             <i class="fas fa-pen-square"></i>
                             <p>Cấu hình</p>
                             <span class="caret"></span>
                         </a>
-                        <div class="collapse {{ request()->routeIs('company.index', 'user.index') ? 'show' : '' }}"
+                        <div class="collapse {{ request()->routeIs('company.index', 'user.index', 'smtp.email', 'smtp.template') ? 'show' : '' }}"
                             id="config">
                             <ul class="nav nav-collapse">
                                 <li class="{{ request()->routeIs('company.index') ? 'active' : '' }}">
@@ -80,6 +80,9 @@
                                 <li class="{{ request()->routeIs('user.index') ? 'active' : '' }}">
                                     <a href="{{ route('user.index') }}"><span class="sub-item"><span>Tài khoản nhân
                                         sự</span></span></a>
+                                </li>
+                                <li class="{{ request()->routeIs('smtp.email', 'smtp.template') ? 'active' : '' }}">
+                                    <a href="{{ route('smtp.email') }}"><span class="sub-item"><span>SMTP</span></span></a>
                                 </li>
                             </ul>
                         </div>
@@ -196,6 +199,13 @@
                                 </li>
                             </ul>
                         </div>
+                    </li>
+
+                    <li class="nav-item ">
+                        <a href="">
+                            <i class="fa fa-ticket-alt"></i>
+                            <p>Ticket</p>
+                        </a>
                     </li>
                 @else
                     <!-- Đăng ký dịch vụ -->

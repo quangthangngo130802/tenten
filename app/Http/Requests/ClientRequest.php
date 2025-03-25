@@ -29,6 +29,7 @@ class ClientRequest extends FormRequest
             // 'address' => 'nullable|string|max:500',
             'phone_number' => 'required|string|max:15|unique:users,phone_number,' . $this->id,
             'email' => 'required|string|email|max:255|unique:users,email,' . $this->id,
+            'status' => 'nullable'
         ];
     }
 

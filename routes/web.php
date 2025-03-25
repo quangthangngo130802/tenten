@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\EmailController;
 use App\Http\Controllers\Admin\HostingController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ServiceActiveController;
+use App\Http\Controllers\Admin\SmtpController;
 use App\Http\Controllers\Admin\TransactionHistoryController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
@@ -144,6 +145,12 @@ Route::middleware(['auth', 'profile.updated'])->group(function () {
         Route::prefix('company')->name('company.')->group(function () {
             Route::get('', [ConfigController::class, 'index'])->name('index');
             Route::post('', [ConfigController::class, 'store'])->name('store');
+        });
+
+        Route::prefix('smtp')->name('smtp.')->group(function () {
+            Route::get('email', [SmtpController::class, 'email'])->name('email');
+            Route::post('email', [SmtpController::class, 'emailSubmit'])->name('email.save');
+            Route::get('template', [SmtpController::class, 'template'])->name('template');
         });
     });
 

@@ -3,51 +3,46 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Domain;
+use App\Models\PriceDomain;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Yajra\DataTables\Facades\DataTables;
 
 class DomainController extends Controller
 {
     public function index(Request $request)
     {
-        $page = "Tên miền";
-        $title = "Danh sách đã đăng ký";
-        $url = 'https://api-reseller.tenten.vn/v1/Domains/list.json';
-
-        $page1 = $request->input('page', 1);
-        $limit = $request->input('limit', 10);
-
-        $data = [
-            "api_key" => "6dc564c5e650dedd67144761a3f2fcdb",
-            "api_user" => "dnse002",
-            "page" => $page1,
-            "limit" => $limit,
-        ];
 
         try {
-            $client = new Client();
-            $response = $client->post($url, [
-                'form_params' => $data,
-            ]);
 
-
-            $responseBody = json_decode($response->getBody(), true);
-            // dd($responseBody);
-            if (isset($responseBody['error']) && !empty($responseBody['error'])) {
-                throw new \Exception($responseBody['error']);
+            $title = "Danh sách Domain";
+            if ($request->ajax()) {
+                $data = Domain::select('*');
+                return DataTables::of($data)
+                ->editColumn('status', function ($row) {
+                    if ($row->status == '1') {
+                        return '<div class="status active">
+                                    <span class="icon-check"></span> Hoạt động
+                                </div>';
+                    } else {
+                        return '<div class="status paused">
+                                    <span class="icon-warning"></span> Tạm dừng
+                                </div>';
+                    }
+                })
+                ->editColumn('created_date', function ($row) {
+                    return Carbon::parse($row->created_date)->format('d/m/Y H:i:s');
+                })
+                ->editColumn('expiration_date', function ($row) {
+                    return Carbon::parse($row->expiration_date)->format('d/m/Y H:i:s');
+                })->rawColumns(['status'])
+                ->make(true);
             }
-
-            $domains = $responseBody['data'] ?? [];
-
-            return view('backend.domain.index', [
-                'domains' => $domains,
-                'paginate' => $responseBody['paginate'] ?? [],
-                'current_limit' => $limit,
-
-                'title' => $title,
-                'page' => $page,
-            ]);
+            $page = 'Domain';
+            return view('backend.domain.index', compact('title', 'page'));
         } catch (\Exception $e) {
             return back()->withErrors('Không thể tải dữ liệu: ' . $e->getMessage());
         }
@@ -98,59 +93,21 @@ class DomainController extends Controller
 
     public function tableprice(Request $request)
     {
-        $page = "Tên miền";
-        $title = "Bảng giá tên kiền";
-        $url = 'https://api-reseller.tenten.vn/v1/Domains/price.json';
-
-        $data = [
-            "api_key" => "6dc564c5e650dedd67144761a3f2fcdb",
-            "api_user" => "dnse002",
-        ];
-
         try {
-            $client = new Client();
-            $response = $client->post($url, [
-                'form_params' => $data,
-            ]);
 
-            $responseBody = json_decode($response->getBody(), true);
-
-            if (isset($responseBody['error']) && !empty($responseBody['error'])) {
-                throw new \Exception($responseBody['error']);
+            $title = "Danh sách giá Domain";
+            if ($request->ajax()) {
+                $data = PriceDomain::select('*');
+                return DataTables::of($data)
+                ->editColumn('price', function ($row) {
+                   return number_format($row->price);
+                })
+                ->editColumn('vat', function ($row) {
+                    return number_format($row->vat);
+                 })->make(true);
             }
-
-            // Dữ liệu từ API
-            $domains = $responseBody['data'] ?? [];
-
-            // Tìm kiếm
-            $search = $request->input('search');
-            if ($search) {
-                $domains = array_filter($domains, function ($key) use ($search) {
-                    return stripos($key, $search) !== false;
-                }, ARRAY_FILTER_USE_KEY);
-            }
-
-            // Phân trang
-            $perPage = $request->get('limit', 10);
-            $currentPage = $request->get('page', 1);
-            $startingPoint = ($currentPage - 1) * $perPage;
-
-            $currentPageItems = array_slice($domains, $startingPoint, $perPage, true);
-
-            $paginatedItems = new \Illuminate\Pagination\LengthAwarePaginator(
-                $currentPageItems,
-                count($domains),
-                $perPage,
-                $currentPage,
-                ['path' => $request->url(), 'query' => $request->query()]
-            );
-
-            return view('backend.domain.price', [
-                'domain' => $paginatedItems,
-                'page' => $page,
-                'title' => $title,
-                'search' => $search,
-            ]);
+            $page = 'Giá Domain';
+            return view('backend.domain.price', compact('title', 'page'));
         } catch (\Exception $e) {
             return back()->withErrors('Không thể tải dữ liệu: ' . $e->getMessage());
         }

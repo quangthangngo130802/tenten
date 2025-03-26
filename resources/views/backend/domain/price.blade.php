@@ -1,82 +1,139 @@
 @extends('backend.layouts.master')
 
 @section('content')
-<div class="content ">
-    {{-- <h1 class="mb-4 text-center">Bảng Giá Tên Miền</h1> --}}
-    <!-- Form Tìm Kiếm -->
-    <div class="row justify-content-between">
-        <form method="GET" action="" class="mb-3 col-md-4">
-            <div class="d-flex align-items-center">
-                <label for="limit" class="mb-0 me-2">Hiển thị:</label>
-                <select id="limit" name="limit" class="form-select " style="width: 200px;"
-                    onchange="this.form.submit()">
-                    <option value="10" @selected(request('limit')==10)>10</option>
-                    <option value="20" @selected(request('limit')==20)>20</option>
-                    <option value="50" @selected(request('limit')==50)>50</option>
-                    <option value="100" @selected(request('limit')==100)>100</option>
-                </select>
-            </div>
-        </form>
+    <div class="content">
+        <!-- Bảng danh sách danh mục -->
+        <div class="category-list">
+            <div style="overflow-x: auto;">
+                <table class="table table-striped table-hover" id="categoryTable">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th class="text-center">Domain</th>
+                            <th>Giá</th>
+                            <th class="text-center">VAT</th>
 
-        <form action="{{ url()->current() }}" method="GET" class="mb-4 col-md-4">
-            <div class="row">
-                <div class="col-md-8">
-                    <input type="text" name="search" value="{{ $search ?? '' }}" class="form-control"
-                        placeholder="Nhập tên miền để tìm kiếm (.vn, .com)">
-                </div>
-                <div class="col-md-4">
-                    <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <!-- Bảng Dữ Liệu -->
-    <div class="category-list">
-        <div style="overflow-x: auto;">
-            <table class="table  table-hover table-striped">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Tên miền</th>
-                        <th>Giá (VNĐ)</th>
-                        <th>Thuế VAT (VNĐ)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($domain as $key => $item)
-                    <tr>
-                        <td>{{ $loop->iteration + (($domain->currentPage() - 1) * $domain->perPage()) }}</td>
-                        <td>{{ $key }}</td>
-                        <td>{{ number_format($item['total'], 0, ',', '.') }}</td>
-                        <td>{{ number_format($item['vat'], 0, ',', '.') }}</td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="4" class="text-center">Không có dữ liệu</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
-
-            <!-- Phân Trang -->
-            <div class="d-flex justify-content-center">
-                {{ $domain->links() }}
+                        </tr>
+                    </thead>
+                </table>
             </div>
         </div>
     </div>
-</div>
-
 @endsection
 
 @push('styles')
-<style>
-    .text-muted {
-        display: none;
-    }
+    <style>
+        .dataTables_scrollBody thead tr {
+            display: none;
+        }
 
-    .table {
-        text-align: center;
-    }
-</style>
+        #add-category-btn {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            */
+            /* text-align: end; */
+            padding: 10px;
+            margin-right: 100px;
+        }
+
+
+        td a {
+            padding: 8px 11px !important;
+            border-radius: 5px;
+            color: white;
+            display: inline-block;
+        }
+
+        .edit {
+            background: #ffc107;
+            margin: 0px 15px;
+        }
+
+        .delete {
+            background: #dc3545;
+            padding: 8px 12px !important;
+        }
+
+        td,
+        th {
+            text-align: center !important;
+        }
+
+    </style>
+@endpush
+
+@push('scripts')
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var APP_URL = '{{ env('APP_URL') }}';
+            $('#categoryTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: APP_URL + '/admin/domain/price',
+                order: [], // Vô hiệu hóa sắp xếp mặc định
+                columns: [{
+                        data: null, // Chúng ta sẽ thêm số thứ tự thủ công
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false,
+                        render: function(data, type, row, meta) {
+                            return meta.row + 1; // Lấy chỉ số hàng +1 để hiển thị số thứ tự
+                        }
+                    },
+                    {
+                        data: 'name',
+                        name: 'name',
+                        orderable: false
+                    },
+                    {
+                        data: 'price',
+                        name: 'price',
+                        orderable: false
+                    },
+                    {
+                        data: 'vat',
+                        name: 'vat',
+                        orderable: false
+                    },
+
+
+                ],
+                columnDefs: [
+                    {
+                        width: '15%',
+                        targets: 0
+                    },
+                    {
+                        width: '30%',
+                        targets: 1
+                    },
+                    {
+                        width: '25%',
+                        targets: 2
+                    },
+                    {
+                        width: '22%',
+                        targets: 3
+                    },
+
+
+                ],
+                pagingType: "full_numbers", // Kiểu phân trang
+                language: {
+                    paginate: {
+                        previous: '&laquo;', // Nút trước
+                        next: '&raquo;' // Nút sau
+                    },
+                    lengthMenu: "Hiển thị _MENU_ mục mỗi trang",
+                    zeroRecords: "Không tìm thấy dữ liệu",
+                    info: "Hiển thị _START_ đến _END_ của _TOTAL_ mục",
+                    infoEmpty: "Không có dữ liệu để hiển thị",
+                    infoFiltered: "(lọc từ _MAX_ mục)"
+                },
+            });
+        });
+
+
+    </script>
 @endpush

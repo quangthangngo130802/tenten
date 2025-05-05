@@ -7,7 +7,7 @@
             <div class="card-tools mb-3">
 
                 <div class="row justify-content-end">
-                    <div class="col-md-2 col-6 mb-2">
+                    {{-- <div class="col-md-2 col-6 mb-2">
                         <a href="{{ route('email.index', ['type_id' => 1]) }}"
                             class="btn btn-sm {{ request()->type_id == 1 ? 'btn-info' : 'btn-outline-primary' }}">
                             Email Premium
@@ -30,7 +30,7 @@
                             class="btn btn-sm {{ request()->type_id == 4 ? 'btn-info' : 'btn-outline-primary' }}">
                             Email Pro
                         </a>
-                    </div>
+                    </div> --}}
 
                     <div class="col-md-2 col-6 mb-2">
                         <a href="{{ route('email.create') }}" class="btn btn-success btn-sm">Thêm mới (+)</a>
@@ -45,11 +45,10 @@
                         <tr>
                             <th>STT</th>
                             <th>Tên gói</th>
-                            <th>Dung lượng</th>
-                            <th>Địa chỉ Email</th>
-                            <th>Email gửi đi/ngày </th>
-                            <th>Email gửi đi/tháng</th>
-                            <th>File đính kèm/tháng (GB)</th>
+                            <th>Dung lượng (GB)/User </th>
+                            <th>Domain Alias</th>
+                            <th>Email gửi/giờ/User </th>
+                            <th>Backup(ngày)</th>
                             <th>Giá/tháng</th>
                             <th>Action</th>
                         </tr>
@@ -109,11 +108,11 @@
     <script type="text/javascript">
         $(document).ready(function() {
             var APP_URL = '{{ env('APP_URL') }}';
-            var typeId = '{{ request()->type_id }}';
+            // var typeId = '{{ request()->type_id }}';
             $('#categoryTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: APP_URL + '/admin/email/' + typeId,
+                ajax: APP_URL + '/admin/email',
                 order: [], // Vô hiệu hóa sắp xếp mặc định
                 columns: [{
                         data: null, // Chúng ta sẽ thêm số thứ tự thủ công
@@ -135,25 +134,21 @@
                         orderable: false
                     },
                     {
-                        data: 'number_email',
-                        name: 'number_email',
+                        data: 'domain_alias',
+                        name: 'domain_alias',
                         orderable: false
                     },
                     {
-                        data: 'sender_day',
-                        name: 'ssdsender_day',
+                        data: 'sender_hour',
+                        name: 'sender_hour',
                         orderable: false
                     },
                     {
-                        data: 'sender_month',
-                        name: 'sender_month',
+                        data: 'backup',
+                        name: 'backup',
                         orderable: false
                     },
-                    {
-                        data: 'storage_file',
-                        name: 'storage_file',
-                        orderable: false
-                    },
+
                     {
                         data: 'price',
                         name: 'price',
@@ -180,7 +175,7 @@
                         targets: 2
                     },
                     {
-                        width: '12%',
+                        width: '10%',
                         targets: 3
                     },
                     {
@@ -188,21 +183,18 @@
                         targets: 4
                     },
                     {
-                        width: '18%',
+                        width: '1%',
                         targets: 5
                     },
                     {
-                        width: '18%',
+                        width: '15%',
                         targets: 6
                     },
                     {
-                        width: '18%',
+                        width: '15%',
                         targets: 7
                     },
-                    {
-                        width: '15%',
-                        targets: 8
-                    }
+
                 ],
                 order: [],
                 pagingType: "full_numbers", // Kiểu phân trang

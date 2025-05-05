@@ -99,18 +99,18 @@ class CustomerServiceController extends Controller
 
         if ($request->ajax()) {
             if($user->role_id == 1){
-                $data = Service::where('status', 'active')->where('type', $type)->select('*');
+                $data = Service::where('status', 'active')->where('type', $type)->select('*')->get();
             }else{
-                $data = Service::where('status', 'active')->where('type', $type)->where('email', $email)->select('*');
+                $data = Service::where('status', 'active')->where('type', $type)->where('email', $email)->select('*')->get();
             }
 
 
             if ($date == 'expire_soon') {
-                $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) BETWEEN 1 AND 30');
+                $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) BETWEEN 1 AND 30')->get();
             }
 
             if ($date == 'expire') {
-                $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) < 0');
+                $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) < 0')->get();
             }
 
             return DataTables::of($data)
@@ -176,7 +176,7 @@ class CustomerServiceController extends Controller
                             <i class="fas fa-cog"></i>
                         </span>
                     </div>';
-                })->rawColumns(['action', 'giahan', 'enddate', 'packagename', 'active'])
+                })->rawColumns(['action', 'giahan', 'enddate', 'active', 'packagename'])
                 ->make(true);
         }
 

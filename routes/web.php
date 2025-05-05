@@ -138,6 +138,10 @@ Route::middleware(['auth', 'profile.updated'])->group(function () {
                 Route::get('{date?}', [ServiceActiveController::class, 'listhotel'])->name('list.hotel');
             });
 
+            Route::prefix('list-email')->name('email.')->group(function () {
+                Route::get('{date?}', [ServiceActiveController::class, 'listEmail'])->name('list.email');
+            });
+
             Route::get('add-service-{type}', [ServiceActiveController::class, 'addForm'])->name('add');
             Route::post('add-service-{type}', [ServiceActiveController::class, 'addSubmit'])->name('add.submit');
         });
@@ -207,6 +211,9 @@ Route::middleware(['auth', 'profile.updated'])->group(function () {
             Route::post('remove/{id}', [CustomerDomainController::class, 'delete']);
         });
     });
+
+    Route::get('check-domain', [DomainController::class, 'checkdomain'])->name('check.domain');
+
 });
 Route::middleware('auth')->group(function () {
     Route::get('profile', [ProfileController::class, 'profile'])->name('profile');
@@ -254,3 +261,10 @@ Route::post('/renews-update-time', [RenewServiceController::class, 'updatetime']
 Route::get('service/getContent/{id}', [ServiceActiveController::class, 'getContentService']);
 Route::post('/service/saveContent', [ServiceActiveController::class, 'saveContent']);
 Route::post('/save-domain', [CartController::class, 'saveDomain'])->name('save-domain');
+
+
+// web.php
+Route::post('/transfer-domain', [DomainController::class, 'transfer'])->name('transfer.domain');
+
+Route::post('/transfer-service', [ServiceActiveController::class, 'transferService'])->name('transfer.service');
+

@@ -10,17 +10,17 @@ use Yajra\DataTables\DataTables;
 
 class EmailController extends Controller
 {
-    public function index(Request $request, $type_id = 1)
+    public function index(Request $request)
     {
         $title = "Danh sách Email";
         if ($request->ajax()) {
-            $data = Email::where('email_type',$type_id)->select('*');
+            $data = Email::select('*');
             return DataTables::of($data)
                 ->editColumn('price', function ($row) {
                     return number_format($row->price);
                 })
                 ->addColumn('action', function ($row) {
-                    return '<div style="display: flex;">
+                    return '<div>
                                 <a href="' . route('email.edit', $row->id) . '" class="btn btn-primary btn-sm edit">
                                     <i class="fas fa-edit btn-edit" title="Sửa"></i>
                                 </a>

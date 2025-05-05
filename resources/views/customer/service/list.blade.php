@@ -98,7 +98,7 @@
                             return meta.row + 1;
                         }
                     },
-                    { data: 'packagename', name: 'id',  orderable: false, },
+                    { data: 'packagename', name: 'packagename',  orderable: false, },
                     { data: 'giahan', name: 'id',  orderable: false, },
                     { data: 'active_at', name: 'active_at' },
                     { data: 'enddate', name: 'number' },
@@ -114,6 +114,7 @@
                     { width: '8%', targets: 0 },
                     { width: '20%', targets: 1 },
                     { width: '15%', targets: [2, 3, 4, 5] },
+                    { width: '20%', targets: 6 },
                 ],
                 order: [],
                 // pagingType: "full_numbers",

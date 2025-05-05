@@ -1,6 +1,45 @@
 @extends('backend.layouts.master')
 
 @section('content')
+    <div class="modal fade" id="transferModal" tabindex="-1" role="dialog" aria-labelledby="transferModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form action="{{ route('transfer.domain') }}" method="POST" id="transferForm">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="transferModalLabel">Chuyển dữ liệu</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Đóng">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label for="domain">Tên Domain để đổi:</label>
+                            <input type="text" name="domain" id="data-domain" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="toUser">Người nhận domain (Người nhận):</label>
+                            <select name="username" id="username" class="form-control">
+                                <option value="">--- Chọn người nhận ---</option>
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->email }}">{{ $user->full_name }} ({{ $user->email }})
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary close-modal" data-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Xác nhận chuyển</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="content">
         <!-- Bảng danh sách danh mục -->
         <div class="category-list">
@@ -13,6 +52,7 @@
                             <th>Trạng thái</th>
                             <th class="text-center">Ngày bắt đầu</th>
                             <th class="text-center">Ngày kết thúc</th>
+                            <th class="text-center">Chuyển</th>
                         </tr>
                     </thead>
                 </table>
@@ -105,6 +145,17 @@
         .status.paused .icon-warning {
             background-image: url('https://cdn-icons-png.flaticon.com/512/1828/1828843.png');
         }
+
+        .btn-transfer {
+            background-color: #e6f4ff;
+            border: 1px solid #91d5ff;
+            color: #1890ff;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
     </style>
 @endpush
 
@@ -118,12 +169,12 @@
                 ajax: APP_URL + '/admin/domain',
                 order: [], // Vô hiệu hóa sắp xếp mặc định
                 columns: [{
-                        data: null, // Chúng ta sẽ thêm số thứ tự thủ công
+                        data: null,
                         name: 'DT_RowIndex',
                         orderable: false,
                         searchable: false,
                         render: function(data, type, row, meta) {
-                            return meta.row + 1; // Lấy chỉ số hàng +1 để hiển thị số thứ tự
+                            return meta.settings._iDisplayStart + meta.row + 1;
                         }
                     },
                     {
@@ -146,15 +197,19 @@
                         name: 'expiration_date',
                         orderable: false
                     },
+                    {
+                        data: 'another_column',
+                        name: 'another_column',
+                        orderable: false
+                    }
 
                 ],
-                columnDefs: [
-                    {
-                        width: '15%',
+                columnDefs: [{
+                        width: '5%',
                         targets: 0
                     },
                     {
-                        width: '30%',
+                        width: '15%',
                         targets: 1
                     },
                     {
@@ -162,20 +217,24 @@
                         targets: 2
                     },
                     {
-                        width: '22%',
+                        width: '19%',
                         targets: 3
                     },
                     {
-                        width: '23%',
+                        width: '19%',
                         targets: 4
+                    },
+                    {
+                        width: '10%',
+                        targets: 5
                     },
 
                 ],
-                pagingType: "full_numbers", // Kiểu phân trang
+                pagingType: "full_numbers",
                 language: {
                     paginate: {
-                        previous: '&laquo;', // Nút trước
-                        next: '&raquo;' // Nút sau
+                        previous: '&laquo;',
+                        next: '&raquo;'
                     },
                     lengthMenu: "Hiển thị _MENU_ mục mỗi trang",
                     zeroRecords: "Không tìm thấy dữ liệu",
@@ -185,7 +244,62 @@
                 },
             });
         });
+    </script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            $(document).on('click', '.btn-transfer', function() {
+                var id = $(this).data('id');
+                var domain = $(this).data('domain');
+                $('#data-domain').val(domain); // hoặc load dữ liệu vào modal
+                $('#transferModal').modal('show');
+            });
 
+            $(document).on('click', '.close-modal, .close', function() {
+                const modal = $('#transferModal');
+                if (modal.length) {
+                    modal.modal('hide');
+                }
+            });
+
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#transferForm').on('submit', function(e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công!',
+                            text: 'Chuyển domain thành công!',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            $('#transferModal').modal('hide');
+                            location.reload();
+                        });
+                    },
+                    error: function(xhr) {
+                        let errorMessage = 'Có lỗi xảy ra. Vui lòng thử lại!';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: errorMessage,
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            });
+        });
     </script>
 @endpush

@@ -22,7 +22,56 @@
             </div>
         </div>
 
+        <div class="modal fade" id="transferModal" tabindex="-1" role="dialog" aria-labelledby="transferModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form action="{{ route('transfer.service') }}" method="POST" id="transferForm">
+                        @csrf
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="transferModalLabel">Chuyển dữ liệu</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Đóng">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <input type="hidden" name="service_id" id="data-id" class="form-control">
+                            <div class="form-group">
+                                <label for="domain">Tên Domain để đổi:</label>
+                                <input type="text" name="hosting" id="data-hosting" class="form-control" readonly>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="toUser">Người chuyển :</label>
+                                <input type="text" id="data-email" class="form-control" readonly>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="toUser">Người nhận domain (Người nhận):</label>
+                                <select name="username" id="username" class="form-control">
+                                    {{-- <option value="">--- Chọn người nhận ---</option> --}}
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->email }}">{{ $user->full_name }} ({{ $user->email }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary close-modal" data-dismiss="modal">Đóng</button>
+                            <button type="submit" class="btn btn-primary">Xác nhận chuyển</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="category-list">
+            <div class="card-tools d-flex justify-content-end ">
+                <a href="{{ route('service.add', ['type' => 'cloud']) }}" class="btn btn-primary btn-sm">Thêm mới (+)</a>
+            </div>
             <table class="table table-striped table-hover" id="categoryTable">
                 <thead>
                     <tr>
@@ -30,8 +79,8 @@
                         <th>Khách hàng</th>
                         <th>Tên gói</th>
                         {{-- <th>Gia hạn</th> --}}
-                        <th>Ngày bắt đầu</th>
-                        <th>Ngày kết thúc</th>
+                        <th>Bắt đầu</th>
+                        <th>Kết thúc</th>
                         <th>Trạng thái</th>
                         <th>Thao tác</th>
                     </tr>
@@ -43,6 +92,10 @@
 
 @push('styles')
     <style>
+        tr th {
+            text-align: center !important;
+        }
+
         .status {
             display: inline-flex;
             align-items: center;
@@ -133,6 +186,17 @@
         .error {
             color: red;
         }
+
+        .btn-transfer {
+            background-color: #e6f4ff;
+            border: 1px solid #91d5ff;
+            color: #1890ff;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
     </style>
 @endpush
 
@@ -153,12 +217,12 @@
                     },
                     {
                         data: 'user_info',
-                        name: 'id',
+                        name: 'user_info',
                         orderable: false,
                     },
                     {
                         data: 'packagename',
-                        name: 'id',
+                        name: 'packagename',
                         orderable: false,
                     },
 
@@ -185,29 +249,29 @@
                     }
                 ],
                 columnDefs: [{
-                        width: '8%',
+                        width: '5%',
                         targets: 0
                     },
                     {
-                        width: '20%',
-                        targets: 1
-                    },
-                    {
                         width: '15%',
                         targets: 1
                     },
                     {
                         width: '15%',
-                        targets: 1
+                        targets: 2
+                    },
+                    {
+                        width: '15%',
+                        targets: 3
                     },
 
                     {
-                        width: '20%',
-                        targets: 1
+                        width: '15%',
+                        targets: 4
                     },
                     {
-                        width: '15%',
-                        targets: 1
+                        width: '20%',
+                        targets: 5
                     },
 
                 ],
@@ -374,6 +438,67 @@
                 .catch(error => {
                     console.error('Error saving content:', error);
                 });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            $(document).on('click', '.btn-transfer', function() {
+                var id = $(this).data('id');
+                var hosting = $(this).data('hosting');
+                var email = $(this).data('email');
+                $('#data-hosting').val(hosting);
+                $('#data-id').val(id);
+                $('#data-email').val(email);
+                $('#transferModal').modal('show');
+            });
+
+            $(document).on('click', '.close-modal, .close', function() {
+                const modal = $('#transferModal');
+                if (modal.length) {
+                    modal.modal('hide');
+                }
+            });
+
+        });
+    </script>
+
+
+    <script>
+        $(document).ready(function() {
+            $('#transferForm').on('submit', function(e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công!',
+                            text: 'Chuyển Cloud thành công!',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            $('#transferModal').modal('hide');
+                            location.reload();
+                        });
+                    },
+                    error: function(xhr) {
+                        let errorMessage = 'Có lỗi xảy ra. Vui lòng thử lại!';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: errorMessage,
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            });
         });
     </script>
 @endpush

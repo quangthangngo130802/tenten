@@ -121,12 +121,11 @@
                 </tr>
                 <tr>
                     <th>Tỉnh thành</th>
-                    <td>{{ Auth::user()->province1->name }}</td>
+                    <td>{{ Auth::user()->province1 ? Auth::user()->province1->name : '' }}</td>
                 </tr>
                 <tr>
                     <th>Địa chỉ</th>
-                    <td>{{ Auth::user()->address }} - {{ Auth::user()->ward1->name }} - {{ Auth::user()->district1->name
-                        }}</td>
+                    <td>{{ Auth::user()->address }} - {{ Auth::user()->ward1 ? Auth::user()->ward1->name : '' }} - {{ Auth::user()->district1 ? Auth::user()->district1->name : ''  }}</td>
                 </tr>
                 <tr>
                     <th>Ngày sinh</th>

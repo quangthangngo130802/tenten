@@ -4,48 +4,17 @@
 <div class="content">
     <!-- Bảng danh sách danh mục -->
     <div class="category-list">
-        <div class="card-tools mb-3">
-
-            <div class="row justify-content-end">
-                <div class="col-md-2 col-6 mb-2">
-                    <a href="{{ route('customer.email.index', ['email_type' => 1]) }}"
-                        class="btn btn-sm {{ request()->email_type == 1 ? 'btn-info' : 'btn-outline-primary' }}">
-                        Email Premium
-                    </a>
-                </div>
-                <div class="col-md-2 col-6 mb-2">
-                    <a href="{{ route('customer.email.index', ['email_type' => 2]) }}"
-                        class="btn btn-sm {{ request()->email_type == 2 ? 'btn-info' : 'btn-outline-primary' }}">
-                        Email Server thường
-                    </a>
-                </div>
-                <div class="col-md-2 col-6 mb-2">
-                    <a href="{{ route('customer.email.index', ['email_type' => 3]) }}"
-                        class="btn btn-sm {{ request()->email_type == 3 ? 'btn-info' : 'btn-outline-primary' }}">
-                        Zshield
-                    </a>
-                </div>
-                <div class="col-md-2 col-6 mb-2">
-                    <a href="{{ route('customer.email.index', ['email_type' => 4]) }}"
-                        class="btn btn-sm {{ request()->email_type == 4 ? 'btn-info' : 'btn-outline-primary' }}">
-                        Email Pro
-                    </a>
-                </div>
-            </div>
-
-
-        </div>
         <div style="overflow-x: auto;">
         <table class="table table-striped table-hover" id="categoryTable">
             <thead>
                 <tr>
                     <th>STT</th>
                     <th>Tên gói</th>
-                    <th>Dung lượng</th>
-                    <th>Địa chỉ Email</th>
-                    <th>Email gửi đi/ngày  </th>
-                    <th>Email gửi đi/tháng</th>
-                    <th>File đính kèm/tháng (GB)</th>
+                    <th>Dung lượng(GB)</th>
+                    <th>Email gửi/giờ</th>
+                    <th>Domain Alias</th>
+                    <th>Giao diện webmail</th>
+                    <th>Cài đặt trên</th>
                     <th>Giá/tháng</th>
                     <th>Action</th>
                 </tr>
@@ -119,10 +88,10 @@
                 },
                 { data: 'package_name', name: 'package_name', orderable: false },
                 { data: 'storage', name: 'storage', orderable: false },
-                { data: 'number_email', name: 'number_email', orderable: false },
-                { data: 'sender_day', name: 'ssdsender_day', orderable: false },
-                { data: 'sender_month', name: 'sender_month', orderable: false },
-                { data: 'storage_file', name: 'storage_file', orderable: false },
+                { data: 'sender_hour', name: 'sender_hour', orderable: false },
+                { data: 'domain_alias', name: 'domain_alias', orderable: false },
+                { data: 'webmail', name: 'webmail', orderable: false },
+                { data: 'setting', name: 'setting', orderable: false },
                 { data: 'price', name: 'price', orderable: false },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ],

@@ -114,7 +114,7 @@
                                     <a href="{{ route('hosting.index') }}"><span class="sub-item"><span>Hosting</span></span></a>
                                 </li>
                                 <li class="{{ request()->routeIs('email.index') ? 'active' : '' }}">
-                                    <a href="{{ route('email.index', ['type_id' => 1]) }}"><span class="sub-item"><span>Email
+                                    <a href="{{ route('email.index') }}"><span class="sub-item"><span>Email
                                         Server</span></span></a>
                                 </li>
                                 <li class="{{ request()->routeIs('cloud.index') ? 'active' : '' }}">
@@ -126,13 +126,13 @@
 
                     <!-- Quản lý dịch vụ được đăng ky -->
                     <li
-                        class="nav-item {{ request()->routeIs('domain.index', 'service.hosting.list.hosting', 'service.cloud.list.cloud', 'service.hotel.list.hotel', 'qrcode.index') ? 'active' : '' }}">
+                        class="nav-item {{ request()->routeIs('domain.index', 'service.hosting.list.hosting', 'service.cloud.list.cloud', 'service.hotel.list.hotel', 'qrcode.index', 'service.email.list.email') ? 'active' : '' }}">
                         <a data-bs-toggle="collapse" href="#service_active">
                             <i class="fas fa-check-circle"></i>
                             <p>Dịch vụ được đăng ký</p>
                             <span class="caret"></span>
                         </a>
-                        <div class="collapse {{ request()->routeIs('domain.index', 'service.hosting.list.hosting', 'service.cloud.list.cloud', 'service.hotel.list.hotel', 'qrcode.index') ? ' show' : '' }}"
+                        <div class="collapse {{ request()->routeIs('domain.index', 'service.hosting.list.hosting', 'service.cloud.list.cloud', 'service.hotel.list.hotel', 'qrcode.index', 'service.email.list.email') ? ' show' : '' }}"
                             id="service_active">
                             <ul class="nav nav-collapse">
                                 <li class="{{ request()->routeIs('domain.index') ? 'active' : '' }}">
@@ -145,8 +145,8 @@
                                         <span class="sub-item"><span>Hosting</span></span>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="#">
+                                <li class="{{ request()->routeIs('service.email.list.email') ? 'active' : '' }}">
+                                    <a href="{{ route('service.email.list.email') }}">
                                         <span class="sub-item"><span>Email Server</span></span>
                                     </a>
                                 </li>
@@ -326,6 +326,13 @@
                         <p>Lịch sử giao dịch</p>
                     </a>
                 </li>
+
+                {{-- <li class="nav-item {{ request()->routeIs('history.index') ? 'active' : '' }}">
+                    <a href="{{ route('history.index') }}">
+                        <i class="fa-solid fa-search"></i>
+                        <p>Kiểm tra tên miền</p>
+                    </a>
+                </li> --}}
             </ul>
         </div>
     </div>

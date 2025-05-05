@@ -29,14 +29,15 @@ class EmailRequest extends FormRequest
             //     // Kiểm tra trùng với package_name trong bảng emails
             //     return $query->where('package_name', $this->package_name);
             // })],
-            'email_type' => 'required|int', // Điều kiện cho package_name
+            // 'email_type' => 'required|int', // Điều kiện cho package_name
             'package_name' => 'required|string|max:255', // Điều kiện cho package_name
             'storage' => 'required|integer',
-            'number_email' => 'required|integer',
-            'sender_day' => 'required|integer',
-            'sender_month' => 'required|integer',
-            'storage_file' => 'required|integer',
+            'domain_alias' => 'required|string',
+            'webmail' => 'required|string',
+            'sender_hour' => 'required|string',
+            'backup' => 'required|string',
             'price' => 'required|numeric',
+            'setting' => 'required|string',
         ];
     }
 
@@ -55,12 +56,13 @@ class EmailRequest extends FormRequest
         return [
             'email_type' => 'Loại Email',
             'package_name'      => 'Tên gói Email',
-            'storage'           => 'Dung lượng',
-            'number_email'      => 'Địa chỉ email',
-            'sender_day'        => 'Số lượng email gửi đi/ngày',
-            'sender_month'      => 'Số lượng email gửi đi/tháng	',
-            'storage_file'      => 'Tổng dung lượng file đính kèm/tháng (GB)',
+            'storage'           => 'Dung lượng trên 01 User',
+            'domain_alias'      => 'Địa chỉ email',
+            'webmail'        => 'Số lượng email gửi đi/ngày',
+            'sender_hour'      => 'Số lượng email gửi đi/tháng	',
+            'backup'      => 'Tổng dung lượng file đính kèm/tháng (GB)',
             'price'             => 'Giá theo tháng',
+            'setting'             => 'Giá theo tháng',
         ];
     }
 }

@@ -18,12 +18,12 @@
             <div class="row">
 
                 <div class="col-md-6">
-                    <div class="form-group row">
+                    {{-- <div class="form-group row">
                         <label for="email_type" class="form-label">Loại email</label>
                         <select class="form-control @error('email_type') is-invalid @enderror" id="email_type"
                             name="email_type">
                             <option value="">Chọn loại email</option>
-                            <option value="1" {{ old('email_type', $email->email_type ?? '') ==1  ? 'selected' : '' }}>Email Premium</option>
+                            <option value="1" {{ old('email_type', $email->email_type ?? '') ==1  ? 'selected' : '' }}>Email Business</option>
                             <option value="2" {{ old('email_type', $email->email_type ?? '') ==2  ? 'selected' : '' }}>Email Server thường</option>
                             <option value="3" {{ old('email_type', $email->email_type ?? '') ==3  ? 'selected' : '' }}>Zshield</option>
                             <option value="4" {{ old('email_type', $email->email_type ?? '') ==4  ? 'selected' : '' }}>Email Pro</option>
@@ -31,7 +31,7 @@
                         @error('email_type')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                    </div>
+                    </div> --}}
                     <div class="form-group row">
                         <label for="package_name" class="form-label">Tên gói</label>
                         <input type="text" class="form-control @error('package_name') is-invalid @enderror"
@@ -43,7 +43,7 @@
                     </div>
 
                     <div class="form-group row">
-                        <label for="storage" class="form-label">Dung lượng lưu trữ (GB)</label>
+                        <label for="storage" class="form-label">Dung lượng lưu trữ (GB) / 1 User</label>
                         <input type="number" class="form-control @error('storage') is-invalid @enderror" id="storage"
                             name="storage" placeholder="Nhập dung lượng lưu trữ"
                             value="{{ old('storage', $email->storage ?? '') }}" />
@@ -53,28 +53,40 @@
                     </div>
 
                     <div class="form-group row">
-                        <label for="number_email" class="form-label">Dịa chỉ email</label>
-                        <input type="number" class="form-control @error('number_email') is-invalid @enderror"
-                            id="number_email" name="number_email" placeholder="Nhập số địa chỉ email"
-                            value="{{ old('number_email', $email->number_email ?? '') }}" />
-                        @error('number_email')
+                        <label for="domain_alias" class="form-label"> Domain Alias</label>
+                        <input type="text" class="form-control @error('domain_alias') is-invalid @enderror"
+                            id="domain_alias" name="domain_alias" placeholder="Nhập Domain Alias"
+                            value="{{ old('domain_alias', $email->domain_alias ?? '') }}" />
+                        @error('domain_alias')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+
+                    <div class="form-group row">
+                        <label for="webmail" class="form-label"> Giao diện webmail</label>
+                        <input type="text" class="form-control @error('webmail') is-invalid @enderror"
+                            id="webmail" name="webmail" placeholder="Nhập Giao diện webmail"
+                            value="{{ old('webmail', $email->webmail ?? '') }}" />
+                        @error('webmail')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+
                 </div>
 
                 <div class="col-md-6">
                     <div class="form-group row">
-                        <label for="sender_day" class="form-label">Số lượng Email gửi đi/ngày</label>
-                        <input type="number" class="form-control @error('sender_day') is-invalid @enderror"
-                            id="sender_day" name="sender_day" placeholder="Nhập số lượng gửi/ngày"
-                            value="{{ old('sender_day', $email->sender_day ?? '') }}" />
-                        @error('sender_day')
+                        <label for="sender_hour" class="form-label">Email gửi/giờ / 1 tài khoản</label>
+                        <input type="number" class="form-control @error('sender_hour') is-invalid @enderror"
+                            id="sender_hour" name="sender_hour" placeholder="Nhập số lượng gửi/giờ / 1 tài khoản"
+                            value="{{ old('sender_hour', $email->sender_hour ?? '') }}" />
+                        @error('sender_hour')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <div class="form-group row">
+                    {{-- <div class="form-group row">
                         <label for="sender_month" class="form-label">Số lượng Email gửi đi/tháng</label>
                         <input type="number" class="form-control @error('sender_month') is-invalid @enderror"
                             id="sender_month" name="sender_month" placeholder="Nhập số lượng gửi/tháng"
@@ -82,14 +94,14 @@
                         @error('sender_month')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                    </div>
+                    </div> --}}
 
                     <div class="form-group row">
-                        <label for="storage_file" class="form-label">Dung lượng file đính kèm (MB)</label>
-                        <input type="number" class="form-control @error('storage_file') is-invalid @enderror"
-                            id="storage_file" name="storage_file" placeholder="Nhập dung lượng file đính kèm"
-                            value="{{ old('storage_file', $email->storage_file ?? '') }}" />
-                        @error('storage_file')
+                        <label for="backup" class="form-label">Tự động Backup (ngày)</label>
+                        <input type="number" class="form-control @error('backup') is-invalid @enderror"
+                            id="backup" name="backup" placeholder="Nhập thời gian để Backup"
+                            value="{{ old('backup', $email->backup ?? '') }}" />
+                        @error('backup')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
@@ -102,6 +114,27 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+
+                    <div class="form-group row">
+                        <label for="setting" class="form-label"> Cài đặt trên</label>
+                        <input type="text" class="form-control @error('setting') is-invalid @enderror"
+                            id="setting" name="setting" placeholder="Nhập cài đặt trên"
+                            value="{{ old('setting', $email->setting ?? '') }}" />
+                        @error('setting')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    {{-- <div class="form-group row">
+                        <label for="number_email" class="form-label">  Tính năng</label>
+                        <input type="number" class="form-control @error('number_email') is-invalid @enderror"
+                            id="number_email" name="number_email" placeholder="Nhập số địa chỉ email"
+                            value="{{ old('number_email', $email->number_email ?? '') }}" />
+                        @error('number_email')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div> --}}
+
                 </div>
             </div>
 
@@ -138,129 +171,5 @@
 @endpush
 
 @push('scripts')
-<script>
-    const BASE_URL = "{{ url('/') }}";
-</script>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"></script>
-<script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
 
-<script src="{{ asset('ckfinder_php_3.7.0/ckfinder/ckfinder.js') }}"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-    const imageInput = document.getElementById('image');
-    const previewFrame = document.getElementById('preview-frame');
-
-    // Khi click vào khung preview, kích hoạt input file
-    previewFrame.addEventListener('click', () => {
-        imageInput.click();
-    });
-
-    // Khi chọn file, hiển thị ảnh
-    imageInput.addEventListener('change', function (event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                previewFrame.innerHTML = `<img src="${e.target.result}" alt="Selected Image" style="max-width: 100%; height: auto;">`;
-            };
-            reader.readAsDataURL(file);
-        } else {
-            previewFrame.innerHTML = '<p class="text-muted">Click here to select an image</p>';
-        }
-    });
-
-    // Nếu có ảnh được chọn sẵn (ví dụ: từ trước khi tải lại trang), hiển thị ảnh
-    const currentImageSrc = '{{ old("image", asset("storage/" . ($category->logo ?? ""))) }}'; // Thay đổi này theo cách bạn lấy ảnh cũ từ server
-    if (currentImageSrc) {
-        previewFrame.innerHTML = `<img src="${currentImageSrc}" alt="Selected Image" style="max-width: 100%; height: auto;">`;
-    }
-});
-</script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-    // Giá trị từ user đã được đổ ra từ backend
-    var selectedProvince = $('#province').val();
-    var selectedDistrict = "{{ $user->district ?? '' }}";
-    var selectedWard = "{{ $user->ward ?? '' }}";
-
-    // Hàm tải quận huyện
-    function loadDistricts(provinceId, districtId = null, wardId = null) {
-        if (provinceId) {
-            $.ajax({
-                url: '/get-districts',
-                type: 'GET',
-                data: { province_id: provinceId },
-                success: function (data) {
-                    var districts = data.districts;
-                    var districtSelect = $('#district');
-                    districtSelect.empty();
-                    districtSelect.append('<option value="">Chọn quận huyện</option>');
-
-                    districts.forEach(function (district) {
-                        districtSelect.append('<option value="' + district.id + '" ' +
-                            (district.id == districtId ? 'selected' : '') + '>' +
-                            district.name + '</option>');
-                    });
-
-                    // Nếu có districtId, tự động tải danh sách phường/xã
-                    if (districtId) {
-                        loadWards(districtId, wardId);
-                    } else {
-                        $('#ward').empty().append('<option value="">Chọn phường xã</option>');
-                    }
-                }
-            });
-        } else {
-            // Xoá danh sách quận/huyện và phường/xã khi không chọn tỉnh thành
-            $('#district').empty().append('<option value="">Chọn quận huyện</option>');
-            $('#ward').empty().append('<option value="">Chọn phường xã</option>');
-        }
-    }
-
-    // Hàm tải xã/phường
-    function loadWards(districtId, wardId = null) {
-        if (districtId) {
-            $.ajax({
-                url: '/get-wards',
-                type: 'GET',
-                data: { district_id: districtId },
-                success: function (data) {
-                    var wards = data.wards;
-                    var wardSelect = $('#ward');
-                    wardSelect.empty();
-                    wardSelect.append('<option value="">Chọn phường xã</option>');
-
-                    wards.forEach(function (ward) {
-                        wardSelect.append('<option value="' + ward.id + '" ' +
-                            (ward.id == wardId ? 'selected' : '') + '>' +
-                            ward.name + '</option>');
-                    });
-                }
-            });
-        } else {
-            $('#ward').empty().append('<option value="">Chọn phường xã</option>');
-        }
-    }
-
-    // Tải dữ liệu khi load trang nếu đã có dữ liệu từ user
-    if (selectedProvince) {
-        loadDistricts(selectedProvince, selectedDistrict, selectedWard);
-    }
-
-    // Khi chọn lại tỉnh thành
-    $('#province').change(function () {
-        var newProvince = $(this).val();
-        loadDistricts(newProvince); // Reset quận huyện và xã/phường khi thay đổi tỉnh thành
-    });
-
-    // Khi chọn lại quận huyện
-    $('#district').change(function () {
-        var newDistrict = $(this).val();
-        loadWards(newDistrict); // Reset xã/phường khi thay đổi quận huyện
-    });
-});
-
-</script>
 @endpush

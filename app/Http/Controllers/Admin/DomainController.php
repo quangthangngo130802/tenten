@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Domain;
 use App\Models\PriceDomain;
+use App\Models\Service;
+use App\Models\User;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -17,32 +19,38 @@ class DomainController extends Controller
     {
 
         try {
-
+            $users = User::where('role_id', '!=', 1)->get();
             $title = "Danh sách Domain";
             if ($request->ajax()) {
                 $data = Domain::select('*');
                 return DataTables::of($data)
-                ->editColumn('status', function ($row) {
-                    if ($row->status == '1') {
-                        return '<div class="status active">
+                    ->editColumn('status', function ($row) {
+                        if ($row->status == '1') {
+                            return '<div class="status active">
                                     <span class="icon-check"></span> Hoạt động
                                 </div>';
-                    } else {
-                        return '<div class="status paused">
+                        } else {
+                            return '<div class="status paused">
                                     <span class="icon-warning"></span> Tạm dừng
                                 </div>';
-                    }
-                })
-                ->editColumn('created_date', function ($row) {
-                    return Carbon::parse($row->created_date)->format('d/m/Y H:i:s');
-                })
-                ->editColumn('expiration_date', function ($row) {
-                    return Carbon::parse($row->expiration_date)->format('d/m/Y H:i:s');
-                })->rawColumns(['status'])
-                ->make(true);
+                        }
+                    })
+                    ->editColumn('created_date', function ($row) {
+                        return Carbon::parse($row->created_date)->format('d/m/Y H:i:s');
+                    })
+                    ->editColumn('expiration_date', function ($row) {
+                        return Carbon::parse($row->expiration_date)->format('d/m/Y H:i:s');
+                    })
+                    ->addColumn('another_column', function ($row) {
+                        return '<button class="btn-transfer" data-id="' . $row->id . '"  data-domain="' . $row->name . '" data-toggle="modal" data-target="#transferModal" title="Chuyển dữ liệu">
+                                    <i class="fas fa-exchange-alt"></i>
+                                </button>';
+                    })
+                    ->rawColumns(['status', 'another_column'])
+                    ->make(true);
             }
             $page = 'Domain';
-            return view('backend.domain.index', compact('title', 'page'));
+            return view('backend.domain.index', compact('title', 'page', 'users'));
         } catch (\Exception $e) {
             return back()->withErrors('Không thể tải dữ liệu: ' . $e->getMessage());
         }
@@ -99,17 +107,58 @@ class DomainController extends Controller
             if ($request->ajax()) {
                 $data = PriceDomain::select('*');
                 return DataTables::of($data)
-                ->editColumn('price', function ($row) {
-                   return number_format($row->price);
-                })
-                ->editColumn('vat', function ($row) {
-                    return number_format($row->vat);
-                 })->make(true);
+                    ->editColumn('price', function ($row) {
+                        return number_format($row->price);
+                    })
+                    ->editColumn('vat', function ($row) {
+                        return number_format($row->vat);
+                    })->make(true);
             }
             $page = 'Giá Domain';
             return view('backend.domain.price', compact('title', 'page'));
         } catch (\Exception $e) {
             return back()->withErrors('Không thể tải dữ liệu: ' . $e->getMessage());
         }
+    }
+
+
+    public function transfer(Request $request)
+    {
+        $domain = $request->domain;
+        $parts = explode('.', $domain);
+
+        $name = $parts[0]; // "thangqt"
+        $extension = '.' . $parts[1];
+
+        $domain = Domain::where('name', $request->domain)->first();
+        // dd($domain);
+        $created = Carbon::parse($domain->created_date)->startOfDay();
+        $expired = Carbon::parse($domain->expiration_date)->startOfDay();
+        $months = $created->diffInMonths($expired);
+
+        $service = Service::where('type', 'domain')->where('domain', $name)->where('domain_extension', $extension)->first();
+        if (!$service) {
+            Service::create([
+                'email' => $request->username,
+                'type' => 'domain',
+                'domain' =>  $name,
+                'domain_extension' => $extension,
+                'number' => $months,
+                'status' =>  $domain->status == 1 ? 'active' : 'unactive',
+                'price' => 0,
+                'active_at' => $domain->created_date
+            ]);
+        }else{
+            $service->update([
+                'email' => $request->username,
+                'active_at' => $domain->created_date
+            ]);
+        }
+
+        return response()->json(['message' => 'Chuyển domain thành công!']);
+    }
+
+    public function checkdomain(){
+
     }
 }

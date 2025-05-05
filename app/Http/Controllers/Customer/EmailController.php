@@ -16,8 +16,11 @@ class EmailController extends Controller
     {
         $title = "Danh sách Email";
         if ($request->ajax()) {
-            $data = Email::where('email_type',$email_type)->select('*');
+            $data = Email::select('*')->get();
             return DataTables::of($data)
+                ->editColumn('price', function ($row) {
+                    return number_format($row->price).'đ';
+                })->rawColumns(['price'])
                 ->addColumn('action', function ($row) {
                     return '<div >
                     <a data-id="' . $row->id . '" data-type="cloud" class="btn btn-primary btn-sm edit" href="' . route('customer.email.viemail', ['id' => $row->id]) . '">
@@ -25,6 +28,7 @@ class EmailController extends Controller
                     </a>
                 </div>';
                 })->rawColumns(['action'])
+
                 ->make(true);
         }
         $page = 'Email';
@@ -77,7 +81,7 @@ class EmailController extends Controller
                 'number' => $quantity
             ]);
 
-           return redirect()->route('customer.cart.listcart');
+            return redirect()->route('customer.cart.listcart');
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

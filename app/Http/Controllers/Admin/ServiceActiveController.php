@@ -14,6 +14,7 @@ use App\Models\Service;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
 class ServiceActiveController extends Controller
@@ -23,13 +24,10 @@ class ServiceActiveController extends Controller
     {
         $title = "Quản lý dịch vụ Cloud";
         $users = User::where('role_id', '!=', 1)->get();
+
         if ($request->ajax()) {
 
-            $data = Service::where('status', 'active')->where('type', 'cloud')
-                // ->whereHas('order', function ($query) {
-                //     $query->where('order_type', '!=', 2);
-                // })
-                ->select('*')->get();
+            $data = Service::where('type', 'cloud')->select('*')->get();
             if ($date == 'expire_soon') {
                 $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) BETWEEN 1 AND 30');
             }
@@ -39,12 +37,8 @@ class ServiceActiveController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('user_info', function ($row) {
-                    // Kiểm tra nếu có liên kết với user qua order
-                    // if ($row->order) {
-                    //     return $row->order->fullname . ' <p> (' . $row->order->email . ')</p>';
-                    // }
-                    // return 'N/A'; // Nếu không có thông tin
-                    return $row->email;
+                    $user = User::where('email', $row->email)->first();
+                    return $row->email . '<br>' . $user->full_name . ' (' . $user->phone_number . ' )';
                 })
                 ->addColumn('packagename', function ($row) {
                     $cloud = Cloud::find($row->product_id);
@@ -66,26 +60,23 @@ class ServiceActiveController extends Controller
 
                     if ($expirationDate->isPast()) {
                         $daysOverdue = $expirationDate->diffInDays(Carbon::now());
-                        return $expirationDate->format('d-m-Y') . '<p class="endday">( Đã hết hạn - ' . $daysOverdue . ' ngày )</p>';
+                        return $expirationDate->format('d-m-Y') . '<p class="endday">(  - ' . $daysOverdue . ' ngày )</p>';
                     }
 
                     $daysLeft = $expirationDate->diffInDays(Carbon::now());
                     if ($daysLeft < 30) {
-                        return $expirationDate->format('d-m-Y') . '<p class="endday">( Còn thời hạn ' . $daysLeft . ' ngày )</p>';
+                        return $expirationDate->format('d-m-Y') . '<p class="endday">(  ' . $daysLeft . ' ngày )</p>';
                     }
 
                     return $expirationDate->format('d-m-Y');
                 })->rawColumns(['enddate'])
                 ->editColumn('active', function ($row) {
-                    if ($row->status == 'active') {
-                        return '<div class="status active">
-                                    <span class="icon-check"></span> Hoạt động
-                                </div>';
-                    } else {
-                        return '<div class="status paused">
-                                    <span class="icon-warning"></span> Tạm dừng
-                                </div>';
-                    }
+                    return ' <div class="toggle-container justify-content-center">
+                    <label class="switch">
+                        <input type="checkbox" class="toggleStatus" data-id="' . $row->id . '"' . ($row->status == 'active' ? ' checked' : '') . '>
+                        <span class="slider"></span>
+                    </label>
+                </div>';
                 })->rawColumns(['active'])
                 ->editColumn('giahan', function ($row) {
                     return '<a href="' . route('order.show', $row->id) . '" class="btn btn-primary btn-sm edit"> Gia hạn </a>';
@@ -97,19 +88,34 @@ class ServiceActiveController extends Controller
                 ->addColumn('action', function ($row) {
                     $user = User::where('email', $row->email)->first();
                     return '
-                       <div class="d-flex ">
-                        <div class="dropdown">
+                    <div class="d-flex">
+                    <div class="dropdown">
                         <!-- Icon hiển thị modal -->
-                        <span style="font-size:26px; cursor:pointer; margin-right:15px" class="action"
-                            onclick="openModal(' . $row->id . ')">
+                        <span style="font-size:26px; cursor:pointer; margin-right:15px" class="action" onclick="toggleMenu(\'' . $row->id . '\')">
                             <i class="fas fa-cog"></i>
                         </span>
+
+                        <!-- Menu Dropdown -->
+                        <div id="menu-' . $row->id . '" class="dropdown-menu">
+                            <ul>
+                                <li><a href="#" onclick="openModal(' . $row->id . ')">Nội dung</a></li>
+
+                                <li><a href="#" onclick="openModalGiaHan(' . $row->id . ')">Gia hạn</a></li>
+                            </ul>
+                        </div>
                     </div>
 
-                    <button class="btn-transfer " data-email="'  . $user->full_name . ' (' . $row->email . ')' . '"  data-id="' . $row->id . '" data-hosting="' . $row->cloud->package_name . '" data-toggle="modal" data-target="#transferModal" title="Chuyển dữ liệu">
-                            <i class="fas fa-exchange-alt"></i>
-                        </button>
-                       </div>
+                    <!-- Button chuyển dữ liệu -->
+                    <button class="btn-transfer"
+                            data-email="' . $user->full_name . ' (' . $row->email . ')"
+                            data-id="' . $row->id . '"
+                            data-hosting="' . $row->cloud->package_name . '"
+                            data-toggle="modal"
+                            data-target="#transferModal"
+                            title="Chuyển dữ liệu">
+                        <i class="fas fa-exchange-alt"></i>
+                    </button>
+                </div>
                     ';
                 })->rawColumns(['action', 'giahan', 'enddate', 'packagename', 'active', 'user_info', 'another_column'])
                 ->make(true);
@@ -123,7 +129,7 @@ class ServiceActiveController extends Controller
         $title = "Quản lý dịch vụ Hosting";
         $users = User::where('role_id', '!=', 1)->get();
         if ($request->ajax()) {
-            $data = Service::where('status', 'active')->where('type', 'hosting')
+            $data = Service::where('type', 'hosting')
                 // ->whereHas('order', function ($query) {
                 //     $query->where('order_type', '!=', 2);
                 // })
@@ -159,26 +165,23 @@ class ServiceActiveController extends Controller
 
                     if ($expirationDate->isPast()) {
                         $daysOverdue = $expirationDate->diffInDays(Carbon::now());
-                        return $expirationDate->format('d-m-Y') . '<p class="endday">( Đã hết hạn -' . $daysOverdue . ' ngày )</p>';
+                        return $expirationDate->format('d-m-Y') . '<p class="endday">(  -' . $daysOverdue . ' ngày )</p>';
                     }
 
                     $daysLeft = $expirationDate->diffInDays(Carbon::now());
                     if ($daysLeft < 30) {
-                        return $expirationDate->format('d-m-Y') . '<p class="endday">( Còn thời hạn ' . $daysLeft . ' ngày )</p>';
+                        return $expirationDate->format('d-m-Y') . '<p class="endday">(  ' . $daysLeft . ' ngày )</p>';
                     }
 
                     return $expirationDate->format('d-m-Y');
                 })->rawColumns(['enddate'])
                 ->editColumn('active', function ($row) {
-                    if ($row->status == 'active') {
-                        return '<div class="status active">
-                                    <span class="icon-check"></span> Hoạt động
-                                </div>';
-                    } else {
-                        return '<div class="status paused">
-                                    <span class="icon-warning"></span> Tạm dừng
-                                </div>';
-                    }
+                    return ' <div class="toggle-container justify-content-center">
+                    <label class="switch">
+                        <input type="checkbox" class="toggleStatus" data-id="' . $row->id . '"' . ($row->status == 'active' ? ' checked' : '') . '>
+                        <span class="slider"></span>
+                    </label>
+                </div>';
                 })->rawColumns(['active'])
                 ->editColumn('active_at', function ($row) {
                     return $row->active_at ? \Carbon\Carbon::parse($row->active_at)->format('d-m-Y') : null;
@@ -190,20 +193,35 @@ class ServiceActiveController extends Controller
                 ->addColumn('action', function ($row) {
                     $user = User::where('email', $row->email)->first();
                     return '
-                    <div class="d-flex ">
-                     <div class="dropdown">
-                     <!-- Icon hiển thị modal -->
-                     <span style="font-size:26px; cursor:pointer; margin-right:15px" class="action"
-                         onclick="openModal(' . $row->id . ')">
-                         <i class="fas fa-cog"></i>
-                     </span>
-                 </div>
+                    <div class="d-flex">
+                    <div class="dropdown">
+                        <!-- Icon hiển thị modal -->
+                        <span style="font-size:26px; cursor:pointer; margin-right:15px" class="action" onclick="toggleMenu(\'' . $row->id . '\')">
+                            <i class="fas fa-cog"></i>
+                        </span>
 
-                 <button class="btn-transfer " data-email="'  . $user->full_name . ' (' . $row->email . ')' . '"  data-id="' . $row->id . '" data-hosting="' . $row->cloud->package_name . '" data-toggle="modal" data-target="#transferModal" title="Chuyển dữ liệu">
-                         <i class="fas fa-exchange-alt"></i>
-                     </button>
+                        <!-- Menu Dropdown -->
+                        <div id="menu-' . $row->id . '" class="dropdown-menu">
+                            <ul>
+                                <li><a href="#" onclick="openModal(' . $row->id . ')">Nội dung</a></li>
+
+                                 <li><a href="#" onclick="openModalGiaHan(' . $row->id . ')">Gia hạn</a></li>
+                            </ul>
+                        </div>
                     </div>
-                 ';
+
+                    <!-- Button chuyển dữ liệu -->
+                    <button class="btn-transfer"
+                            data-email="' . $user->full_name . ' (' . $row->email . ')"
+                            data-id="' . $row->id . '"
+                            data-hosting="' . $row->cloud->package_name . '"
+                            data-toggle="modal"
+                            data-target="#transferModal"
+                            title="Chuyển dữ liệu">
+                        <i class="fas fa-exchange-alt"></i>
+                    </button>
+                </div>
+                    ';
                 })->rawColumns(['action', 'giahan', 'enddate', 'packagename', 'active', 'user_info', 'another_column'])
                 ->make(true);
         }
@@ -216,7 +234,7 @@ class ServiceActiveController extends Controller
         $title = "Quản lý dịch vụ Email";
         $users = User::where('role_id', '!=', 1)->get();
         if ($request->ajax()) {
-            $data = Service::where('status', 'active')->where('type', 'email')
+            $data = Service::where('type', 'email')
 
                 ->select('*')->get();
             if ($date == 'expire_soon') {
@@ -239,26 +257,23 @@ class ServiceActiveController extends Controller
                     $expirationDate = $activeAt->addMonths($row->number);
                     if ($expirationDate->isPast()) {
                         $daysOverdue = $expirationDate->diffInDays(Carbon::now());
-                        return $expirationDate->format('d-m-Y') . '<p class="endday">( Đã hết hạn -' . $daysOverdue . ' ngày )</p>';
+                        return $expirationDate->format('d-m-Y') . '<p class="endday">(  -' . $daysOverdue . ' ngày )</p>';
                     }
 
                     $daysLeft = $expirationDate->diffInDays(Carbon::now());
                     if ($daysLeft < 30) {
-                        return $expirationDate->format('d-m-Y') . '<p class="endday">( Còn thời hạn ' . $daysLeft . ' ngày )</p>';
+                        return $expirationDate->format('d-m-Y') . '<p class="endday">(  ' . $daysLeft . ' ngày )</p>';
                     }
 
                     return $expirationDate->format('d-m-Y');
                 })->rawColumns(['enddate'])
                 ->editColumn('active', function ($row) {
-                    if ($row->status == 'active') {
-                        return '<div class="status active">
-                                    <span class="icon-check"></span> Hoạt động
-                                </div>';
-                    } else {
-                        return '<div class="status paused">
-                                    <span class="icon-warning"></span> Tạm dừng
-                                </div>';
-                    }
+                    return ' <div class="toggle-container justify-content-center">
+                    <label class="switch">
+                        <input type="checkbox" class="toggleStatus" data-id="' . $row->id . '"' . ($row->status == 'active' ? ' checked' : '') . '>
+                        <span class="slider"></span>
+                    </label>
+                </div>';
                 })->rawColumns(['active'])
                 ->editColumn('active_at', function ($row) {
                     return $row->active_at ? \Carbon\Carbon::parse($row->active_at)->format('d-m-Y') : null;
@@ -269,19 +284,35 @@ class ServiceActiveController extends Controller
                 ->addColumn('action', function ($row) {
                     $user = User::where('email', $row->email)->first();
                     return '
-                    <div class="d-flex ">
+                    <div class="d-flex">
                         <div class="dropdown">
-                            <span style="font-size:26px; cursor:pointer; margin-right:15px" class="action"
-                                onclick="openModal(' . $row->id . ')">
+                            <!-- Icon hiển thị modal -->
+                            <span style="font-size:26px; cursor:pointer; margin-right:15px" class="action" onclick="toggleMenu(\'' . $row->id . '\')">
                                 <i class="fas fa-cog"></i>
                             </span>
+
+                            <!-- Menu Dropdown -->
+                            <div id="menu-' . $row->id . '" class="dropdown-menu">
+                                <ul>
+                                    <li><a href="#" onclick="openModal(' . $row->id . ')">Nội dung</a></li>
+
+                                    <li><a href="#" onclick="openModalGiaHan(' . $row->id . ')">Gia hạn</a></li>
+                                </ul>
+                            </div
                         </div>
 
-                        <button class="btn-transfer " data-email="'  . $user->full_name . ' (' . $row->email . ')' . '"  data-id="' . $row->id . '" data-hosting="' . $row->emailServer->package_name . '" data-toggle="modal" data-target="#transferModal" title="Chuyển dữ liệu">
+                        <!-- Button chuyển dữ liệu -->
+                        <button class="btn-transfer"
+                                data-email="' . $user->full_name . ' (' . $row->email . ')"
+                                data-id="' . $row->id . '"
+                                data-hosting="' . $row->cloud->package_name . '"
+                                data-toggle="modal"
+                                data-target="#transferModal"
+                                title="Chuyển dữ liệu">
                             <i class="fas fa-exchange-alt"></i>
                         </button>
                     </div>
-                 ';
+                    ';
                 })->rawColumns(['action', 'giahan', 'enddate', 'packagename', 'active', 'user_info', 'another_column'])
                 ->make(true);
         }
@@ -301,6 +332,39 @@ class ServiceActiveController extends Controller
         return response()->json(['content' => $content]);
     }
 
+    public function getStatusService($id)
+    {
+        $service = Service::find($id);
+        // dd($service);
+        $status = $service->status;
+        // Trả về dữ liệu dưới dạng JSON
+        return response()->json(['status' => $status]);
+    }
+
+    public function getGiaHanService($id)
+    {
+
+        $service = Service::find($id);
+        $activeAt = Carbon::parse($service->active_at);
+        $expirationDate = (clone $activeAt)->addMonths($service->number);
+
+        return response()->json([
+            'activeAt' => $activeAt->format('Y-m-d'),
+            'expirationDate' => $expirationDate->format('Y-m-d')
+        ]);
+    }
+
+    public function updateStatus(Request $request)
+    {
+        $service = Service::findOrFail($request->id);
+
+        $service->status = $request->status;
+        $service->save();
+
+        return response()->json(['message' => 'Cập nhật thành công']);
+    }
+
+
     // Controller method to save content
     public function saveContent(Request $request)
     {
@@ -312,6 +376,23 @@ class ServiceActiveController extends Controller
         $service = Service::find($id);
         if ($service) {
             $service->content = $content;
+            $service->save();
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'service not found']);
+    }
+
+
+    public function giaHan(Request $request)
+    {
+
+        $id = $request->input('service_id');
+        $extend_time = $request->input('extend_time');
+
+        $service = Service::find($id);
+        if ($service) {
+            $service->number = $service->number + $extend_time;
             $service->save();
             return response()->json(['success' => true]);
         }
@@ -337,6 +418,7 @@ class ServiceActiveController extends Controller
 
     public function addSubmit(ServiceRequest $serviceRequest, $type)
     {
+        // dd($serviceRequest->toArray());
 
         $service = new Service();
         $service->email = $serviceRequest->email;
@@ -345,7 +427,7 @@ class ServiceActiveController extends Controller
         $service->status = 'active';
         $service->type = $type;
         $service->price = 0;
-        if ($type != 'domain') {
+        if ($type == 'domain') {
             $service->product_id = $serviceRequest->package_name;
 
             $domain = $serviceRequest->domain;
@@ -357,7 +439,7 @@ class ServiceActiveController extends Controller
         if ($type == 'email' || $type == 'hosting') {
             $service->domain = $serviceRequest->domain;
         }
-        if ($type != 'cloud') {
+        if ($type == 'cloud') {
             $service->os_id = $serviceRequest->os_id;
         }
         $service->save();
@@ -369,8 +451,13 @@ class ServiceActiveController extends Controller
     {
         $title = "Quản lý dịch vụ Khách sạn";
         if ($request->ajax()) {
-            $data = Service::where('status', 'active')->where('type', 'hotel')->orderBy('created_at', 'desc')
-                ->select('*')->get();
+            $data = Service::where('service.type', 'hotel')
+                ->join('users', function ($join) {
+                    $join->on(DB::raw("CONVERT(users.email USING utf8mb4) COLLATE utf8mb4_unicode_ci"), '=', DB::raw("CONVERT(service.email USING utf8mb4) COLLATE utf8mb4_unicode_ci"));
+                })
+                ->select('service.*', 'users.full_name', 'users.phone_number')
+                ->orderBy('service.created_at', 'desc');
+
             if ($date == 'expire_soon') {
                 $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) BETWEEN 1 AND 30');
             }
@@ -378,10 +465,16 @@ class ServiceActiveController extends Controller
                 $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) < 0');
             }
             return DataTables::of($data)
+                ->filterColumn('user_info', function ($query, $keyword) {
+                    $query->where(function ($q) use ($keyword) {
+                        $q->where('users.full_name', 'like', "%$keyword%")
+                            ->orWhere('users.phone_number', 'like', "%$keyword%");
+                    });
+                })
                 ->addIndexColumn()
                 ->addColumn('user_info', function ($row) {
                     $user = User::where('email', $row->email)->first();
-                    return $user ? $user->full_name . '<br>(' . $user->phone_number . ')' : ''; // Nối tên và số điện thoại với dấu ngoặc và xuống dòng
+                    return $user ? $user->full_name . '<br>(' . $user->phone_number . ')' : '';
                 })
 
                 ->editColumn('active_at', function ($row) {
@@ -395,39 +488,46 @@ class ServiceActiveController extends Controller
 
                     if ($expirationDate->isPast()) {
                         $daysOverdue = $expirationDate->diffInDays(Carbon::now());
-                        return $expirationDate->format('d-m-Y') . '<p class="endday">( Đã hết hạn - ' . $daysOverdue . ' ngày )</p>';
+                        return $expirationDate->format('d-m-Y') . '<p class="endday">(  - ' . $daysOverdue . ' ngày )</p>';
                     }
 
                     $daysLeft = $expirationDate->diffInDays(Carbon::now());
                     if ($daysLeft < 30) {
-                        return $expirationDate->format('d-m-Y') . '<p class="endday">( Còn thời hạn ' . $daysLeft . ' ngày )</p>';
+                        return $expirationDate->format('d-m-Y') . '<p class="endday">(  ' . $daysLeft . ' ngày )</p>';
                     }
 
                     return $expirationDate->format('d-m-Y');
                 })->rawColumns(['enddate'])
                 ->editColumn('active', function ($row) {
-                    if ($row->status == 'active') {
-                        return '<div class="status active">
-                                    <span class="icon-check"></span> Hoạt động
-                                </div>';
-                    } else {
-                        return '<div class="status paused">
-                                    <span class="icon-warning"></span> Tạm dừng
-                                </div>';
-                    }
+                    return ' <div class="toggle-container justify-content-center">
+                    <label class="switch">
+                        <input type="checkbox" class="toggleStatus" data-id="' . $row->id . '"' . ($row->status == 'active' ? ' checked' : '') . '>
+                        <span class="slider"></span>
+                    </label>
+                </div>';
                 })->rawColumns(['active'])
                 ->editColumn('giahan', function ($row) {
                     return '<a href="' . route('order.show', $row->id) . '" class="btn btn-primary btn-sm edit"> Gia hạn </a>';
                 })->rawColumns(['giahan'])
                 ->addColumn('action', function ($row) {
                     return '
-                        <div class="dropdown">
-                            <!-- Icon hiển thị modal -->
-                            <span style="font-size:26px; cursor:pointer;" class="action"
-                                onclick="openModal(' . $row->id . ')">
-                                <i class="fas fa-cog"></i>
-                            </span>
+                    <div class="d-flex">
+                    <div class="dropdown">
+                        <!-- Icon hiển thị modal -->
+                        <span style="font-size:26px; cursor:pointer; margin-right:15px" class="action" onclick="toggleMenu(\'' . $row->id . '\')">
+                            <i class="fas fa-cog"></i>
+                        </span>
+
+                        <!-- Menu Dropdown -->
+                        <div id="menu-' . $row->id . '" class="dropdown-menu">
+                            <ul>
+                                <li><a href="#" onclick="openModal(' . $row->id . ')">Nội dung</a></li>
+
+                                 <li><a href="#" onclick="openModalGiaHan(' . $row->id . ')">Gia hạn</a></li>
+                            </ul>
                         </div>
+                    </div>
+                </div>
                     ';
                 })->rawColumns(['action', 'giahan', 'enddate', 'active', 'user_info'])
                 ->make(true);

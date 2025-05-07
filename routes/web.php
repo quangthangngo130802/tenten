@@ -259,8 +259,14 @@ Route::post('/renews-delete-item', [RenewServiceController::class, 'deleteItem']
 Route::post('/renews-update-time', [RenewServiceController::class, 'updatetime'])->name('renews.update.time');
 
 Route::get('service/getContent/{id}', [ServiceActiveController::class, 'getContentService']);
+Route::get('service/status/{id}', [ServiceActiveController::class, 'getStatusService']);
+Route::get('service/giahan/{id}', [ServiceActiveController::class, 'getGiaHanService']);
+Route::post('/service/update-status/{id}', [ServiceActiveController::class, 'updateStatus'])->name('service.updateStatus');
 Route::post('/service/saveContent', [ServiceActiveController::class, 'saveContent']);
-Route::post('/save-domain', [CartController::class, 'saveDomain'])->name('save-domain');
+Route::post('/service/giahan', [ServiceActiveController::class, 'giaHan']);
+
+Route::post('/save-domain', [ServiceActiveController::class, 'saveDomain'])->name('save-domain');
+
 
 
 // web.php

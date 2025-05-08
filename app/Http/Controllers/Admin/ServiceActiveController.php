@@ -477,6 +477,10 @@ class ServiceActiveController extends Controller
                     $user = User::where('email', $row->email)->first();
                     return $user ? $user->full_name . '<br>(' . $user->phone_number . ')' : '';
                 })
+                ->addColumn('provinces', function ($row) {
+                    $user = User::where('email', $row->email)->first();
+                    return $user ? $user->province1?->name : '' ;
+                })
 
                 ->editColumn('active_at', function ($row) {
                     $activeAt = Carbon::parse($row->active_at);
@@ -530,7 +534,7 @@ class ServiceActiveController extends Controller
                     </div>
                 </div>
                     ';
-                })->rawColumns(['action', 'giahan', 'enddate', 'active', 'user_info'])
+                })->rawColumns(['action', 'giahan', 'enddate', 'active', 'user_info', 'provinces'])
                 ->make(true);
         }
         $page = 'Quản lý dịch vụ khách sạn';

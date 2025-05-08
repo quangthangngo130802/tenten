@@ -12,7 +12,7 @@
                         <th>STT</th>
                         <th>Khách hàng</th>
                         <th>Email</th>
-                        {{-- <th>Gia hạn</th> --}}
+                        <th>Khu vực</th>
                         <th>Ngày bắt đầu</th>
                         <th>Ngày kết thúc</th>
                         <th>Trạng thái</th>
@@ -60,7 +60,11 @@
                         name: 'email',
                         orderable: false,
                     },
-
+                    {
+                        data: 'provinces',
+                        name: 'provinces',
+                        orderable: false,
+                    },
                     {
                         data: 'active_at',
                         name: 'active_at'
@@ -85,7 +89,7 @@
                 ],
                 columnDefs: [{
                         width: '5%',
-                        targets: 0
+                        targets: 0,
                     },
                     {
                         width: '20%',

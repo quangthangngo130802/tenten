@@ -427,8 +427,9 @@ class ServiceActiveController extends Controller
         $service->status = 'active';
         $service->type = $type;
         $service->price = 0;
+        $service->product_id = $serviceRequest->package_name;
         if ($type == 'domain') {
-            $service->product_id = $serviceRequest->package_name;
+            // $service->product_id = $serviceRequest->package_name;
 
             $domain = $serviceRequest->domain;
             $ten_mien = pathinfo($domain, PATHINFO_FILENAME);

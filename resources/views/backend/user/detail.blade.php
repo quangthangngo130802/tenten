@@ -139,6 +139,8 @@
                                     {{ old('role_id', $user->role_id ?? '') == '1' ? 'selected' : '' }}>Admin</option>
                                 <option value="2"
                                     {{ old('role_id', $user->role_id ?? '') == '2' ? 'selected' : '' }}>Khách hàng</option>
+                                    <option value="3"
+                                    {{ old('role_id', $user->role_id ?? '') == '3' ? 'selected' : '' }}>Khách sạn</option>
                             </select>
                             @error('role_id')
                                 <div class="invalid-feedback">{{ $message }}</div>

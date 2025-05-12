@@ -20,7 +20,7 @@ class UserController extends Controller
         $title = "Tài khoản";
         if ($request->ajax()) {
 
-            $data = User::where('role_id', '=', 1)->orderBy('updated_at', 'desc')->select('*');
+            $data = User::where('role_id', [1, 3])->orderBy('updated_at', 'desc')->select('*');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->editColumn('status', function ($row) {
@@ -39,7 +39,7 @@ class UserController extends Controller
                                 <a href="' . route('user.edit', $row->id) . '" class="btn btn-primary btn-sm edit">
                                     <i class="fas fa-edit btn-edit" title="Sửa"></i>
                                 </a>
-                                
+
                             </div>';
                 })->rawColumns(['action', 'status'])
                 ->make(true);

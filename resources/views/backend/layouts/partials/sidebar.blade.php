@@ -6,13 +6,16 @@
     .sidebar-wrapper {
         background-color: #005aa1 no-repeat !important;
     }
-    .nav-collapse{
+
+    .nav-collapse {
         padding: 0px 0px 0px 13px;
     }
-    .sub-item{
+
+    .sub-item {
         font-size: 14px !important;
     }
-    .sub-item span{
+
+    .sub-item span {
         margin-left: 14px;
     }
 
@@ -63,66 +66,74 @@
                     <h4 class="text-section">Components</h4>
                 </li>
 
-                @if (Auth::user()->role_id == 1)
+                @if (Auth::user()->role_id == 1 || Auth::user()->role_id == 3)
                     <!-- Cấu hình -->
-                    <li class="nav-item {{ request()->routeIs('company.index', 'user.index', 'smtp.email', 'smtp.template') ? 'active' : '' }}">
-                        <a data-bs-toggle="collapse" href="#config">
-                            <i class="fas fa-pen-square"></i>
-                            <p>Cấu hình</p>
-                            <span class="caret"></span>
-                        </a>
-                        <div class="collapse {{ request()->routeIs('company.index', 'user.index', 'smtp.email', 'smtp.template') ? 'show' : '' }}"
-                            id="config">
-                            <ul class="nav nav-collapse">
-                                <li class="{{ request()->routeIs('company.index') ? 'active' : '' }}">
-                                    <a href="{{ route('company.index') }}"><span class="sub-item"><span>Công ty</span></span></a>
-                                </li>
-                                <li class="{{ request()->routeIs('user.index') ? 'active' : '' }}">
-                                    <a href="{{ route('user.index') }}"><span class="sub-item"><span>Tài khoản nhân
-                                        sự</span></span></a>
-                                </li>
-                                <li class="{{ request()->routeIs('smtp.email', 'smtp.template') ? 'active' : '' }}">
-                                    <a href="{{ route('smtp.email') }}"><span class="sub-item"><span>SMTP</span></span></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
+                    @if (Auth::user()->role_id == 1)
+                        <li
+                            class="nav-item {{ request()->routeIs('company.index', 'user.index', 'smtp.email', 'smtp.template') ? 'active' : '' }}">
+                            <a data-bs-toggle="collapse" href="#config">
+                                <i class="fas fa-pen-square"></i>
+                                <p>Cấu hình</p>
+                                <span class="caret"></span>
+                            </a>
+                            <div class="collapse {{ request()->routeIs('company.index', 'user.index', 'smtp.email', 'smtp.template') ? 'show' : '' }}"
+                                id="config">
+                                <ul class="nav nav-collapse">
+                                    <li class="{{ request()->routeIs('company.index') ? 'active' : '' }}">
+                                        <a href="{{ route('company.index') }}"><span class="sub-item"><span>Công
+                                                    ty</span></span></a>
+                                    </li>
+                                    <li class="{{ request()->routeIs('user.index') ? 'active' : '' }}">
+                                        <a href="{{ route('user.index') }}"><span class="sub-item"><span>Tài khoản nhân
+                                                    sự</span></span></a>
+                                    </li>
+                                    <li class="{{ request()->routeIs('smtp.email', 'smtp.template') ? 'active' : '' }}">
+                                        <a href="{{ route('smtp.email') }}"><span
+                                                class="sub-item"><span>SMTP</span></span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
 
-                    <!-- Quản lý khách -->
-                    <li class="nav-item {{ request()->routeIs('client.index') ? 'active' : '' }}">
-                        <a href="{{ route('client.index') }}">
-                            <i class="fas fa-user"></i>
-                            <p>Quản lý khách</p>
-                        </a>
-                    </li>
+                        <!-- Quản lý khách -->
+                        <li class="nav-item {{ request()->routeIs('client.index') ? 'active' : '' }}">
+                            <a href="{{ route('client.index') }}">
+                                <i class="fas fa-user"></i>
+                                <p>Quản lý khách</p>
+                            </a>
+                        </li>
 
-                    <!-- Quản lý dịch vụ -->
-                    <li
-                        class="nav-item {{ request()->routeIs('domain.price', 'hosting.index', 'email.index', 'cloud.index') ? 'active' : '' }}">
-                        <a data-bs-toggle="collapse" href="#service">
-                            <i class="fas fa-server"></i>
-                            <p>Quản lý dịch vụ</p>
-                            <span class="caret"></span>
-                        </a>
-                        <div class="collapse {{ request()->routeIs('domain.price', 'hosting.index', 'email.index', 'cloud.index') ? 'show' : '' }}"
-                            id="service">
-                            <ul class="nav nav-collapse">
-                                <li class="{{ request()->routeIs('domain.price') ? 'active' : '' }}">
-                                    <a href="{{ route('domain.price') }}"><span class="sub-item"><span>Tên miền</span></span></a>
-                                </li>
-                                <li class="{{ request()->routeIs('hosting.index') ? 'active' : '' }}">
-                                    <a href="{{ route('hosting.index') }}"><span class="sub-item"><span>Hosting</span></span></a>
-                                </li>
-                                <li class="{{ request()->routeIs('email.index') ? 'active' : '' }}">
-                                    <a href="{{ route('email.index') }}"><span class="sub-item"><span>Email
-                                        Server</span></span></a>
-                                </li>
-                                <li class="{{ request()->routeIs('cloud.index') ? 'active' : '' }}">
-                                    <a href="{{ route('cloud.index') }}"><span class="sub-item"><span>Cloud</span></span></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
+                        <!-- Quản lý dịch vụ -->
+                        <li
+                            class="nav-item {{ request()->routeIs('domain.price', 'hosting.index', 'email.index', 'cloud.index') ? 'active' : '' }}">
+                            <a data-bs-toggle="collapse" href="#service">
+                                <i class="fas fa-server"></i>
+                                <p>Quản lý dịch vụ</p>
+                                <span class="caret"></span>
+                            </a>
+                            <div class="collapse {{ request()->routeIs('domain.price', 'hosting.index', 'email.index', 'cloud.index') ? 'show' : '' }}"
+                                id="service">
+                                <ul class="nav nav-collapse">
+                                    <li class="{{ request()->routeIs('domain.price') ? 'active' : '' }}">
+                                        <a href="{{ route('domain.price') }}"><span class="sub-item"><span>Tên
+                                                    miền</span></span></a>
+                                    </li>
+                                    <li class="{{ request()->routeIs('hosting.index') ? 'active' : '' }}">
+                                        <a href="{{ route('hosting.index') }}"><span
+                                                class="sub-item"><span>Hosting</span></span></a>
+                                    </li>
+                                    <li class="{{ request()->routeIs('email.index') ? 'active' : '' }}">
+                                        <a href="{{ route('email.index') }}"><span class="sub-item"><span>Email
+                                                    Server</span></span></a>
+                                    </li>
+                                    <li class="{{ request()->routeIs('cloud.index') ? 'active' : '' }}">
+                                        <a href="{{ route('cloud.index') }}"><span
+                                                class="sub-item"><span>Cloud</span></span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    @endif
 
                     <!-- Quản lý dịch vụ được đăng ky -->
                     <li
@@ -135,78 +146,84 @@
                         <div class="collapse {{ request()->routeIs('domain.index', 'service.hosting.list.hosting', 'service.cloud.list.cloud', 'service.hotel.list.hotel', 'qrcode.index', 'service.email.list.email') ? ' show' : '' }}"
                             id="service_active">
                             <ul class="nav nav-collapse">
-                                <li class="{{ request()->routeIs('domain.index') ? 'active' : '' }}">
-                                    <a href="{{ route('domain.index') }}">
-                                        <span class="sub-item"><span>Tên miền</span></span>
-                                    </a>
-                                </li>
-                                <li class="{{ request()->routeIs('service.hosting.list.hosting') ? 'active' : '' }}">
-                                    <a href="{{ route('service.hosting.list.hosting') }}">
-                                        <span class="sub-item"><span>Hosting</span></span>
-                                    </a>
-                                </li>
-                                <li class="{{ request()->routeIs('service.email.list.email') ? 'active' : '' }}">
-                                    <a href="{{ route('service.email.list.email') }}">
-                                        <span class="sub-item"><span>Email Server</span></span>
-                                    </a>
-                                </li>
-                                <li class="{{ request()->routeIs('service.cloud.list.cloud') ? 'active' : '' }}">
-                                    <a href="{{ route('service.cloud.list.cloud') }}">
-                                        <span class="sub-item"><span>Cloud</span></span>
-                                    </a>
-                                </li>
+                                @if (Auth::user()->role_id == 1)
+                                    <li class="{{ request()->routeIs('domain.index') ? 'active' : '' }}">
+                                        <a href="{{ route('domain.index') }}">
+                                            <span class="sub-item"><span>Tên miền</span></span>
+                                        </a>
+                                    </li>
+                                    <li
+                                        class="{{ request()->routeIs('service.hosting.list.hosting') ? 'active' : '' }}">
+                                        <a href="{{ route('service.hosting.list.hosting') }}">
+                                            <span class="sub-item"><span>Hosting</span></span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ request()->routeIs('service.email.list.email') ? 'active' : '' }}">
+                                        <a href="{{ route('service.email.list.email') }}">
+                                            <span class="sub-item"><span>Email Server</span></span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ request()->routeIs('service.cloud.list.cloud') ? 'active' : '' }}">
+                                        <a href="{{ route('service.cloud.list.cloud') }}">
+                                            <span class="sub-item"><span>Cloud</span></span>
+                                        </a>
+                                    </li>
+                                @endif
                                 <li class="{{ request()->routeIs('service.hotel.list.hotel') ? 'active' : '' }}">
                                     <a href="{{ route('service.hotel.list.hotel') }}">
                                         <span class="sub-item"><span>Khách sạn</span></span>
                                     </a>
                                 </li>
-
-                                <li class="{{ request()->routeIs('qrcode.index') ? 'active' : '' }}">
-                                    <a href="{{ route('qrcode.index') }}"><span
-                                            class="sub-item"><span>Qr Code</span></span></a>
-                                </li>
+                                @if (Auth::user()->role_id == 1)
+                                    <li class="{{ request()->routeIs('qrcode.index') ? 'active' : '' }}">
+                                        <a href="{{ route('qrcode.index') }}"><span class="sub-item"><span>Qr
+                                                    Code</span></span></a>
+                                    </li>
+                                @endif
                             </ul>
                         </div>
                     </li>
+                    @if (Auth::user()->role_id == 1)
+                        <li class="nav-item {{ request()->routeIs('order.index') ? 'active' : '' }}">
+                            <a data-bs-toggle="collapse" href="#order">
+                                <i class="fa fa-box"></i>
+                                <p>Quản lý đơn hàng</p>
+                                <span class="caret"></span>
+                            </a>
+                            <div class="collapse {{ request()->routeIs('order.index') ? 'show' : '' }}"
+                                id="order">
+                                <ul class="nav nav-collapse">
+                                    <li class="{{ request()->get('status') == 'nopayment' ? 'active' : '' }}">
+                                        <a href="{{ route('order.index', ['status' => 'nopayment']) }}">
+                                            <span class="sub-item"><span>Đơn chưa thanh toán</span></span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ request()->get('status') == 'payment' ? 'active' : '' }}">
+                                        <a href="{{ route('order.index', ['status' => 'payment']) }}">
+                                            <span class="sub-item"><span>Đơn đã thanh toán</span></span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ request()->get('status') == 'pending' ? 'active' : '' }}">
+                                        <a href="{{ route('order.index', ['status' => 'pending']) }}">
+                                            <span class="sub-item"><span>Đơn chờ cấp tài khoản</span></span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ request()->get('status') == 'active' ? 'active' : '' }}">
+                                        <a href="{{ route('order.index', ['status' => 'active']) }}">
+                                            <span class="sub-item"><span>Đơn đã kích hoạt</span></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
 
-                    <li class="nav-item {{ request()->routeIs('order.index') ? 'active' : '' }}">
-                        <a data-bs-toggle="collapse" href="#order">
-                            <i class="fa fa-box"></i>
-                            <p>Quản lý đơn hàng</p>
-                            <span class="caret"></span>
-                        </a>
-                        <div class="collapse {{ request()->routeIs('order.index') ? 'show' : '' }}" id="order">
-                            <ul class="nav nav-collapse">
-                                <li class="{{ request()->get('status') == 'nopayment' ? 'active' : '' }}">
-                                    <a href="{{ route('order.index', ['status' => 'nopayment']) }}">
-                                        <span class="sub-item"><span>Đơn chưa thanh toán</span></span>
-                                    </a>
-                                </li>
-                                <li class="{{ request()->get('status') == 'payment' ? 'active' : '' }}">
-                                    <a href="{{ route('order.index', ['status' => 'payment']) }}">
-                                        <span class="sub-item"><span>Đơn đã thanh toán</span></span>
-                                    </a>
-                                </li>
-                                <li class="{{ request()->get('status') == 'pending' ? 'active' : '' }}">
-                                    <a href="{{ route('order.index', ['status' => 'pending']) }}">
-                                        <span class="sub-item"><span>Đơn chờ cấp tài khoản</span></span>
-                                    </a>
-                                </li>
-                                <li class="{{ request()->get('status') == 'active' ? 'active' : '' }}">
-                                    <a href="{{ route('order.index', ['status' => 'active']) }}">
-                                        <span class="sub-item"><span>Đơn đã kích hoạt</span></span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-
-                    <li class="nav-item ">
-                        <a href="">
-                            <i class="fa fa-ticket-alt"></i>
-                            <p>Ticket</p>
-                        </a>
-                    </li>
+                        <li class="nav-item ">
+                            <a href="">
+                                <i class="fa fa-ticket-alt"></i>
+                                <p>Ticket</p>
+                            </a>
+                        </li>
+                    @endif
                 @else
                     <!-- Đăng ký dịch vụ -->
                     <li
@@ -221,7 +238,7 @@
                             <ul class="nav nav-collapse">
                                 <li class="{{ request()->routeIs('customer.domain.index') ? 'active' : '' }}">
                                     <a href="{{ route('customer.domain.index') }}"><span class="sub-item">
-                                        <span>Tên miền</span></span></a>
+                                            <span>Tên miền</span></span></a>
                                 </li>
                                 <li class="{{ request()->routeIs('customer.hosting.index') ? 'active' : '' }}">
                                     <a href="{{ route('customer.hosting.index') }}"><span
@@ -237,15 +254,16 @@
                                 </li>
 
                                 <li class="{{ request()->routeIs('qrcode.create') ? 'active' : '' }}">
-                                    <a href="{{ route('qrcode.create') }}"><span
-                                            class="sub-item"><span>Qr Code</span></span></a>
+                                    <a href="{{ route('qrcode.create') }}"><span class="sub-item"><span>Qr
+                                                Code</span></span></a>
                                 </li>
                             </ul>
                         </div>
                     </li>
 
                     <!-- Dịch vụ được đăng ký -->
-                    <li class="nav-item {{ request()->routeIs('customer.service.list.service', 'qrcode.index') ? 'active' : '' }}">
+                    <li
+                        class="nav-item {{ request()->routeIs('customer.service.list.service', 'qrcode.index') ? 'active' : '' }}">
                         <a data-bs-toggle="collapse" href="#service_active">
                             <i class="fas fa-check-circle"></i>
                             <p>Dịch vụ được đăng ký</p>
@@ -282,8 +300,8 @@
                                 </li>
 
                                 <li class="{{ request()->routeIs('qrcode.index') ? 'active' : '' }}">
-                                    <a href="{{ route('qrcode.index') }}"><span
-                                            class="sub-item"><span>Qr Code</span></span></a>
+                                    <a href="{{ route('qrcode.index') }}"><span class="sub-item"><span>Qr
+                                                Code</span></span></a>
                                 </li>
                             </ul>
                         </div>
@@ -320,12 +338,14 @@
                 @endif
 
                 <!-- Lịch sử giao dịch -->
+                @if (Auth::user()->role_id != 3 )
                 <li class="nav-item {{ request()->routeIs('history.index') ? 'active' : '' }}">
                     <a href="{{ route('history.index') }}">
                         <i class="fa fa-history"></i>
                         <p>Lịch sử giao dịch</p>
                     </a>
                 </li>
+                @endif
 
                 {{-- <li class="nav-item {{ request()->routeIs('history.index') ? 'active' : '' }}">
                     <a href="{{ route('history.index') }}">

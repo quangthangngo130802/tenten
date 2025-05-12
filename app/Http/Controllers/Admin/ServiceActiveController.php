@@ -453,11 +453,12 @@ class ServiceActiveController extends Controller
         $title = "Quản lý dịch vụ Khách sạn";
         if ($request->ajax()) {
             $data = Service::where('service.type', 'hotel')
-                ->join('users', function ($join) {
-                    $join->on(DB::raw("CONVERT(users.email USING utf8mb4) COLLATE utf8mb4_unicode_ci"), '=', DB::raw("CONVERT(service.email USING utf8mb4) COLLATE utf8mb4_unicode_ci"));
-                })
-                ->select('service.*', 'users.full_name', 'users.phone_number')
-                ->orderBy('service.created_at', 'desc');
+            ->join('users', function ($join) {
+                $join->on(DB::raw("CONVERT(users.email USING utf8mb4) COLLATE utf8mb4_unicode_ci"), '=', DB::raw("CONVERT(service.email USING utf8mb4) COLLATE utf8mb4_unicode_ci"));
+            })
+            ->leftJoin('provinces', 'users.province', '=', 'provinces.id') // Thêm dòng này
+            ->select('service.*', 'users.full_name', 'users.phone_number', 'provinces.name as province_name')
+            ->orderBy('service.created_at', 'desc');
 
             if ($date == 'expire_soon') {
                 $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) BETWEEN 1 AND 30');
@@ -471,6 +472,9 @@ class ServiceActiveController extends Controller
                         $q->where('users.full_name', 'like', "%$keyword%")
                             ->orWhere('users.phone_number', 'like', "%$keyword%");
                     });
+                })
+                ->filterColumn('provinces', function ($query, $keyword) {
+                    $query->where('provinces.name', 'like', "%$keyword%");
                 })
                 ->addIndexColumn()
                 ->addColumn('user_info', function ($row) {

@@ -143,7 +143,8 @@ class ServiceActiveController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('user_info', function ($row) {
-                    return $row->email;
+                    $user = User::where('email', $row->email)->first();
+                    return $row->email . '<br>' . $user->full_name . ' (' . $user->phone_number . ' )';
                 })
                 ->addColumn('another_column', function ($row) {
                     $user = User::where('email', $row->email)->first();
@@ -246,7 +247,8 @@ class ServiceActiveController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('user_info', function ($row) {
-                    return $row->email;
+                    $user = User::where('email', $row->email)->first();
+                    return $row->email . '<br>' . $user->full_name . ' (' . $user->phone_number . ' )';
                 })
                 ->addColumn('packagename', function ($row) {
                     $hosting = Email::find($row->product_id);

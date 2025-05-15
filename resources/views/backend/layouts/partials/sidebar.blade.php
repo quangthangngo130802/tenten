@@ -345,6 +345,13 @@
                         <p>Lịch sử giao dịch</p>
                     </a>
                 </li>
+
+                <li class="nav-item {{ request()->routeIs('check.domai') ? 'active' : '' }}">
+                    <a href="{{ route('check.domain') }}">
+                        <i class="fa-solid fa-search"></i>
+                        <p>Kiểm tra tên miền</p>
+                    </a>
+                </li>
                 @endif
 
                 {{-- <li class="nav-item {{ request()->routeIs('history.index') ? 'active' : '' }}">

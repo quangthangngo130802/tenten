@@ -213,6 +213,7 @@ Route::middleware(['auth', 'profile.updated'])->group(function () {
     });
 
     Route::get('check-domain', [DomainController::class, 'checkdomain'])->name('check.domain');
+    Route::post('submit-check-domain', [DomainController::class, 'submitcheckdomain'])->name('submit.check.domain');
 
 });
 Route::middleware('auth')->group(function () {

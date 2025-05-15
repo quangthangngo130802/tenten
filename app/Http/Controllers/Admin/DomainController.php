@@ -159,6 +159,69 @@ class DomainController extends Controller
     }
 
     public function checkdomain(){
+        $listDomain = $this->domainPrice();
+        return view('check.index', compact('listDomain'));
+    }
 
+    public function submitcheckdomain(Request $request){
+        $domain = $request->input('domain');
+
+        if (!$domain) {
+            return response()->json(['error' => 'Domain is required'], 400);
+        }
+
+        // dd($request->toArray());
+        $client = new Client();
+
+        try {
+            $response = $client->post('https://api-reseller.tenten.vn/v1/Domains/search.json', [
+                'json' => [
+                    'api_key' => '6dc564c5e650dedd67144761a3f2fcdb',
+                    'api_user' => 'dnse002',
+                    'domainName' => $domain,
+                ],
+                'headers' => [
+                    'Accept' => 'application/json',
+                ],
+            ]);
+
+            $body = $response->getBody()->getContents();
+            $data = json_decode($body, true);
+            
+
+            // Trả dữ liệu nguyên gốc hoặc xử lý tùy ý trước khi trả
+            return response()->json($data);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Lỗi khi gọi API bên ngoài',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+    public function domainPrice()
+    {
+
+        $url = 'https://api-reseller.tenten.vn/v1/Domains/price.json';
+
+        $data = [
+            "api_key" => "6dc564c5e650dedd67144761a3f2fcdb",
+            "api_user" => "dnse002",
+        ];
+
+        try {
+            $client = new Client();
+            $response = $client->post($url, [
+                'form_params' => $data,
+            ]);
+
+            $responseBody = json_decode($response->getBody(), true);
+
+            return $responseBody['data'];
+            // dd($responseBody['data']);
+
+        } catch (\Exception $e) {
+            return back()->withErrors('Không thể tải dữ liệu: ' . $e->getMessage());
+        }
     }
 }

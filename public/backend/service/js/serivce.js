@@ -29,15 +29,29 @@ $(document).ready(function () {
             },
             success: function (response) {
                 console.log('Trạng thái đã được cập nhật:', response);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công!',
+                    text: response.message || 'Cập nhật trạng thái thành công.'
+                });
+
                 $('#categoryTable').DataTable().ajax.reload(null, false);
                 $('#statusModal').modal('hide');
             },
             error: function (xhr, status, error) {
                 console.error('Cập nhật trạng thái thất bại:', error);
-                $('#toggleStatus').prop('checked', !isChecked);
+                $(this).prop('checked', !isChecked);
+                $('#categoryTable').DataTable().ajax.reload(null, false);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: xhr.responseJSON?.message || 'Không thể cập nhật trạng thái.'
+                });
             }
         });
     });
+
 
     $('#transferForm').on('submit', function (e) {
         e.preventDefault();

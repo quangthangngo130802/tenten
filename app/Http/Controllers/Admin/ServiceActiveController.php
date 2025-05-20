@@ -360,11 +360,42 @@ class ServiceActiveController extends Controller
     public function updateStatus(Request $request)
     {
         $service = Service::findOrFail($request->id);
+        $status = $request->status;
+        if($service->type = 'hotel'){
+            $client = new \GuzzleHttp\Client([
+                'base_uri' => 'http://127.0.0.1:9000',
+                'cookies' => false,
+            ]);
 
+            try {
+                $response = $client->post('/api/user/status', [
+                    'form_params' => [
+                        'email' => $service->email,
+                        'status' => $status == 'active' ? '1' : '0'
+                    ],
+                ]);
+
+                $data = json_decode($response->getBody(), true);
+
+                if (isset($data['success']) && $data['success'] == false) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $data['message']
+                    ], 400);
+                }
+            } catch (\Exception $e) {
+
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Không tìm thấy để cập nhật',
+                ], 500);
+            }
+        }
         $service->status = $request->status;
         $service->save();
 
-        return response()->json(['message' => 'Cập nhật thành công']);
+        return response()->json(['success' => true, 'message' => 'Cập nhật thành công']);
     }
 
 

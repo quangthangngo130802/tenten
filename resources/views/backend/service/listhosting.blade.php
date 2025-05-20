@@ -198,5 +198,5 @@
         });
     </script>
 
-    <script src="{{ asset('backend/service/js/serivce.js') }}"></script>
+    <script src="{{ asset('backend/service/js/serivce.js') }}?v=123"></script>
 @endpush

@@ -23,7 +23,7 @@ class ServiceActiveController extends Controller
     //
     public function listcloud(Request $request, $date = null)
     {
-        $title = "Quản lý dịch vụ Cloud";
+        $title = "Quản lý dịch vụ Cloud 1";
         $users = User::where('role_id', '!=', 1)->get();
 
         if ($request->ajax()) {
@@ -105,7 +105,7 @@ class ServiceActiveController extends Controller
                                 <li><a href="#" onclick="openModal(' . $row->id . ')">Nội dung</a></li>
 
                                 <li><a href="#" onclick="openModalGiaHan(' . $row->id . ')">Gia hạn</a></li>
-                                
+
                                 <li><a href="#" onclick="openModalEdit(' . $row->id . ')">Chỉnh sửa</a></li>
                             </ul>
                         </div>

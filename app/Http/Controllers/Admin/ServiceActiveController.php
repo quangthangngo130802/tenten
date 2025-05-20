@@ -23,7 +23,7 @@ class ServiceActiveController extends Controller
     //
     public function listcloud(Request $request, $date = null)
     {
-        $title = "Quản lý dịch vụ Cloud 1";
+        $title = "Quản lý dịch vụ Cloud";
         $users = User::where('role_id', '!=', 1)->get();
 
         if ($request->ajax()) {

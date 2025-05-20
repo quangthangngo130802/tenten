@@ -265,6 +265,7 @@ Route::get('service/giahan/{id}', [ServiceActiveController::class, 'getGiaHanSer
 Route::post('/service/update-status/{id}', [ServiceActiveController::class, 'updateStatus'])->name('service.updateStatus');
 Route::post('/service/saveContent', [ServiceActiveController::class, 'saveContent']);
 Route::post('/service/giahan', [ServiceActiveController::class, 'giaHan']);
+Route::delete('/service/delete/{id}', [ServiceActiveController::class, 'destroy'])->name('service.destroy');
 
 Route::post('/save-domain', [ServiceActiveController::class, 'saveDomain'])->name('save-domain');
 

@@ -1,11 +1,12 @@
 
+
 $(document).ready(function () {
 
-    $.fn.modal.Constructor.prototype._enforceFocus = function () {};
+    $.fn.modal.Constructor.prototype._enforceFocus = function () { };
     $('#username').select2({
         dropdownParent: $('#transferModal'),
         placeholder: "Chọn một mục",
-        width : '100%',
+        width: '100%',
         allowClear: true,
         minimumResultsForSearch: 0
     });
@@ -238,8 +239,8 @@ function openModalGiaHan(id) {
             const startDate = document.getElementById('startDate');
             const endDate = document.getElementById('endDate');
 
-            startDate.value  = data.activeAt;
-            endDate.value  = data.expirationDate;
+            startDate.value = data.activeAt;
+            endDate.value = data.expirationDate;
 
             const extendTime = document.getElementById('extendTime');
             extendTime.setAttribute('data-endDate', data.expirationDate);
@@ -253,6 +254,42 @@ function openModalGiaHan(id) {
     var myModal = new bootstrap.Modal(document.getElementById('giaHanModal'), {});
     myModal.show();
 }
+//
+function confirmDeleteSweet(id) {
+    let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    Swal.fire({
+        title: 'Bạn có chắc muốn xóa?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Có, xóa đi!',
+        cancelButtonText: 'Hủy'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`/service/delete/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': token,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log(data);
+                        Swal.fire('Đã xóa!', data.message, 'success');
+                        $('#categoryTable').DataTable().ajax.reload(null, false);
+                    } else {
+                        Swal.fire('Lỗi!', data.message, 'error');
+                    }
+                })
+                .catch(() => {
+                    Swal.fire('Lỗi!', 'Không thể xóa mục.', 'error');
+                });
+        }
+    });
+}
+
 
 // Lắng nghe sự kiện khi bấm nút Lưu
 document.getElementById('saveButton').addEventListener('click', function () {
@@ -315,19 +352,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function toggleMenu(id) {
     var menu = document.getElementById('menu-' + id);
-    var isMenuVisible = menu.style.display === 'block';
-    menu.style.display = isMenuVisible ? 'none' : 'block';
+
+    // Ẩn tất cả menu trước
+    document.querySelectorAll('.dropdown-menu').forEach(function (m) {
+        if (m !== menu) {
+            m.style.display = 'none';
+        }
+    });
+
+    // Toggle menu được nhấn
+    menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
 }
 
 document.addEventListener('click', function (event) {
+    const isToggleButton = event.target.closest('.action');
 
-    var dropdownMenus = document.querySelectorAll('.dropdown-menu');
-    var dropdownToggles = document.querySelectorAll('.action');
+    // Nếu click vào nút toggle => không ẩn menu ở đây (toggleMenu xử lý rồi)
+    if (isToggleButton) return;
 
-    dropdownMenus.forEach(function (menu) {
-        if (!menu.contains(event.target) && !event.target.closest('.action')) {
-            menu.style.display = 'none';
-        }
+    // Click bên ngoài => ẩn tất cả menu
+    document.querySelectorAll('.dropdown-menu').forEach(function (menu) {
+        menu.style.display = 'none';
     });
 });
 

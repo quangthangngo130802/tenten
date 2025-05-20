@@ -20,10 +20,11 @@ class ServiceController extends Controller
             $service = Service::create([
                 'email' => $request->email,
                 'type' => 'hotel',
-                'domain' => $request->domain,
+                'domain' => $request->username,
                 'active_at' => $request->active_at,
                 'number' => $request->number,
                 'status' =>  $request->status,
+                'domain_extension' =>'.fasthotel.vn',
                 'price' => 0
             ]);
 

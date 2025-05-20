@@ -15,6 +15,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Spatie\FlareClient\Http\Client;
 use Yajra\DataTables\DataTables;
 
 class ServiceActiveController extends Controller
@@ -455,12 +456,12 @@ class ServiceActiveController extends Controller
         $title = "Quản lý dịch vụ Khách sạn";
         if ($request->ajax()) {
             $data = Service::where('service.type', 'hotel')
-            ->join('users', function ($join) {
-                $join->on(DB::raw("CONVERT(users.email USING utf8mb4) COLLATE utf8mb4_unicode_ci"), '=', DB::raw("CONVERT(service.email USING utf8mb4) COLLATE utf8mb4_unicode_ci"));
-            })
-            ->leftJoin('provinces', 'users.province', '=', 'provinces.id') // Thêm dòng này
-            ->select('service.*', 'users.full_name', 'users.phone_number', 'provinces.name as province_name')
-            ->orderBy('service.created_at', 'desc');
+                ->join('users', function ($join) {
+                    $join->on(DB::raw("CONVERT(users.email USING utf8mb4) COLLATE utf8mb4_unicode_ci"), '=', DB::raw("CONVERT(service.email USING utf8mb4) COLLATE utf8mb4_unicode_ci"));
+                })
+                ->leftJoin('provinces', 'users.province', '=', 'provinces.id')
+                ->select('service.*', 'users.full_name', 'users.phone_number', 'provinces.name as province_name')
+                ->orderBy('service.created_at', 'desc');
 
             if ($date == 'expire_soon') {
                 $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) BETWEEN 1 AND 30');
@@ -485,7 +486,11 @@ class ServiceActiveController extends Controller
                 })
                 ->addColumn('provinces', function ($row) {
                     $user = User::where('email', $row->email)->first();
-                    return $user ? $user->province1?->name : '' ;
+                    return $user ? $user->province1?->name : '';
+                })
+
+                ->addColumn('link', function ($row) {
+                    return $row->domain . $row->domain_extension;
                 })
 
                 ->editColumn('active_at', function ($row) {
@@ -522,25 +527,27 @@ class ServiceActiveController extends Controller
                 })->rawColumns(['giahan'])
                 ->addColumn('action', function ($row) {
                     return '
-                    <div class="d-flex">
-                    <div class="dropdown">
-                        <!-- Icon hiển thị modal -->
-                        <span style="font-size:26px; cursor:pointer; margin-right:15px" class="action" onclick="toggleMenu(\'' . $row->id . '\')">
-                            <i class="fas fa-cog"></i>
-                        </span>
+                    <div >
+                        <div class="dropdown">
+                            <!-- Icon hiển thị modal -->
+                            <span style="font-size:26px; cursor:pointer; margin-right:15px" class="action" onclick="toggleMenu(\'' . $row->id . '\')">
+                                <i class="fas fa-cog"></i>
+                            </span>
 
-                        <!-- Menu Dropdown -->
-                        <div id="menu-' . $row->id . '" class="dropdown-menu">
-                            <ul>
-                                <li><a href="#" onclick="openModal(' . $row->id . ')">Nội dung</a></li>
+                            <!-- Menu Dropdown -->
+                            <div id="menu-' . $row->id . '" class="dropdown-menu">
+                                <ul>
+                                    <li><a href="#" onclick="openModal(' . $row->id . ')">Nội dung</a></li>
 
-                                 <li><a href="#" onclick="openModalGiaHan(' . $row->id . ')">Gia hạn</a></li>
-                            </ul>
+                                    <li><a href="#" onclick="openModalGiaHan(' . $row->id . ')">Gia hạn</a></li>
+
+                                    <li><a href="#" onclick="confirmDeleteSweet(' . $row->id . ')">Xóa</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </div>
                     ';
-                })->rawColumns(['action', 'giahan', 'enddate', 'active', 'user_info', 'provinces'])
+                })->rawColumns(['action', 'giahan', 'enddate', 'active', 'user_info', 'provinces', 'link'])
                 ->make(true);
         }
         $page = 'Quản lý dịch vụ khách sạn';
@@ -556,5 +563,58 @@ class ServiceActiveController extends Controller
             'email' => $request->username
         ]);
         return response()->json(['message' => 'Chuyển domain thành công!']);
+    }
+
+    public function destroy($id)
+    {
+        // Tìm Service theo id
+        $item = Service::find($id);
+
+        if (!$item) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không tìm thấy mục để xóa.'
+            ], 404);
+        }
+
+        // Tạo client Guzzle để gọi API xóa admin
+        $client = new \GuzzleHttp\Client([
+            'base_uri' => 'http://127.0.0.1:9000',
+            'cookies' => false,
+        ]);
+
+        try {
+            $response = $client->post('/api/user/delete', [
+                'form_params' => [
+                    'email' => $item->email,
+                ],
+            ]);
+
+            $data = json_decode($response->getBody(), true);
+            // dd($data);
+
+            if (isset($data['success']) && $data['success'] == false) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $data['message']
+                ], 400);
+            }
+        } catch (\Exception $e) {
+
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Không tìm thấy để xóa',
+            ], 500);
+        }
+
+
+        // Xóa Service trong database
+        $item->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Xóa mục thành công.'
+        ]);
     }
 }

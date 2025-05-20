@@ -79,8 +79,8 @@
 
 @push('scripts')
 
-    {{-- <script src="https://cdn.ckeditor.com/4.19.1/standard-all/ckeditor.js"></script> --}}
-    <script src="https://cdn.ckeditor.com/ckeditor4/ckeditor.js"></script>
+    <script src="https://cdn.ckeditor.com/4.19.1/standard-all/ckeditor.js"></script>
+    {{-- <script src="https://cdn.ckeditor.com/ckeditor4/ckeditor.js"></script> --}}
     <!-- Thêm SweetAlert2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

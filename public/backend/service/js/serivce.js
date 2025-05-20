@@ -138,6 +138,75 @@ $(document).ready(function () {
         });
     });
 
+    $('#editForm').on('submit', function (e) {
+        e.preventDefault();
+
+        const serviceId = $('#service_edit_id').val();
+        const startDate_edit = $('#startDate_edit').val();
+     
+        if (!serviceId || !extendTime) {
+            alert('Vui lòng điền đầy đủ thông tin');
+            return;
+        }
+
+        $.ajax({
+            url: `/service/edit`,
+            method: 'POST',
+            data: {
+                service_id: serviceId,
+                startDate_edit: startDate_edit,
+                _token: token
+            },
+            success: function (response) {
+                console.log('Cập nhật thành công:', response);
+                $('#categoryTable').DataTable().ajax.reload(null, false);
+                $('#editModal').modal('hide');
+            },
+            error: function (xhr, status, error) {
+                console.error('Lỗi khi gia hạn:', error);
+                alert('Có lỗi xảy ra. Vui lòng thử lại!');
+            }
+        });
+    });
+
+    $('#checkboxAll').on('change', function () {
+
+        $('.checkbox-item').prop('checked', this.checked);
+        toggleDeleteButton();
+    });
+
+    $(document).on('change', '.checkbox-item', function () {
+        $('#checkboxAll').prop('checked', $('.checkbox-item:checked').length === $('.checkbox-item').length);
+        toggleDeleteButton();
+    });
+
+    function toggleDeleteButton() {
+        if ($('.checkbox-item:checked').length > 0) {
+            if ($('.btn-delete').length === 0) {
+                $('<button class="btn-delete btn-danger">Xóa</button>').insertAfter('.dt-length');
+                $('.btn-delete').on('click', function () {
+                    Swal.fire({
+                        title: 'Bạn có chắc muốn xóa?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Có, xóa ngay!',
+                        cancelButtonText: 'Hủy'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $('.checkbox-item:checked').closest('tr').remove();
+                            $('.btn-delete').remove();
+                            $('#checkboxAll').prop('checked', false);
+                            Swal.fire('Đã xóa!', 'Các mục đã được xóa.', 'success');
+                        }
+                    });
+                });
+            }
+        } else {
+            $('.btn-delete').remove();
+        }
+    }
 
 
 });
@@ -269,6 +338,33 @@ function openModalGiaHan(id) {
     myModal.show();
 }
 //
+
+function openModalEdit(id) {
+
+    fetch(`/service/edit/${id}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            const startDate = document.getElementById('startDate_edit');
+            const endDate = document.getElementById('endDate_edit');
+
+            startDate.value = data.activeAt;
+            endDate.value = data.number;
+
+            const extendTime = document.getElementById('extendTime');
+            extendTime.setAttribute('data-endDate', data.expirationDate);
+
+            const service_id = document.getElementById('service_edit_id');
+            service_id.value = id;
+        })
+        .catch(error => {
+            console.error('Error fetching content:', error);
+        });
+    var myModal = new bootstrap.Modal(document.getElementById('editModal'), {});
+    myModal.show();
+}
+
+
 function confirmDeleteSweet(id) {
     let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     Swal.fire({
@@ -305,19 +401,16 @@ function confirmDeleteSweet(id) {
 }
 
 
-// Lắng nghe sự kiện khi bấm nút Lưu
 document.getElementById('saveButton').addEventListener('click', function () {
-    // Lấy nội dung từ CKEditor
+
     var content = CKEDITOR.instances['content_noidung'].getData();
     var id = document.getElementById('contentModalLabel').getAttribute('data-id');
-    // Kiểm tra nội dung trước khi gửi
-    // Gửi dữ liệu lên server qua AJAX (Sử dụng fetch hoặc XMLHttpRequest)
+
     fetch('/service/saveContent', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
-                'content') // Nếu sử dụng Laravel, thêm CSRF token
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: JSON.stringify({
             content: content,
@@ -367,24 +460,23 @@ document.addEventListener('DOMContentLoaded', function () {
 function toggleMenu(id) {
     var menu = document.getElementById('menu-' + id);
 
-    // Ẩn tất cả menu trước
+
     document.querySelectorAll('.dropdown-menu').forEach(function (m) {
         if (m !== menu) {
             m.style.display = 'none';
         }
     });
 
-    // Toggle menu được nhấn
+
     menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
 }
 
 document.addEventListener('click', function (event) {
     const isToggleButton = event.target.closest('.action');
 
-    // Nếu click vào nút toggle => không ẩn menu ở đây (toggleMenu xử lý rồi)
     if (isToggleButton) return;
 
-    // Click bên ngoài => ẩn tất cả menu
+
     document.querySelectorAll('.dropdown-menu').forEach(function (menu) {
         menu.style.display = 'none';
     });

@@ -42,8 +42,8 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary close-modal" data-dismiss="modal">Đóng</button>
-                            <button type="submit" class="btn btn-primary">Xác nhận chuyển</button>
+                            <button type="button" class="btn btn-secondary close-modal btn-sm" data-dismiss="modal">Đóng</button>
+                            <button type="submit" class="btn btn-primary btn-sm">Xác nhận chuyển</button>
                         </div>
                     </form>
                 </div>
@@ -57,10 +57,10 @@
             <table class="table table-striped table-hover" id="categoryTable">
                 <thead>
                     <tr>
+                        {{-- <th><input type="checkbox" id="checkboxAll" ></th> --}}
                         <th>STT</th>
                         <th>Khách hàng</th>
                         <th>Tên gói</th>
-                        {{-- <th>Gia hạn</th> --}}
                         <th>Bắt đầu</th>
                         <th>Kết thúc</th>
                         <th>Trạng thái</th>
@@ -93,7 +93,14 @@
                 processing: true,
                 serverSide: true,
                 ajax: APP_URL + '/admin/service/list-cloud/' + date,
-                columns: [{
+                columns: [
+                    // {
+                    //     data: 'checkbox',
+                    //     name: 'checkbox',
+                    //     orderable: false,
+                    //     searchable: false
+                    // },
+                    {
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
                         orderable: false,
@@ -132,16 +139,18 @@
                         searchable: false
                     }
                 ],
-                columnDefs: [{
+                columnDefs: [
+
+                    {
                         width: '5%',
                         targets: 0
                     },
                     {
-                        width: '15%',
+                        width: '25%',
                         targets: 1
                     },
                     {
-                        width: '15%',
+                        width: '20%',
                         targets: 2
                     },
                     {
@@ -154,10 +163,13 @@
                         targets: 4
                     },
                     {
-                        width: '20%',
+                        width: '10%',
                         targets: 5
                     },
-
+                    {
+                        width: '10%',
+                        targets: 6
+                    }
                 ],
                 order: [],
                 pagingType: "full_numbers", // Kiểu phân trang

@@ -29,6 +29,9 @@ class ClientController extends Controller
                     // Nối các giá trị thành một chuỗi
                     return trim("$address, $ward, $district, $province", ', ');
                 })
+                ->addColumn('checkbox', function ($row) {
+                    return '<input type="checkbox" class="checkbox-item"  name="selected[]" value="' . $row->id . '">';
+                })
                 ->editColumn('status', function ($row) {
                     if ($row->status == 'active') {
                         return '<div class="status active">
@@ -54,7 +57,7 @@ class ClientController extends Controller
 
                                 </form>
                             </div>';
-                })->rawColumns(['action', 'status'])
+                })->rawColumns(['action', 'status', 'checkbox'])
                 ->make(true);
         }
         $page = 'Khách hàng';

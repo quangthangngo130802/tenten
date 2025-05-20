@@ -39,7 +39,10 @@ class ServiceActiveController extends Controller
                 ->addIndexColumn()
                 ->addColumn('user_info', function ($row) {
                     $user = User::where('email', $row->email)->first();
-                    return $row->email . '<br>' . $user->full_name . ' (' . $user->phone_number . ' )';
+                    return $row->email . '<br>' . $user->full_name . '<br>'.' (' . $user->phone_number . ' )';
+                })
+                ->addColumn('checkbox', function ($row) {
+                    return '<input type="checkbox" class="checkbox-item"  name="selected[]" value="' . $row->id . '">';
                 })
                 ->addColumn('packagename', function ($row) {
                     $cloud = Cloud::find($row->product_id);
@@ -89,7 +92,7 @@ class ServiceActiveController extends Controller
                 ->addColumn('action', function ($row) {
                     $user = User::where('email', $row->email)->first();
                     return '
-                    <div class="d-flex">
+                    <div class="d-flex justify-content-center">
                     <div class="dropdown">
                         <!-- Icon hiển thị modal -->
                         <span style="font-size:26px; cursor:pointer; margin-right:15px" class="action" onclick="toggleMenu(\'' . $row->id . '\')">
@@ -102,6 +105,7 @@ class ServiceActiveController extends Controller
                                 <li><a href="#" onclick="openModal(' . $row->id . ')">Nội dung</a></li>
 
                                 <li><a href="#" onclick="openModalGiaHan(' . $row->id . ')">Gia hạn</a></li>
+                                <li><a href="#" onclick="openModalEdit(' . $row->id . ')">Chỉnh sửa</a></li>
                             </ul>
                         </div>
                     </div>
@@ -118,7 +122,7 @@ class ServiceActiveController extends Controller
                     </button>
                 </div>
                     ';
-                })->rawColumns(['action', 'giahan', 'enddate', 'packagename', 'active', 'user_info', 'another_column'])
+                })->rawColumns(['action', 'giahan', 'enddate', 'packagename', 'active', 'user_info', 'another_column', 'checkbox'])
                 ->make(true);
         }
         $page = 'Quản lý dịch vụ Cloud';
@@ -195,7 +199,7 @@ class ServiceActiveController extends Controller
                 ->addColumn('action', function ($row) {
                     $user = User::where('email', $row->email)->first();
                     return '
-                    <div class="d-flex">
+                    <div class="d-flex justify-content-center">
                     <div class="dropdown">
                         <!-- Icon hiển thị modal -->
                         <span style="font-size:26px; cursor:pointer; margin-right:15px" class="action" onclick="toggleMenu(\'' . $row->id . '\')">
@@ -287,7 +291,7 @@ class ServiceActiveController extends Controller
                 ->addColumn('action', function ($row) {
                     $user = User::where('email', $row->email)->first();
                     return '
-                    <div class="d-flex">
+                    <div class="d-flex justify-content-center">
                         <div class="dropdown">
                             <!-- Icon hiển thị modal -->
                             <span style="font-size:26px; cursor:pointer; margin-right:15px" class="action" onclick="toggleMenu(\'' . $row->id . '\')">
@@ -353,6 +357,20 @@ class ServiceActiveController extends Controller
 
         return response()->json([
             'activeAt' => $activeAt->format('Y-m-d'),
+            'expirationDate' => $expirationDate->format('Y-m-d')
+        ]);
+    }
+
+    public function getEditService($id)
+    {
+
+        $service = Service::find($id);
+        $activeAt = Carbon::parse($service->active_at);
+        $expirationDate = (clone $activeAt)->addMonths($service->number);
+
+        return response()->json([
+            'activeAt' => $activeAt->format('Y-m-d'),
+            'number' => $service->number,
             'expirationDate' => $expirationDate->format('Y-m-d')
         ]);
     }
@@ -427,6 +445,22 @@ class ServiceActiveController extends Controller
         $service = Service::find($id);
         if ($service) {
             $service->number = $service->number + $extend_time;
+            $service->save();
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'service not found']);
+    }
+
+    public function editService(Request $request)
+    {
+
+        $id = $request->input('service_id');
+        $startDate_edit = $request->input('startDate_edit');
+
+        $service = Service::find($id);
+        if ($service) {
+            $service->active_at = $startDate_edit;
             $service->save();
             return response()->json(['success' => true]);
         }

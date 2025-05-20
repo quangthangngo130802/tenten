@@ -44,8 +44,8 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary close-modal" data-dismiss="modal">Đóng</button>
-                            <button type="submit" class="btn btn-primary">Xác nhận chuyển</button>
+                            <button type="button" class="btn btn-secondary close-modal btn-sm" data-dismiss="modal">Đóng</button>
+                            <button type="submit" class="btn btn-primary btn-sm">Xác nhận chuyển</button>
                         </div>
                     </form>
                 </div>

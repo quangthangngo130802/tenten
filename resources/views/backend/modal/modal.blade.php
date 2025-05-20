@@ -69,3 +69,39 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="giaHanModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header py-2">
+                <h5 class="modal-title fs-6" id="giaHanModalLabel">Sửa đổi</h5>
+                <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <div class="row mb-2">
+
+                        <input type="hidden" id="service_edit_id" class="form-control form-control-sm"
+                        value="" disabled>
+
+                        <div class="col-6">
+                            <label class="form-label small">Bắt đầu</label>
+                            <input type="date" id="startDate_edit" class="form-control form-control-sm"
+                                value="">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small">Thời gian kết thúc / tháng</label>
+                            <input type="number" id="endDate_edit" class="form-control form-control-sm"
+                                value="" disabled>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer py-1">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Hủy</button>
+                <button type="submit" form="editForm" class="btn btn-success btn-sm">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -382,9 +382,9 @@ class ServiceActiveController extends Controller
     {
         $service = Service::findOrFail($request->id);
         $status = $request->status;
-        if($service->type = 'hotel'){
+        if($service->type == 'hotel'){
             $client = new \GuzzleHttp\Client([
-                'base_uri' => 'http://127.0.0.1:9000',
+                'base_uri' => 'https://app.fasthotel.vn',
                 'cookies' => false,
             ]);
 

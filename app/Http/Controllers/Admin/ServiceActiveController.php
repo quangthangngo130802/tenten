@@ -686,3 +686,4 @@ class ServiceActiveController extends Controller
         ]);
     }
 }
+

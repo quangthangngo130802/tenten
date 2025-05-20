@@ -212,6 +212,7 @@ class ServiceActiveController extends Controller
                                 <li><a href="#" onclick="openModal(' . $row->id . ')">Nội dung</a></li>
 
                                  <li><a href="#" onclick="openModalGiaHan(' . $row->id . ')">Gia hạn</a></li>
+                                 
                                  <li><a href="#" onclick="openModalEdit(' . $row->id . ')">Chỉnh sửa</a></li>
                             </ul>
                         </div>

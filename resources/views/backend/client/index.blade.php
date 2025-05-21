@@ -231,7 +231,7 @@
             function toggleDeleteButton() {
                 if ($('.checkbox-item:checked').length > 0) {
                     if ($('#btn-delete').length === 0) {
-                        $('<button id="btn-delete" class="btn-danger btn">Xóa</button>').insertAfter('.dt-length');
+                        $('<button id="btn-delete" class="btn-danger btn" style="padding:4px 15px">Xóa</button>').insertAfter('.dt-length');
 
                         $('#btn-delete').on('click', function() {
                             Swal.fire({

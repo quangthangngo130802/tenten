@@ -16,14 +16,14 @@ class CustomerController extends Controller
             // Kiểm tra xem email hoặc username đã tồn tại chưa
             if (User::where('email', $request->email)->exists()) {
                 return response()->json([
-                    'success' => false,
+                    'success' => true,
                     'message' => 'Email đã tồn tại'
                 ], 400);
             }
 
             if (User::where('username', $request->username)->exists()) {
                 return response()->json([
-                    'success' => false,
+                    'success' => true,
                     'message' => 'Username đã tồn tại'
                 ], 400);
             }

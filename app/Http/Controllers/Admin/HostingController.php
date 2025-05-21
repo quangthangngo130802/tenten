@@ -19,7 +19,7 @@ class HostingController extends Controller
             return DataTables::of($data)
             ->editColumn('price', function ($row) {
                 return $row->price !== null && is_numeric($row->price)
-                    ? number_format($row->price, 0, ',', '.')
+                    ? number_format($row->price, 0, '.', ',')
                     : '0';
             })
                 ->addColumn('action', function ($row) {

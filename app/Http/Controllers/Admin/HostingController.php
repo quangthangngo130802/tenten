@@ -17,6 +17,11 @@ class HostingController extends Controller
             $data = Hosting::select('*')
             ->orderBy('website_limit', 'asc');
             return DataTables::of($data)
+            ->editColumn('price', function ($row) {
+                return $row->price !== null && is_numeric($row->price)
+                    ? number_format($row->price, 0, ',', '.')
+                    : '0';
+            })
                 ->addColumn('action', function ($row) {
                     return '<div style="display: flex;">
                                 <a href="' . route('hosting.edit', $row->id) . '" class="btn btn-primary btn-sm edit">
@@ -31,7 +36,7 @@ class HostingController extends Controller
 
                                 </form>
                             </div>';
-                })->rawColumns(['action'])
+                })->rawColumns(['action', 'price'])
                 ->make(true);
         }
         $page = 'Hosting';

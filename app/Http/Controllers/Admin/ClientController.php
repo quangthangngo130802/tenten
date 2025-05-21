@@ -113,4 +113,21 @@ class ClientController extends Controller
         return redirect()->back();
     }
 
+    public function deleteItemsClient(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if (!$ids || !is_array($ids)) {
+            return response()->json(['success' => false, 'message' => 'Không có mục nào được chọn']);
+        }
+
+        try {
+            User::whereIn('id', $ids)->delete();
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Xóa không thành công']);
+        }
+    }
+
 }

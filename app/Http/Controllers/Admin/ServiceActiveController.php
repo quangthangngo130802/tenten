@@ -39,7 +39,17 @@ class ServiceActiveController extends Controller
                 ->addIndexColumn()
                 ->addColumn('user_info', function ($row) {
                     $user = User::where('email', $row->email)->first();
-                    return $row->email . '<br>' . $user->full_name . '<br>'.' (' . $user->phone_number . ' )';
+                    $fullName = $user && !empty($user->full_name) ?  '<br>' .$user->full_name : '';
+                    $phoneNumber = $user && !empty($user->phone_number) ? $user->phone_number : '';
+                    return $row->email . $fullName . '<br>' . ($phoneNumber ? ' (' . $phoneNumber . ')' : '');
+                })
+                ->addColumn('another_column', function ($row) {
+                    $user = User::where('email', $row->email)->first();
+                    $emailData = $user && !empty($user->full_name) ? $user->full_name . ' (' . $row->email . ')' : $row->email;
+                    $hostingData = $row->hosting && !empty($row->hosting->package_name) ? $row->hosting->package_name : '';
+                    return '<button class="btn-transfer" data-email="' . $emailData . '" data-id="' . $row->id . '" data-hosting="' . $hostingData . '" data-toggle="modal" data-target="#transferModal" title="Chuyển dữ liệu">
+                                <i class="fas fa-exchange-alt"></i>
+                            </button>';
                 })
                 ->addColumn('checkbox', function ($row) {
                     return '<input type="checkbox" class="checkbox-item"  name="selected[]" value="' . $row->id . '">';
@@ -47,12 +57,6 @@ class ServiceActiveController extends Controller
                 ->addColumn('packagename', function ($row) {
                     $cloud = Cloud::find($row->product_id);
                     return $cloud->package_name . ' - ' . $row->os->name;
-                })
-                ->addColumn('another_column', function ($row) {
-                    $user = User::where('email', $row->email)->first();
-                    return '<button class="btn-transfer" data-email="'  . $user->full_name . ' (' . $row->email . ')' . '"  data-id="' . $row->id . '" data-hosting="' . $row->hosting->package_name . '" data-toggle="modal" data-target="#transferModal" title="Chuyển dữ liệu">
-                                <i class="fas fa-exchange-alt"></i>
-                            </button>';
                 })
                 ->editColumn('active_at', function ($row) {
                     $activeAt = Carbon::parse($row->active_at);
@@ -113,12 +117,12 @@ class ServiceActiveController extends Controller
 
                     <!-- Button chuyển dữ liệu -->
                     <button class="btn-transfer"
-                            data-email="' . $user->full_name . ' (' . $row->email . ')"
-                            data-id="' . $row->id . '"
-                            data-hosting="' . $row->cloud->package_name . '"
-                            data-toggle="modal"
-                            data-target="#transferModal"
-                            title="Chuyển dữ liệu">
+                        data-email="' . (!empty($user) && isset($user->full_name) ? $user->full_name . ' (' . $row->email . ')' : $row->email) . '"
+                        data-id="' . $row->id . '"
+                        data-hosting="' . $row->cloud->package_name . '"
+                        data-toggle="modal"
+                        data-target="#transferModal"
+                        title="Chuyển dữ liệu">
                         <i class="fas fa-exchange-alt"></i>
                     </button>
                 </div>
@@ -150,11 +154,15 @@ class ServiceActiveController extends Controller
                 ->addIndexColumn()
                 ->addColumn('user_info', function ($row) {
                     $user = User::where('email', $row->email)->first();
-                    return $row->email . '<br>' . $user->full_name . ' (' . $user->phone_number . ' )';
+                    $fullName = $user && !empty($user->full_name) ?  '<br>' .$user->full_name : '';
+                    $phoneNumber = $user && !empty($user->phone_number) ? $user->phone_number : '';
+                    return $row->email .  $fullName . '<br>' . ($phoneNumber ? ' (' . $phoneNumber . ')' : '');
                 })
                 ->addColumn('another_column', function ($row) {
                     $user = User::where('email', $row->email)->first();
-                    return '<button class="btn-transfer" data-email="'  . $user->full_name . ' (' . $row->email . ')' . '"  data-id="' . $row->id . '" data-hosting="' . $row->hosting->package_name . '" data-toggle="modal" data-target="#transferModal" title="Chuyển dữ liệu">
+                    $emailData = $user && !empty($user->full_name) ? $user->full_name . ' (' . $row->email . ')' : $row->email;
+                    $hostingData = $row->hosting && !empty($row->hosting->package_name) ? $row->hosting->package_name : '';
+                    return '<button class="btn-transfer" data-email="' . $emailData . '" data-id="' . $row->id . '" data-hosting="' . $hostingData . '" data-toggle="modal" data-target="#transferModal" title="Chuyển dữ liệu">
                                 <i class="fas fa-exchange-alt"></i>
                             </button>';
                 })
@@ -221,12 +229,12 @@ class ServiceActiveController extends Controller
 
                     <!-- Button chuyển dữ liệu -->
                     <button class="btn-transfer"
-                            data-email="' . $user->full_name . ' (' . $row->email . ')"
-                            data-id="' . $row->id . '"
-                            data-hosting="' . $row->cloud->package_name . '"
-                            data-toggle="modal"
-                            data-target="#transferModal"
-                            title="Chuyển dữ liệu">
+                        data-email="' . (!empty($user) && isset($user->full_name) ? $user->full_name . ' (' . $row->email . ')' : $row->email) . '"
+                        data-id="' . $row->id . '"
+                        data-hosting="' . $row->cloud->package_name . '"
+                        data-toggle="modal"
+                        data-target="#transferModal"
+                        title="Chuyển dữ liệu">
                         <i class="fas fa-exchange-alt"></i>
                     </button>
                 </div>
@@ -256,7 +264,19 @@ class ServiceActiveController extends Controller
                 ->addIndexColumn()
                 ->addColumn('user_info', function ($row) {
                     $user = User::where('email', $row->email)->first();
-                    return $row->email . '<br>' . $user->full_name . ' (' . $user->phone_number . ' )';
+                    $output = $row->email ;
+
+                    if ($user && isset($user->full_name)) {
+                        $output .= '<br>'.$user->full_name;
+                    } else {
+                        $output .= 'N/A'; // Optional: Handle case where user or full_name is null
+                    }
+
+                    if ($user && !empty($user->phone_number)) {
+                        $output .= !empty($user->full_name) ? ' (' . $user->phone_number . ')' : $user->phone_number;
+                    }
+
+                    return $output;
                 })
                 ->addColumn('packagename', function ($row) {
                     $hosting = Email::find($row->product_id);
@@ -315,12 +335,12 @@ class ServiceActiveController extends Controller
 
                         <!-- Button chuyển dữ liệu -->
                         <button class="btn-transfer"
-                                data-email="' . $user->full_name . ' (' . $row->email . ')"
-                                data-id="' . $row->id . '"
-                                data-hosting="' . $row->cloud->package_name . '"
-                                data-toggle="modal"
-                                data-target="#transferModal"
-                                title="Chuyển dữ liệu">
+                            data-email="' . (!empty($user) && isset($user->full_name) ? $user->full_name . ' (' . $row->email . ')' : $row->email) . '"
+                            data-id="' . $row->id . '"
+                            data-hosting="' . $row->cloud->package_name . '"
+                            data-toggle="modal"
+                            data-target="#transferModal"
+                            title="Chuyển dữ liệu">
                             <i class="fas fa-exchange-alt"></i>
                         </button>
                     </div>
@@ -330,6 +350,115 @@ class ServiceActiveController extends Controller
         }
         $page = 'Quản lý dịch vụ Email';
         return view('backend.service.listemail', compact('title', 'page', 'date', 'users'));
+    }
+
+    public function listhotel(Request $request, $date = null)
+    {
+        $title = "Quản lý dịch vụ Khách sạn";
+        if ($request->ajax()) {
+            $data = Service::where('service.type', 'hotel')
+                ->join('users', function ($join) {
+                    $join->on(DB::raw("CONVERT(users.email USING utf8mb4) COLLATE utf8mb4_unicode_ci"), '=', DB::raw("CONVERT(service.email USING utf8mb4) COLLATE utf8mb4_unicode_ci"));
+                })
+                ->leftJoin('provinces', 'users.province', '=', 'provinces.id')
+                ->select('service.*', 'users.full_name', 'users.phone_number', 'provinces.name as province_name')
+                ->orderBy('service.created_at', 'desc');
+
+            if ($date == 'expire_soon') {
+                $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) BETWEEN 1 AND 30');
+            }
+            if ($date == 'expire') {
+                $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) < 0');
+            }
+            return DataTables::of($data)
+                ->filterColumn('user_info', function ($query, $keyword) {
+                    $query->where(function ($q) use ($keyword) {
+                        $q->where('users.full_name', 'like', "%$keyword%")
+                            ->orWhere('users.phone_number', 'like', "%$keyword%");
+                    });
+                })
+                ->filterColumn('provinces', function ($query, $keyword) {
+                    $query->where('provinces.name', 'like', "%$keyword%");
+                })
+                ->addIndexColumn()
+                ->addColumn('user_info', function ($row) {
+                    $user = User::where('email', $row->email)->first();
+                    return $user && !empty($user->full_name) && !empty($user->phone_number)
+                        ? $user->full_name . '<br>(' . $user->phone_number . ')'
+                        : ($user && !empty($user->full_name) ? $user->full_name : '');
+                })
+                ->addColumn('provinces', function ($row) {
+                    $user = User::where('email', $row->email)->first();
+                    return $user && $user->province1 && !empty($user->province1->name)
+                        ? $user->province1->name
+                        : '';
+                })
+
+                ->addColumn('link', function ($row) {
+                    return $row->domain . $row->domain_extension;
+                })
+
+                ->editColumn('active_at', function ($row) {
+                    $activeAt = Carbon::parse($row->active_at);
+                    return $activeAt->format('d-m-Y');
+                })
+
+                ->addColumn('enddate', function ($row) {
+                    $activeAt = Carbon::parse($row->active_at);
+                    $expirationDate = $activeAt->addMonths($row->number);
+
+                    if ($expirationDate->isPast()) {
+                        $daysOverdue = $expirationDate->diffInDays(Carbon::now());
+                        return $expirationDate->format('d-m-Y') . '<p class="endday">(  - ' . $daysOverdue . ' ngày )</p>';
+                    }
+
+                    $daysLeft = $expirationDate->diffInDays(Carbon::now());
+                    if ($daysLeft < 30) {
+                        return $expirationDate->format('d-m-Y') . '<p class="endday">(  ' . $daysLeft . ' ngày )</p>';
+                    }
+
+                    return $expirationDate->format('d-m-Y');
+                })->rawColumns(['enddate'])
+                ->editColumn('active', function ($row) {
+                    return ' <div class="toggle-container justify-content-center">
+                    <label class="switch">
+                        <input type="checkbox" class="toggleStatus" data-id="' . $row->id . '"' . ($row->status == 'active' ? ' checked' : '') . '>
+                        <span class="slider"></span>
+                    </label>
+                </div>';
+                })->rawColumns(['active'])
+                ->editColumn('giahan', function ($row) {
+                    return '<a href="' . route('order.show', $row->id) . '" class="btn btn-primary btn-sm edit"> Gia hạn </a>';
+                })->rawColumns(['giahan'])
+                ->addColumn('action', function ($row) {
+                    return '
+                    <div >
+                        <div class="dropdown">
+                            <!-- Icon hiển thị modal -->
+                            <span style="font-size:26px; cursor:pointer; margin-right:15px" class="action" onclick="toggleMenu(\'' . $row->id . '\')">
+                                <i class="fas fa-cog"></i>
+                            </span>
+
+                            <!-- Menu Dropdown -->
+                            <div id="menu-' . $row->id . '" class="dropdown-menu">
+                                <ul>
+                                    <li><a href="#" onclick="openModal(' . $row->id . ')">Nội dung</a></li>
+
+                                    <li><a href="#" onclick="openModalGiaHan(' . $row->id . ')">Gia hạn</a></li>
+
+                                    <li><a href="#" onclick="openModalEdit(' . $row->id . ')">Chỉnh sửa</a></li>
+
+                                    <li><a href="#" onclick="confirmDeleteSweet(' . $row->id . ')">Xóa</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    ';
+                })->rawColumns(['action', 'giahan', 'enddate', 'active', 'user_info', 'provinces', 'link'])
+                ->make(true);
+        }
+        $page = 'Quản lý dịch vụ khách sạn';
+        return view('backend.service.listhotel', compact('title', 'page', 'date'));
     }
 
     public function getContentService($id)
@@ -384,7 +513,7 @@ class ServiceActiveController extends Controller
     {
         $service = Service::findOrFail($request->id);
         $status = $request->status;
-        if($service->type == 'hotel'){
+        if ($service->type == 'hotel') {
             $client = new \GuzzleHttp\Client([
                 'base_uri' => 'https://app.fasthotel.vn',
                 'cookies' => false,
@@ -521,111 +650,6 @@ class ServiceActiveController extends Controller
         return redirect()->back()->with('success', 'Thêm mới dịch vụ thành công!');
     }
 
-    public function listhotel(Request $request, $date = null)
-    {
-        $title = "Quản lý dịch vụ Khách sạn";
-        if ($request->ajax()) {
-            $data = Service::where('service.type', 'hotel')
-                ->join('users', function ($join) {
-                    $join->on(DB::raw("CONVERT(users.email USING utf8mb4) COLLATE utf8mb4_unicode_ci"), '=', DB::raw("CONVERT(service.email USING utf8mb4) COLLATE utf8mb4_unicode_ci"));
-                })
-                ->leftJoin('provinces', 'users.province', '=', 'provinces.id')
-                ->select('service.*', 'users.full_name', 'users.phone_number', 'provinces.name as province_name')
-                ->orderBy('service.created_at', 'desc');
-
-            if ($date == 'expire_soon') {
-                $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) BETWEEN 1 AND 30');
-            }
-            if ($date == 'expire') {
-                $data->whereRaw('DATEDIFF(DATE_ADD(active_at, INTERVAL number MONTH), NOW()) < 0');
-            }
-            return DataTables::of($data)
-                ->filterColumn('user_info', function ($query, $keyword) {
-                    $query->where(function ($q) use ($keyword) {
-                        $q->where('users.full_name', 'like', "%$keyword%")
-                            ->orWhere('users.phone_number', 'like', "%$keyword%");
-                    });
-                })
-                ->filterColumn('provinces', function ($query, $keyword) {
-                    $query->where('provinces.name', 'like', "%$keyword%");
-                })
-                ->addIndexColumn()
-                ->addColumn('user_info', function ($row) {
-                    $user = User::where('email', $row->email)->first();
-                    return $user ? $user->full_name . '<br>(' . $user->phone_number . ')' : '';
-                })
-                ->addColumn('provinces', function ($row) {
-                    $user = User::where('email', $row->email)->first();
-                    return $user ? $user->province1?->name : '';
-                })
-
-                ->addColumn('link', function ($row) {
-                    return $row->domain . $row->domain_extension;
-                })
-
-                ->editColumn('active_at', function ($row) {
-                    $activeAt = Carbon::parse($row->active_at);
-                    return $activeAt->format('d-m-Y');
-                })
-
-                ->addColumn('enddate', function ($row) {
-                    $activeAt = Carbon::parse($row->active_at);
-                    $expirationDate = $activeAt->addMonths($row->number);
-
-                    if ($expirationDate->isPast()) {
-                        $daysOverdue = $expirationDate->diffInDays(Carbon::now());
-                        return $expirationDate->format('d-m-Y') . '<p class="endday">(  - ' . $daysOverdue . ' ngày )</p>';
-                    }
-
-                    $daysLeft = $expirationDate->diffInDays(Carbon::now());
-                    if ($daysLeft < 30) {
-                        return $expirationDate->format('d-m-Y') . '<p class="endday">(  ' . $daysLeft . ' ngày )</p>';
-                    }
-
-                    return $expirationDate->format('d-m-Y');
-                })->rawColumns(['enddate'])
-                ->editColumn('active', function ($row) {
-                    return ' <div class="toggle-container justify-content-center">
-                    <label class="switch">
-                        <input type="checkbox" class="toggleStatus" data-id="' . $row->id . '"' . ($row->status == 'active' ? ' checked' : '') . '>
-                        <span class="slider"></span>
-                    </label>
-                </div>';
-                })->rawColumns(['active'])
-                ->editColumn('giahan', function ($row) {
-                    return '<a href="' . route('order.show', $row->id) . '" class="btn btn-primary btn-sm edit"> Gia hạn </a>';
-                })->rawColumns(['giahan'])
-                ->addColumn('action', function ($row) {
-                    return '
-                    <div >
-                        <div class="dropdown">
-                            <!-- Icon hiển thị modal -->
-                            <span style="font-size:26px; cursor:pointer; margin-right:15px" class="action" onclick="toggleMenu(\'' . $row->id . '\')">
-                                <i class="fas fa-cog"></i>
-                            </span>
-
-                            <!-- Menu Dropdown -->
-                            <div id="menu-' . $row->id . '" class="dropdown-menu">
-                                <ul>
-                                    <li><a href="#" onclick="openModal(' . $row->id . ')">Nội dung</a></li>
-
-                                    <li><a href="#" onclick="openModalGiaHan(' . $row->id . ')">Gia hạn</a></li>
-
-                                    <li><a href="#" onclick="openModalEdit(' . $row->id . ')">Chỉnh sửa</a></li>
-
-                                    <li><a href="#" onclick="confirmDeleteSweet(' . $row->id . ')">Xóa</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    ';
-                })->rawColumns(['action', 'giahan', 'enddate', 'active', 'user_info', 'provinces', 'link'])
-                ->make(true);
-        }
-        $page = 'Quản lý dịch vụ khách sạn';
-        return view('backend.service.listhotel', compact('title', 'page', 'date'));
-    }
-
     public function transferService(Request $request)
     {
 
@@ -690,4 +714,3 @@ class ServiceActiveController extends Controller
         ]);
     }
 }
-

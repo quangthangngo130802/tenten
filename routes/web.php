@@ -271,6 +271,7 @@ Route::post('service/edit', [ServiceActiveController::class, 'editService']);
 
 Route::post('/save-domain', [ServiceActiveController::class, 'saveDomain'])->name('save-domain');
 
+Route::post('/delete-item-client', [ClientController::class, 'deleteItemsClient'])->name('items.client.delete');
 
 
 // web.php

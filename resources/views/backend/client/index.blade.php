@@ -13,6 +13,7 @@
                 <table class="table table-striped table-hover" id="categoryTable">
                     <thead>
                         <tr>
+                            <th><input type="checkbox" name="" id="checkboxAll"></th>
                             <th>STT</th>
                             <th>Họ và tên</th>
                             <th>Email</th>
@@ -129,6 +130,11 @@
                 serverSide: true,
                 ajax: APP_URL + '/admin/client',
                 columns: [{
+                        data: 'checkbox',
+                        name: 'checkbox',
+                        orderable: false,
+                        searchable: false
+                    }, {
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
                         orderable: false,
@@ -168,25 +174,29 @@
                         targets: 0
                     },
                     {
-                        width: '20%',
+                        width: '5%',
                         targets: 1
                     },
                     {
-                        width: '15%',
+                        width: '20%',
                         targets: 2
                     },
                     {
                         width: '15%',
                         targets: 3
                     },
+                    {
+                        width: '15%',
+                        targets: 4
+                    },
 
                     {
                         width: '10%',
-                        targets: 4
+                        targets: 5
                     },
                     {
                         width: '15%',
-                        targets: 5
+                        targets: 6
                     },
 
                 ],
@@ -206,6 +216,78 @@
                 // dom: '<"row"<"col-md-6"l><"col-md-6"f>>t<"row"<"col-md-6"i><"col-md-6"p>>',
                 // lengthMenu: [10, 25, 50, 100],
             });
+
+            $('#checkboxAll').on('change', function() {
+                $('.checkbox-item').prop('checked', this.checked);
+                toggleDeleteButton();
+            });
+
+            $(document).on('change', '.checkbox-item', function() {
+                $('#checkboxAll').prop('checked', $('.checkbox-item:checked').length === $('.checkbox-item')
+                    .length);
+                toggleDeleteButton();
+            });
+
+            function toggleDeleteButton() {
+                if ($('.checkbox-item:checked').length > 0) {
+                    if ($('#btn-delete').length === 0) {
+                        $('<button id="btn-delete" class="btn-danger btn">Xóa</button>').insertAfter('.dt-length');
+
+                        $('#btn-delete').on('click', function() {
+                            Swal.fire({
+                                title: 'Bạn có chắc muốn xóa?',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#d33',
+                                cancelButtonColor: '#3085d6',
+                                confirmButtonText: 'Có, xóa ngay!',
+                                cancelButtonText: 'Hủy'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    let checkedValues = $('.checkbox-item:checked').map(function() {
+                                        return $(this).val();
+                                    }).get();
+
+                                    if (checkedValues.length === 0) {
+                                        Swal.fire('Lỗi', 'Bạn chưa chọn mục nào để xóa.', 'error');
+                                        return;
+                                    }
+
+                                    $.ajax({
+                                        url: "{{ route('items.client.delete') }}",
+                                        method: 'POST',
+                                        data: {
+                                            ids: checkedValues,
+                                            _token: $('meta[name="csrf-token"]').attr(
+                                                'content')
+                                        },
+                                        success: function(response) {
+                                            if (response.success) {
+                                                $('#checkboxAll').prop('checked', false);
+                                                $('#btn-delete').remove();
+                                                Swal.fire('Đã xóa!', 'Các mục đã được xóa.','success');
+                                                $('#categoryTable').DataTable().ajax.reload(null, false);
+                                            } else {
+                                                Swal.fire('Lỗi', response.message ||
+                                                    'Xóa thất bại', 'error');
+                                            }
+                                        },
+                                        error: function(xhr) {
+                                            Swal.fire('Lỗi', 'Có lỗi xảy ra khi xóa',
+                                                'error');
+                                        }
+                                    });
+                                }
+
+                            });
+                        });
+                    }
+                } else {
+                    $('#btn-delete').remove();
+                }
+            }
+
+
         });
 
 

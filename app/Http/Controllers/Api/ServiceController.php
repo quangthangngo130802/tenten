@@ -16,7 +16,6 @@ class ServiceController extends Controller
     {
 
         try {
-            $check = Service::where('type', 'hotel')->where('email', $request->email)->first();
 
             $service = Service::create([
                 'email' => $request->email,
@@ -25,7 +24,7 @@ class ServiceController extends Controller
                 'active_at' => $request->active_at,
                 'number' => $request->number,
                 'status' =>  $request->status,
-                'domain_extension' =>'.fasthotel.vn',
+                'domain_extension' => '.fasthotel.vn',
                 'price' => 0
             ]);
 

@@ -28,18 +28,20 @@ class CustomerController extends Controller
                 ]);
             }
 
-            $checkEmail = Service::where('type', 'hotel')->where('email', $request->email)->first();
-            if ($checkEmail) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Email đã được sử dụng .',
-                ], 409); 
-            }
+
             $checkUsername = Service::where('type', 'hotel')->where('domain', $request->username)->first();
             if ($checkUsername) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Username đã được sử dụng .',
+                ], 409);
+            }
+
+            $checkEmail = Service::where('type', 'hotel')->where('email', $request->email)->first();
+            if ($checkEmail) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Email đã được sử dụng .',
                 ], 409);
             }
 

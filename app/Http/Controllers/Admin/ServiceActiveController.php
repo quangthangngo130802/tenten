@@ -675,7 +675,7 @@ class ServiceActiveController extends Controller
 
         // Tạo client Guzzle để gọi API xóa admin
         $client = new \GuzzleHttp\Client([
-            'base_uri' => 'http://127.0.0.1:9000',
+            'base_uri' => 'https://app.fasthotel.vn',
             'cookies' => false,
         ]);
 

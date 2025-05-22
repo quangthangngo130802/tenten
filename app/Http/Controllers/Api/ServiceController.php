@@ -14,8 +14,9 @@ class ServiceController extends Controller
 
     public function store(Request $request)
     {
-        Log::info($request->all());
+
         try {
+            $check = Service::where('type', 'hotel')->where('email', $request->email)->first();
 
             $service = Service::create([
                 'email' => $request->email,

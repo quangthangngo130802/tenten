@@ -25,7 +25,8 @@ class ServiceController extends Controller
                 'number' => $request->number,
                 'status' =>  $request->status,
                 'domain_extension' => '.fasthotel.vn',
-                'price' => 0
+                'price' => 0,
+                'hotel_homestay' => $request->hotel_homestay
             ]);
 
             return response()->json([

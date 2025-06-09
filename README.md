@@ -64,3 +64,18 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+CREATE TABLE businesses (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT UNSIGNED,
+    businessCode VARCHAR(20) NOT NULL ,
+    businessName VARCHAR(255) NOT NULL,
+    businessAddress VARCHAR(500) NOT NULL,
+    representative VARCHAR(100) NOT NULL,
+    contactPhone VARCHAR(15) NULL,
+    contactEmail VARCHAR(255) NOT NULL,
+    file_path VARCHAR(500) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+

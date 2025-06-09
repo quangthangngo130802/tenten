@@ -216,6 +216,12 @@
                                 </ul>
                             </div>
                         </li>
+                        <li class="nav-item ">
+                            <a href="{{ route('business.index') }}">
+                                <i class="fas fa-file-contract"></i>
+                                <p>Đăng ký dinh doanh</p>
+                            </a>
+                        </li>
 
                         <li class="nav-item ">
                             <a href="">
@@ -335,23 +341,30 @@
                             </ul>
                         </div>
                     </li>
+
+                    <li class="nav-item ">
+                        <a href="{{ route('business.registration') }}">
+                            <i class="fas fa-file-contract"></i>
+                            <p>Đăng ký dinh doanh</p>
+                        </a>
+                    </li>
                 @endif
 
                 <!-- Lịch sử giao dịch -->
-                @if (Auth::user()->role_id != 3 )
-                <li class="nav-item {{ request()->routeIs('history.index') ? 'active' : '' }}">
-                    <a href="{{ route('history.index') }}">
-                        <i class="fa fa-history"></i>
-                        <p>Lịch sử giao dịch</p>
-                    </a>
-                </li>
+                @if (Auth::user()->role_id != 3)
+                    <li class="nav-item {{ request()->routeIs('history.index') ? 'active' : '' }}">
+                        <a href="{{ route('history.index') }}">
+                            <i class="fa fa-history"></i>
+                            <p>Lịch sử giao dịch</p>
+                        </a>
+                    </li>
 
-                <li class="nav-item {{ request()->routeIs('check.domai') ? 'active' : '' }}">
-                    <a href="{{ route('check.domain') }}">
-                        <i class="fa-solid fa-search"></i>
-                        <p>Kiểm tra tên miền</p>
-                    </a>
-                </li>
+                    <li class="nav-item {{ request()->routeIs('check.domai') ? 'active' : '' }}">
+                        <a href="{{ route('check.domain') }}">
+                            <i class="fa-solid fa-search"></i>
+                            <p>Kiểm tra tên miền</p>
+                        </a>
+                    </li>
                 @endif
 
                 {{-- <li class="nav-item {{ request()->routeIs('history.index') ? 'active' : '' }}">

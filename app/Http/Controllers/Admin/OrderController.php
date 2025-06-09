@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Mail\CloudNotify;
 use App\Mail\EmailNotify;
 use App\Mail\HostingNotify;
+use App\Models\Cloud;
+use App\Models\Email;
+use App\Models\Hosting;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Service;
@@ -20,6 +23,9 @@ class OrderController extends Controller
     public function index(Request $request, $status = null)
     {
         $title = "Đơn hàng";
+        if ($status === 'create' && !$request->ajax()) {
+            return redirect()->route('order.create');
+        }
 
         if ($request->ajax()) {
             $data = Order::where('status', $status)->select('*');
@@ -79,7 +85,7 @@ class OrderController extends Controller
                 ->make(true);
         }
         $page = 'Đơn hàng';
-        return view('backend.order.index', compact('title', 'page'));
+        return view('backend.order.index', compact('title', 'page', 'status'));
     }
 
     public function show($id)
@@ -179,5 +185,13 @@ class OrderController extends Controller
             Mail::to($orderDetail->order->email)->send(new HostingNotify($data));
         }
         return redirect()->back()->with('success', 'Cấp tài khoản thành công');
+    }
+
+    public function createOrder(){
+        $hostings = Hosting::get();
+        $emails = Email::get();
+        $clouds = Cloud::get();
+        // dd($hostings);
+        return view('backend.order.save', compact('hostings', 'emails', 'clouds'));
     }
 }

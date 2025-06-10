@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\TransactionHistoryController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\Customer\BusinessController;
 use App\Http\Controllers\Customer\CloudController as CustomerCloudController;
 use App\Http\Controllers\Customer\CustomerServiceController;
 use App\Http\Controllers\Customer\DomainController as CustomerDomainController;
@@ -85,11 +86,13 @@ Route::middleware(['auth', 'profile.updated'])->group(function () {
         });
 
         Route::prefix('order')->name('order.')->group(function () {
+            Route::get('create', [OrderController::class, 'createOrder'])->name('create');
             Route::get('{status?}', [OrderController::class, 'index'])->name('index');
             Route::get('{id}/show', [OrderController::class, 'show'])->name('show');
             Route::post('delete-{id}', [OrderController::class, 'delete'])->name('delete');
             Route::post('active-{id}', [OrderController::class, 'active'])->name('active');
             Route::post('create-account-{id}', [OrderController::class, 'createAccount'])->name('create.account');
+
         });
 
         Route::prefix('hosting')->name('hosting.')->group(function () {
@@ -156,6 +159,12 @@ Route::middleware(['auth', 'profile.updated'])->group(function () {
             Route::post('email', [SmtpController::class, 'emailSubmit'])->name('email.save');
             Route::get('template', [SmtpController::class, 'template'])->name('template');
         });
+
+        Route::prefix('business')->name('business.')->group(function () {
+            Route::get('', [App\Http\Controllers\Admin\BusinessController::class, 'index'])->name('index');
+            Route::get('{id}', [App\Http\Controllers\Admin\BusinessController::class, 'view'])->name('detail');
+            Route::post('delete', [App\Http\Controllers\Admin\BusinessController::class, 'delete'])->name('delete');
+        });
     });
 
     Route::prefix('customer')->name('customer.')->group(function () {
@@ -215,6 +224,11 @@ Route::middleware(['auth', 'profile.updated'])->group(function () {
     Route::get('check-domain', [DomainController::class, 'checkdomain'])->name('check.domain');
     Route::post('submit-check-domain', [DomainController::class, 'submitcheckdomain'])->name('submit.check.domain');
 
+
+    Route::prefix('business')->name('business.')->group(function () {
+        Route::get('registration', [BusinessController::class, 'registration'])->name('registration');
+        Route::post('dang-ky', [BusinessController::class, 'registrationSubmit'])->name('registration.submit');
+    });
 });
 Route::middleware('auth')->group(function () {
     Route::get('profile', [ProfileController::class, 'profile'])->name('profile');

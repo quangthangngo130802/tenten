@@ -1,21 +1,66 @@
 @extends('backend.layouts.master')
 
 @section('content')
-    <div class="content">
-            <div style="overflow-x: auto;">
-                <table class="table table-striped table-hover" id="categoryTable">
-                    <thead>
-                        <tr>
-                            <th>STT</th>
-                            <th class="text-center">Tên Qr Code</th>
-                            <th class="text-center">Link</th>
-                            <th class="text-center">Ảnh</th>
-                            <th class="text-center">Action</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
+    <div class="card">
+        <div class="card-body">
+            <form id="qrForm" action="{{ route('qrcode.save') }}" method="POST">
+                @csrf
+                <input type="hidden" name="qr_id" id="qr_id" value="">
+                <h5 class="section-title" id="form-title">Tạo QR Code</h5>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="qr_name" class="form-label">Tên QR</label>
+                            <input type="text" class="form-control @error('qr_name') is-invalid @enderror" id="qr_name"
+                                name="qr_name" placeholder="Nhập tên QR" value="{{ old('qr_name') }}" />
+                            @error('qr_name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="qr_link" class="form-label">Link QR</label>
+                            <input type="url" class="form-control @error('qr_link') is-invalid @enderror" id="qr_link"
+                                name="qr_link" placeholder="Nhập link QR" required value="{{ old('qr_link') }}" />
+                            @error('qr_link')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success" id="submit-btn">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 d-flex align-items-center justify-content-center">
+                        <div id="qrcode" class="p-3" style="min-width: 250px; min-height: 250px;">
+                            <img id="qrImage" src="" alt="">
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
         </div>
+    </div>
+    <div class="content">
+        <div style="overflow-x: auto;">
+            <table class="table table-striped table-hover" id="categoryTable">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th class="text-center">Tên Qr Code</th>
+                        <th class="text-center">Link</th>
+                        <th class="text-center">Ảnh</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
     </div>
 @endsection
 
@@ -88,8 +133,7 @@
                         searchable: false
                     }
                 ],
-                columnDefs: [
-                    {
+                columnDefs: [{
                         width: '5%',
                         targets: 0
                     },
@@ -123,6 +167,55 @@
                     infoFiltered: "(lọc từ _MAX_ mục)"
                 },
             });
+
+            $("#qr_link").on("input", function() {
+                // alert(1);
+                let qrName = $("#qr_name").val();
+                let qrLink = $(this).val();
+
+                if (qrLink.length > 0) {
+                    $.ajax({
+                        url: "{{ route('qrcode.imageurl') }}",
+                        method: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            qr_name: qrName,
+                            qr_link: qrLink
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                $("#qrcode img").attr("src", response.qr_code_url).show();
+                            }
+                        },
+                        error: function(xhr) {
+                            console.log(xhr.responseText);
+                        }
+                    });
+                } else {
+                    $("#qrcode img").hide();
+                }
+            });
+
+            $(document).on('click', '.edit', function() {
+                let id = $(this).data('id');
+                let qrName = $(this).data('qr_name');
+                let qrLink = $(this).data('qr_link');
+                let defaultLink = $(this).data('default_link');
+
+                $('#qr_id').val(id);
+                $('#qr_name').val(qrName);
+                $('#qr_link').val(qrLink);
+
+                let actionUrl = "{{ route('qrcode.save', ':id') }}";
+                actionUrl = actionUrl.replace(':id', id);
+                $('#qrForm').attr('action', actionUrl);
+
+                $('#form-title').text('Cập nhật QR Code');
+                $('#submit-btn').text('Cập nhật');
+
+                // Hiển thị ảnh QR nếu có
+                $('#qrImage').attr('src', defaultLink);
+            });
         });
 
         function confirmDelete(event, id) {
@@ -142,5 +235,30 @@
                 }
             });
         }
+    </script>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const qrImage = document.getElementById("qrImage");
+
+            if (qrImage) {
+                qrImage.addEventListener("click", function() {
+                    fetch(qrImage.src)
+                        .then(response => response.blob())
+                        .then(blob => {
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement("a");
+                            a.href = url;
+                            a.download = "qr_code.png"; // Tên file khi tải về
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            window.URL.revokeObjectURL(url);
+                        })
+                        .catch(error => console.error("Lỗi tải ảnh:", error));
+                });
+            }
+        });
     </script>
 @endpush

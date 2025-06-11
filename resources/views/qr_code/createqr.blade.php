@@ -38,7 +38,7 @@
 
                     <!-- Cột hiển thị QR Code -->
                     <div class="col-md-6 d-flex align-items-center justify-content-center">
-                        <div id="qrcode" class="p-3 border" style="min-width: 250px; min-height: 250px;">
+                        <div id="qrcode" class="p-3" style="min-width: 250px; min-height: 250px;">
                             @if (isset($qrCode))
                                 <img id="qrImage" src="{{ $qrCode->default_link }}" alt="QR Code"
                                     style="cursor: pointer;">

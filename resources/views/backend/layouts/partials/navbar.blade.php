@@ -26,60 +26,69 @@
                 </ul>
             </li>
             @if (Auth::user()->role_id != 1)
-            <li class="nav-item topbar-icon dropdown hidden-caret">
-                <a class="nav-link dropdown-toggle" href="#" id="walletDropdown" role="button" data-bs-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-wallet"></i>
 
-                </a>
-                <ul class="dropdown-menu wallet-menu animated fadeIn" aria-labelledby="walletDropdown">
-                    <li>
-                        <div class="dropdown-title d-flex justify-content-between align-items-center"
-                            style="width: 250px;">
-                            Ví : {{ number_format(Auth::user()->wallet, 0, ',', '.') }} đ
-                        </div>
-                    </li>
-                    <li>
-                        <a href="{{ route('payment.recharge') }}"
-                            class="dropdown-title d-flex justify-content-between align-items-center">
-                            <i class="fas fa-coins"></i> Nạp tiền
-                        </a>
-                    </li>
-                    {{-- <li>
+                <li>
+                    <a href="{{ route('qrcode.index') }}" class="dropdown-title d-flex justify-content-between align-items-center" style="border-bottom: none !important;">
+                        <span>
+                            <i class="fas fa-qrcode"></i>
+                        </span>
+                    </a>
+                </li>
+
+                <li class="nav-item topbar-icon dropdown hidden-caret">
+                    <a class="nav-link dropdown-toggle" href="#" id="walletDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-wallet"></i>
+
+                    </a>
+                    <ul class="dropdown-menu wallet-menu animated fadeIn" aria-labelledby="walletDropdown">
+                        <li>
+                            <div class="dropdown-title d-flex justify-content-between align-items-center"
+                                style="width: 250px;">
+                                Ví : {{ number_format(Auth::user()->wallet, 0, ',', '.') }} đ
+                            </div>
+                        </li>
+                        <li>
+                            <a href="{{ route('payment.recharge') }}"
+                                class="dropdown-title d-flex justify-content-between align-items-center">
+                                <i class="fas fa-coins"></i> Nạp tiền
+                            </a>
+                        </li>
+                        {{-- <li>
                         <a href="#" class="dropdown-title d-flex justify-content-between align-items-center">
                             <i class="fas fa-history"></i> Lịch sử giao dịch
                         </a>
                     </li> --}}
-                </ul>
-            </li>
-            <li class="nav-item topbar-icon dropdown hidden-caret">
-                @php
-                    $cartDetails = optional(Auth::user()->cart)->details ?? false;
-                    $renewCount = \App\Models\RenewService::where('email', Auth::user()->email)->count();
-                @endphp
+                    </ul>
+                </li>
+                <li class="nav-item topbar-icon dropdown hidden-caret">
+                    @php
+                        $cartDetails = optional(Auth::user()->cart)->details ?? false;
+                        $renewCount = \App\Models\RenewService::where('email', Auth::user()->email)->count();
+                    @endphp
 
-                @if ($cartDetails)
-                    <a class="nav-link" href="{{ route('customer.cart.listcart') }}" id="notifDropdown">
-                        <i class="fa fa-shopping-cart"></i>
-                        <span class="notification">
-                            {{ count($cartDetails) }}
-                        </span>
-                    </a>
-                @elseif ($renewCount > 0)
-                    <a class="nav-link" href="{{ route('customer.cart.listrenews') }}" id="notifDropdown">
-                        <i class="fa fa-shopping-cart"></i>
-                        <span class="notification">
-                            {{ $renewCount }}
-                        </span>
-                    </a>
-                @else
-                    <a class="nav-link" href="#" id="notifDropdown">
-                        <i class="fa fa-shopping-cart"></i>
-                        <span class="notification">0</span>
-                    </a>
-                @endif
+                    @if ($cartDetails)
+                        <a class="nav-link" href="{{ route('customer.cart.listcart') }}" id="notifDropdown">
+                            <i class="fa fa-shopping-cart"></i>
+                            <span class="notification">
+                                {{ count($cartDetails) }}
+                            </span>
+                        </a>
+                    @elseif ($renewCount > 0)
+                        <a class="nav-link" href="{{ route('customer.cart.listrenews') }}" id="notifDropdown">
+                            <i class="fa fa-shopping-cart"></i>
+                            <span class="notification">
+                                {{ $renewCount }}
+                            </span>
+                        </a>
+                    @else
+                        <a class="nav-link" href="#" id="notifDropdown">
+                            <i class="fa fa-shopping-cart"></i>
+                            <span class="notification">0</span>
+                        </a>
+                    @endif
 
-            </li>
+                </li>
             @endif
             <li class="nav-item topbar-user dropdown hidden-caret">
                 <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
@@ -121,12 +130,12 @@
 
 
 <!-- Đảm bảo jQuery được tải trước -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function() {
         $('#notifDropdown').on('click', function(event) {
-            let cartItems =  $('.notification').text(); // Giả sử dữ liệu giỏ hàng là null
+            let cartItems = $('.notification').text(); // Giả sử dữ liệu giỏ hàng là null
             // alert(cartItems);
             if (!cartItems == null || cartItems == 0) {
                 event.preventDefault(); // Ngăn điều hướng

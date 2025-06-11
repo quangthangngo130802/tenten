@@ -20,10 +20,5 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
 <link rel="stylesheet" href="//cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css">
-{{-- <style>
-    * {
-    outline: 1px solid red;
-} --}}
-</style>
 
 @stack('styles')

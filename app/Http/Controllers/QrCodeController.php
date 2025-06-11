@@ -22,7 +22,7 @@ class QrCodeController extends Controller
             return DataTables::of($data)
                 ->addColumn('action', function ($row) {
                     return '<div style="display: flex;">
-                                <a href="' . route('qrcode.edit', $row->id) . '" class="btn btn-primary btn-sm edit">
+                                <a  class="btn btn-primary btn-sm edit" data-id="'.$row->id.'" data-qr_name="'.$row->qr_name.'" data-qr_link="'.$row->qr_link.'" data-default_link="'.$row->default_link.'">
                                     <i class="fas fa-edit btn-edit" title="Sửa"></i>
                                 </a>
                                 <a href="#" class="btn btn-danger btn-sm delete"
@@ -93,7 +93,7 @@ class QrCodeController extends Controller
             $qrcode->user_id = $user->id;
             $qrcode->save();
         }
-        return redirect()->route('qrcode.edit', ['id' => $qrcode->id])->with('success', 'QR Code has been saved!');
+        return redirect()->back()->with('success', 'QR Code has been saved!');
     }
 
     public function delete($id)

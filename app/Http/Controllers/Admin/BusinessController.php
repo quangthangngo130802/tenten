@@ -27,7 +27,7 @@ class BusinessController extends Controller
              ->rawColumns(['checkbox', 'businessCode'])
                 ->make(true);
         }
-        $title = "Danh sách đăng ký kinh doanh";
+        $page = "Danh sách đăng ký kinh doanh";
         return view('backend.business.index', compact('title', 'page'));
     }
 

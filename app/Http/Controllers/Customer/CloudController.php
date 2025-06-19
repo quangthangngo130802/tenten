@@ -97,7 +97,7 @@ class CloudController extends Controller
                 'os_id' => $request->os_id,
                 'backup' => $request->issetbackup,
                 'price' => $request->totalprice,
-                'number' => $quantity
+                'number' => 12
             ]);
 
            return redirect()->route('customer.cart.listcart');

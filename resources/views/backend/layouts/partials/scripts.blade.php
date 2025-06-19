@@ -63,7 +63,7 @@
 {{-- <script src="{{ asset('backend/assets/js/demo.js') }}"></script> --}}
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="//cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
-
+<script src="{{ asset('helper.js') }}"></script>
 @include('backend/includes/alert')
 
 @stack('scripts')

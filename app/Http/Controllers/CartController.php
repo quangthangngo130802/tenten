@@ -192,12 +192,15 @@ class CartController extends Controller
     public function updatetime(Request $request)
     {
 
+        // dd($request->toArray());
         $details = DetailCart::find($request->id);
+        // dd($details);
         if($details->type == 'hosting'){
-            $details->price = $details->price  / ($details->number/12) * $request->quantity/12 ;
+            $details->price = $details->price  / $details->number * $request->quantity ;
         }else{
             if($details->backup == '0'){
-                $details->price = $details->price/$details->number * $request->quantity;
+                // dd($request->quantity.'-'.$details->number);
+                $details->price = $details->price* $request->quantity/$details->number ;
             }else{
                 $details->price = ($details->price-75000)/$details->number * $request->quantity + 75000;
             }

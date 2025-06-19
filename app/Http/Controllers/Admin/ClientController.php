@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ClientRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\Province;
+use App\Models\Service;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -92,6 +93,7 @@ class ClientController extends Controller
             unset($credentials['password']);
         }
         $user->update($credentials);
+        Service::query()->update(['email' => $request->email]);
         toastr()->success('Cập nhật thành công.');
         return redirect()->route('client.index');
     }

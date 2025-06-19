@@ -2,19 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Email;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Email extends Model
+class EmailConfig extends Model
 {
     use HasFactory;
-    protected $table = 'emails';
-    protected $guarded = [];
-    public $timestamps = true;
 
-    public function emailConfigs()
+    protected $guarded = [];
+    public function emails()
     {
-        return $this->belongsToMany(EmailConfig::class, 'email_config_email')
+        return $this->belongsToMany(Email::class, 'email_config_email')
                     ->withPivot('price')
                     ->withTimestamps();
     }

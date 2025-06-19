@@ -183,6 +183,7 @@ Route::middleware(['auth', 'profile.updated'])->group(function () {
             Route::get('{email_type?}', [CustomerEmailController::class, 'index'])->name('index');
             Route::get('vi/email-{id}', [CustomerEmailController::class, 'viemail'])->name('viemail');
             Route::post('add-cart', [CustomerEmailController::class, 'addtocart'])->name('addtocart');
+            Route::get('package/type', [CustomerEmailController::class, 'packageType'])->name('package');
         });
 
         Route::prefix('order')->name('order.')->group(function () {

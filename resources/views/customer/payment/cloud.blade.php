@@ -47,10 +47,10 @@
                     </div>
                     <div class="col-sm-9">
                         <select class="form-select" name="quantity" id="quantity">
-                            <option value="1" attrvalue="{{ $cloud->price }}">1 tháng ({{
+                            {{-- <option value="1" attrvalue="{{ $cloud->price }}">1 tháng ({{
                                 number_format($cloud->price, 0, ',', '.') }} đ)</option>
                             <option value="6" attrvalue="{{ $cloud->price*6 }}">6 tháng ({{
-                                number_format($cloud->price*6, 0, ',', '.') }} đ)</option>
+                                number_format($cloud->price*6, 0, ',', '.') }} đ)</option> --}}
                             <option value="12" attrvalue="{{ $cloud->price*12 }}">1 năm ({{
                                 number_format($cloud->price*12, 0, ',', '.') }})</option>
                             <option value="24" attrvalue="{{ $cloud->price*24 }}">2 năm ({{
@@ -102,7 +102,7 @@
                 <div class="cart-total">
                     <p>
                         <strong class="tg_fl">Tổng tiền chưa VAT: </strong>
-                        <strong class="tg_fr" id="tong_price">{{number_format($cloud->price, 0, ',', '.') }}
+                        <strong class="tg_fr" id="tong_price">{{number_format($cloud->price * 12, 0, ',', '.') }}
                             đ</strong>
                     </p>
                     {{-- <p>
@@ -111,7 +111,7 @@
                     </p> --}}
                     <p>
                         <strong class="tg_fl">Tổng cộng: </strong>
-                        <strong class="tg_fr"><span id="tong_cong" style="color: red">{{number_format($cloud->price, 0,
+                        <strong class="tg_fr"><span id="tong_cong" style="color: red">{{number_format($cloud->price * 12, 0,
                                 ',', '.') }}
                                 đ</span></strong>
                     </p>
@@ -267,7 +267,7 @@
         // currentBasePrice = parseInt(selectedProduct.getAttribute("data-price")) || 0;
 
         // Tính giá theo thời gian và backup
-        const months = parseInt(selectedQuantity.value) || 1;
+        const months = parseInt(selectedQuantity.value) || 12;
         const basePriceForDuration = currentBasePrice * months;
         const backupPrice = backupCheckbox.checked ? parseInt(backupCheckbox.value) : 0;
 
@@ -319,7 +319,7 @@
 
     // Hàm cập nhật lại giá sau khi thay đổi lựa chọn thời gian
     function updatePriceForSelectedDuration(selectedQuantity) {
-        const months = parseInt(selectedQuantity.value) || 1;  // Sử dụng giá trị đã chọn
+        const months = parseInt(selectedQuantity.value) || 12;  // Sử dụng giá trị đã chọn
         const basePriceForDuration = currentBasePrice * months;
 
         // Tính lại tổng giá sau khi cập nhật

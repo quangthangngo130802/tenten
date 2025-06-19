@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\TransactionHistory;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -35,7 +36,10 @@ class TransactionHistoryController extends Controller
                     return Carbon::parse($row->created_at)->format('Y-m-d H:i:s');
                 })
                 ->editColumn('user_id', function ($row) {
-                    return '<span>' . $row->user->full_name . '<p>( ' . $row->user->email . ' )</p> </span>';
+                    $user = User::where('email', $row->email)->first();
+                    return $user && !empty($user->full_name) && !empty($user->phone_number)
+                        ? $user->full_name . '<br>(' . $user->phone_number . ')'
+                        : ($user && !empty($user->full_name) ? $user->full_name : '');
                 })
                 ->editColumn('amount', function ($row) {
                     if ($row->status == 1) {

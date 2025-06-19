@@ -44,8 +44,10 @@
                         @endif
                     </option>
                 </select>
-  
-                <span class="fw-bold text-primary col-md-3 text-end">{{ number_format($item->price, 0, ',', '.') }}
+
+                <span class="fw-bold text-primary col-md-3 text-end" style="display: flex;
+                justify-content: end;
+                align-items: center;">{{ number_format($item->price, 0, ',', '.') }}
                     đ</span>
             </div>
             @empty

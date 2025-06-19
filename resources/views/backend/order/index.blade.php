@@ -2,7 +2,11 @@
 
 @section('content')
     <div class="content">
-        <!-- Bảng danh sách danh mục -->
+      @if($status == 'payment')
+        <div class="d-flex justify-content-end mb-3">
+            <a class="btn btn-primary btn-sm" href="{{ route('order.create') }}"><i class="fas fa-plus" style="margin-right: 10px"></i>    Thêm đơn hàng</a>
+        </div>
+      @endif
         <div class="category-list">
             <table class="table table-striped table-hover" id="categoryTable">
                 <thead>

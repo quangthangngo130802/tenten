@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EmailRequest;
 use App\Models\Email;
+use App\Models\EmailConfig;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -44,19 +45,28 @@ class EmailController extends Controller
         $page ='Email';
         $title = 'Thay đổi Email';
         $email = Email::findOrFail($id);
-        return view('backend.email.detail', compact('email', 'title', 'page'));
+        $emailConfigs = EmailConfig::get();
+        $pivotData = $email->emailConfigs->pluck('pivot.price', 'id');
+        // dd($pivotData);
+        return view('backend.email.detail', compact('email', 'title', 'page', 'emailConfigs', 'pivotData'));
     }
     public function create(){
         $page ='Email';
         $title = 'Thêm Email';
-        return view('backend.email.detail' , compact( 'title', 'page'));
+        $emailConfigs = EmailConfig::get();
+        return view('backend.email.detail' , compact( 'title', 'page', 'emailConfigs' ));
     }
 
     public function update(EmailRequest $request, $id)
     {
+
         $email = Email::find($id);
         $credentials = $request->validated();
-
+        $syncData = [];
+        foreach ($request->package_type as $emailConfigId => $price) {
+            $syncData[$emailConfigId] = ['price' => $price];
+        }
+        $email->emailConfigs()->syncWithoutDetaching($syncData);
         $email->update($credentials);
         toastr()->success('Cập nhật thành công.');
         // dd(route('email.index', ['type_id' => $email->email_type]));
@@ -66,7 +76,13 @@ class EmailController extends Controller
     public function store(EmailRequest $request)
     {
         $credentials = $request->validated();
-        Email::create($credentials);
+        $email = Email::create($credentials);
+        $syncData = [];
+        foreach ($request->package_type as $emailConfigId => $price) {
+            $syncData[$emailConfigId] = ['price' => $price];
+        }
+        $email->emailConfigs()->syncWithoutDetaching($syncData);
+        $email->update($credentials);
         toastr()->success('Thêm thành công.');
         return redirect()->route('email.index', ['type_id' => $request->email_type]);
     }

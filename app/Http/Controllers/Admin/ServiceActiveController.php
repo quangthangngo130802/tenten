@@ -13,6 +13,7 @@ use App\Models\Os;
 use App\Models\Service;
 use App\Models\User;
 use Carbon\Carbon;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\FlareClient\Http\Client;
@@ -677,9 +678,10 @@ class ServiceActiveController extends Controller
         return response()->json(['message' => 'Chuyển domain thành công!']);
     }
 
+
+
     public function destroy($id)
     {
-        // Tìm Service theo id
         $item = Service::find($id);
 
         if (!$item) {
@@ -689,44 +691,50 @@ class ServiceActiveController extends Controller
             ], 404);
         }
 
-
         $client = new \GuzzleHttp\Client([
             'base_uri' => 'https://app.fasthotel.vn',
             'cookies' => false,
         ]);
 
-        // try {
+        try {
             $response = $client->post('/api/user/delete', [
                 'form_params' => [
                     'email' => $item->email,
                 ],
             ]);
 
-            $data = json_decode($response->getBody(), true);
-            // dd($data);
+            // $data = json_decode($response->getBody(), true);
 
-        //     if (isset($data['success']) && $data['success'] == false) {
-        //         return response()->json([
-        //             'success' => false,
-        //             'message' => $data['message']
-        //         ], 400);
-        //     }
-        // } catch (\Exception $e) {
+            // if (!isset($data['success']) || $data['success'] === false) {
+            //     return response()->json([
+            //         'success' => false,
+            //         'message' => $data['message'] ?? 'Lỗi không xác định từ API',
+            //     ], 400);
+            // }
 
+        } catch (RequestException $e) {
+            // $message = 'Gọi API xóa thất bại.';
+            // if ($e->hasResponse()) {
+            //     $body = json_decode($e->getResponse()->getBody(), true);
+            //     if (isset($body['message'])) {
+            //         $message = $body['message'];
+            //     }
+            // }
 
-        //     return response()->json([
-        //         'success' => false,
-        //         'message' => 'Không tìm thấy để xóa',
-        //     ], 500);
-        // }
+            // return response()->json([
+            //     'success' => false,
+            //     'message' => $message,
+            // ], 500);
+        }
 
-
-        // Xóa Service trong database
+        // Nếu thành công, xóa trong database
         $item->delete();
 
         return response()->json([
             'success' => true,
-            'message' => 'Xóa mục thành công.'
+            'message' => 'Xóa mục thành công.',
         ]);
     }
+
+
 }

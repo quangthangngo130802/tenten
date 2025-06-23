@@ -14,7 +14,7 @@
                         <th>Email</th>
                         <th>Link</th>
                         <th>Khu vực</th>
-                        <th>Ngày bắt đầu</th>
+                        <th>Ngày Bắt đầu/Kết thúc</th>
                         {{-- <th>Ngày kết thúc</th> --}}
                         {{-- <th>Trạng thái</th> --}}
                         <th>Thao tác</th>

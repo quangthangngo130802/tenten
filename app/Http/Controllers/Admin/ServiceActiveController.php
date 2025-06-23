@@ -39,7 +39,7 @@ class ServiceActiveController extends Controller
                 ->addIndexColumn()
                 ->addColumn('user_info', function ($row) {
                     $user = User::where('email', $row->email)->first();
-                    $fullName = $user && !empty($user->full_name) ?  '<br>' .$user->full_name : '';
+                    $fullName = $user && !empty($user->full_name) ? '<br>' . $user->full_name : '';
                     $phoneNumber = $user && !empty($user->phone_number) ? $user->phone_number : '';
                     return $row->email . $fullName . '<br>' . ($phoneNumber ? ' (' . $phoneNumber . ')' : '');
                 })
@@ -154,9 +154,9 @@ class ServiceActiveController extends Controller
                 ->addIndexColumn()
                 ->addColumn('user_info', function ($row) {
                     $user = User::where('email', $row->email)->first();
-                    $fullName = $user && !empty($user->full_name) ?  '<br>' .$user->full_name : '';
+                    $fullName = $user && !empty($user->full_name) ? '<br>' . $user->full_name : '';
                     $phoneNumber = $user && !empty($user->phone_number) ? $user->phone_number : '';
-                    return $row->email .  $fullName . '<br>' . ($phoneNumber ? ' (' . $phoneNumber . ')' : '');
+                    return $row->email . $fullName . '<br>' . ($phoneNumber ? ' (' . $phoneNumber . ')' : '');
                 })
                 ->addColumn('another_column', function ($row) {
                     $user = User::where('email', $row->email)->first();
@@ -264,10 +264,10 @@ class ServiceActiveController extends Controller
                 ->addIndexColumn()
                 ->addColumn('user_info', function ($row) {
                     $user = User::where('email', $row->email)->first();
-                    $output = $row->email ;
+                    $output = $row->email;
 
                     if ($user && isset($user->full_name)) {
-                        $output .= '<br>'.$user->full_name;
+                        $output .= '<br>' . $user->full_name;
                     } else {
                         $output .= 'N/A'; // Optional: Handle case where user or full_name is null
                     }
@@ -377,6 +377,9 @@ class ServiceActiveController extends Controller
                             ->orWhere('users.phone_number', 'like', "%$keyword%");
                     });
                 })
+                ->filterColumn('link', function ($query, $keyword) {
+                    $query->whereRaw("CONCAT(domain, domain_extension) LIKE ?", ["%{$keyword}%"]);
+                })
                 ->filterColumn('provinces', function ($query, $keyword) {
                     $query->where('provinces.name', 'like', "%$keyword%");
                 })
@@ -395,30 +398,35 @@ class ServiceActiveController extends Controller
                 })
 
                 ->addColumn('link', function ($row) {
-                    return $row->domain . $row->domain_extension;
+                    $fullLink = $row->domain . $row->domain_extension;
+                    return '<a href="https://' . $fullLink . '" target="_blank" style="color: #007bff; text-decoration: underline;">' . $fullLink . '</a>';
                 })
 
-                ->editColumn('active_at', function ($row) {
-                    $activeAt = Carbon::parse($row->active_at);
-                    return $activeAt->format('d-m-Y');
-                })
 
-                ->addColumn('enddate', function ($row) {
+                ->addColumn('time_info', function ($row) {
                     $activeAt = Carbon::parse($row->active_at);
-                    $expirationDate = $activeAt->addMonths($row->number);
+                    $startDate = $activeAt->format('d-m-Y');
 
+                    $expirationDate = $activeAt->copy()->addMonths($row->number);
+                    $endDate = $expirationDate->format('d-m-Y');
+
+                    $today = Carbon::now();
+
+                    // Tính số ngày còn lại hoặc quá hạn
                     if ($expirationDate->isPast()) {
-                        $daysOverdue = $expirationDate->diffInDays(Carbon::now());
-                        return $expirationDate->format('d-m-Y') . '<p class="endday">(  - ' . $daysOverdue . ' ngày )</p>';
+                        $daysOverdue = $expirationDate->diffInDays($today);
+                        $status = "<p class='endday' style='color: red;'>(- {$daysOverdue} ngày)</p>";
+                    } else {
+                        $daysLeft = $expirationDate->diffInDays($today);
+                        $status = $daysLeft < 30
+                            ? "<p class='endday' style='color: orange;'>({$daysLeft} ngày)</p>"
+                            : '';
                     }
 
-                    $daysLeft = $expirationDate->diffInDays(Carbon::now());
-                    if ($daysLeft < 30) {
-                        return $expirationDate->format('d-m-Y') . '<p class="endday">(  ' . $daysLeft . ' ngày )</p>';
-                    }
+                    return "<b></b> {$startDate}<br><b></b> {$endDate}<br> {$status}";
+                })
+                ->rawColumns(['time_info'])
 
-                    return $expirationDate->format('d-m-Y');
-                })->rawColumns(['enddate'])
                 ->editColumn('active', function ($row) {
                     return ' <div class="toggle-container justify-content-center">
                     <label class="switch">
@@ -442,19 +450,27 @@ class ServiceActiveController extends Controller
                             <!-- Menu Dropdown -->
                             <div id="menu-' . $row->id . '" class="dropdown-menu">
                                 <ul>
-                                    <li><a href="#" onclick="openModal(' . $row->id . ')">Nội dung</a></li>
-
                                     <li><a href="#" onclick="openModalGiaHan(' . $row->id . ')">Gia hạn</a></li>
 
                                     <li><a href="#" onclick="openModalEdit(' . $row->id . ')">Chỉnh sửa</a></li>
 
                                     <li><a href="#" onclick="confirmDeleteSweet(' . $row->id . ')">Xóa</a></li>
+                                    <li>
+                                        <div class="toggle-container " style="margin-left:10px">
+                                        Trạng thái
+                                            <label class="switch">
+                                                <input type="checkbox" class="toggleStatus" data-id="' . $row->id . '"' . ($row->status == 'active' ? ' checked' : '') . '>
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+                                    </li>
+
                                 </ul>
                             </div>
                         </div>
                     </div>
                     ';
-                })->rawColumns(['action', 'giahan', 'enddate', 'active', 'user_info', 'provinces', 'link'])
+                })->rawColumns(['action', 'giahan', 'time_info', 'active', 'user_info', 'provinces', 'link'])
                 ->make(true);
         }
         $page = 'Quản lý dịch vụ khách sạn';
@@ -673,13 +689,13 @@ class ServiceActiveController extends Controller
             ], 404);
         }
 
-        // Tạo client Guzzle để gọi API xóa admin
+
         $client = new \GuzzleHttp\Client([
             'base_uri' => 'https://app.fasthotel.vn',
             'cookies' => false,
         ]);
 
-        try {
+        // try {
             $response = $client->post('/api/user/delete', [
                 'form_params' => [
                     'email' => $item->email,
@@ -689,20 +705,20 @@ class ServiceActiveController extends Controller
             $data = json_decode($response->getBody(), true);
             // dd($data);
 
-            if (isset($data['success']) && $data['success'] == false) {
-                return response()->json([
-                    'success' => false,
-                    'message' => $data['message']
-                ], 400);
-            }
-        } catch (\Exception $e) {
+        //     if (isset($data['success']) && $data['success'] == false) {
+        //         return response()->json([
+        //             'success' => false,
+        //             'message' => $data['message']
+        //         ], 400);
+        //     }
+        // } catch (\Exception $e) {
 
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Không tìm thấy để xóa',
-            ], 500);
-        }
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Không tìm thấy để xóa',
+        //     ], 500);
+        // }
 
 
         // Xóa Service trong database

@@ -12,10 +12,11 @@
                         <th>STT</th>
                         <th>Khách hàng</th>
                         <th>Email</th>
+                        <th>Link</th>
                         <th>Khu vực</th>
                         <th>Ngày bắt đầu</th>
-                        <th>Ngày kết thúc</th>
-                        <th>Trạng thái</th>
+                        {{-- <th>Ngày kết thúc</th> --}}
+                        {{-- <th>Trạng thái</th> --}}
                         <th>Thao tác</th>
                     </tr>
                 </thead>
@@ -61,25 +62,30 @@
                         orderable: false,
                     },
                     {
+                        data: 'link',
+                        name: 'link',
+                        orderable: false,
+                    },
+                    {
                         data: 'provinces',
                         name: 'provinces',
                         orderable: false,
                     },
                     {
-                        data: 'active_at',
-                        name: 'active_at'
+                        data: 'time_info',
+                        name: 'time_info'
                     },
-                    {
-                        data: 'enddate',
-                        name: 'number'
+                    // {
+                    //     data: 'enddate',
+                    //     name: 'number'
 
-                    },
-                    {
-                        data: 'active',
-                        name: 'status',
-                        orderable: false,
+                    // },
+                    // {
+                    //     data: 'active',
+                    //     name: 'status',
+                    //     orderable: false,
 
-                    },
+                    // },
                     {
                         data: 'action',
                         name: 'action',

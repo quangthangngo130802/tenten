@@ -68,10 +68,7 @@ class HotelController extends Controller
             return response()->json(['message' => 'Bạn không có quyền truy cập domain này'], 403);
         }
 
-        $response = Http::post('http://127.0.0.1:1000/api/pos/print', [
-            'invoice_code' => $invoice_code,
-            'domain' => $domain,
-        ]);
+        $response = Http::get("https://app.fasthotel.vn/api/get-payment/{$invoice_code}");
 
         Log::info($response->json());
 
@@ -79,14 +76,13 @@ class HotelController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Yêu cầu thanh toán đã gửi đến POS',
-                'pdf_url' => $response->json()['pdf_url']
+                'data' => $response->json()['data']
             ]);
         }
 
         return response()->json([
             'success' => true,
             'message' => 'Token hợp lệ và có quyền truy cập domain',
-            'client' => $client,
             '$invoice_code' => $invoice_code
 
         ]);

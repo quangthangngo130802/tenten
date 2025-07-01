@@ -29,7 +29,7 @@ Route::middleware('checkToken')->group(function () {
 Route::post('/invoice/quota', [HotelController::class, 'getDetailBill']);
 Route::post('/bill/send', [HotelController::class, 'sendToInvoiceSystem']);
 
-Route::middleware('auth.api_token')->get('/invoices', [HotelController::class, 'getData']);
+Route::middleware('auth.api_token')->post('/invoices', [HotelController::class, 'getData']);
 
 
 

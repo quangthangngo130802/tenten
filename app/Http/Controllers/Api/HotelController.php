@@ -34,7 +34,6 @@ class HotelController extends Controller
 
         if($checkdomain->status != 'active'){
             Log::info('check status');
-
             return response()->json([
                 'success' => false,
                 'message' => 'Doamin không còn hoạt dộng.'
@@ -42,7 +41,6 @@ class HotelController extends Controller
         }
 
         $accessToken = Service::where('domain', $validated['domain'])->where('token', $checkdomain->token)->get();
-
 
         if (!$accessToken) {
             Log::info('token');
@@ -54,27 +52,11 @@ class HotelController extends Controller
         }
         Log::info(1);
 
-
-        $response = Http::post('http://127.0.0.1:1000/api/pos/print', [
-            'invoice_code' => $request->invoice_code,
-            'amount' => $request->amount,
-        ]);
-
-        Log::info($response->json());
-
-
-        if ($response->successful()) {
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Yêu cầu thanh toán đã gửi đến POS',
-                'pdf_url' => $response->json()['pdf_url']
-            ]);
-        }
-
         return response()->json([
-            'status' => 'error',
-            'message' => 'Không thể gửi yêu cầu đến máy POS'
-        ], 500);
+            'status' => 'success',
+            'message' => 'Yêu cầu thanh toán đã gửi đến POS',
+            'token' => $checkdomain->token
+        ]);
     }
 
 

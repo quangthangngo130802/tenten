@@ -75,16 +75,14 @@ class HotelController extends Controller
         if ($response->successful()) {
             return response()->json([
                 'status' => 'success',
-                'message' => 'Yêu cầu thanh toán đã gửi đến POS',
+                'message' => 'Thông tin đơn hàng',
                 'data' => $response->json()['data']
             ]);
         }
 
         return response()->json([
             'success' => true,
-            'message' => 'Token hợp lệ và có quyền truy cập domain',
-            '$invoice_code' => $invoice_code
-
+            'message' => 'Mã đơn hàng không tồn tại.',
         ]);
     }
 

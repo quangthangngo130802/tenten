@@ -348,6 +348,13 @@
                             <p>Đăng ký dinh doanh</p>
                         </a>
                     </li>
+
+                    <li class="nav-item {{ request()->routeIs('customer.fasthotelApi.api') ? 'active' : '' }}">
+                        <a href="{{ route('customer.fasthotelApi.api') }}">
+                            <i class="fa-solid fa-puzzle-piece"></i>
+                            <p>Api Fasthotel</p>
+                        </a>
+                    </li>
                 @endif
 
                 <!-- Lịch sử giao dịch -->
@@ -367,12 +374,7 @@
                     </li>
                 @endif
 
-                {{-- <li class="nav-item {{ request()->routeIs('history.index') ? 'active' : '' }}">
-                    <a href="{{ route('history.index') }}">
-                        <i class="fa-solid fa-search"></i>
-                        <p>Kiểm tra tên miền</p>
-                    </a>
-                </li> --}}
+
             </ul>
         </div>
     </div>

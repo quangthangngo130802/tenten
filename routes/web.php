@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ApiTokenController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\CloudController;
 use App\Http\Controllers\Admin\ConfigController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\Customer\CloudController as CustomerCloudController;
 use App\Http\Controllers\Customer\CustomerServiceController;
 use App\Http\Controllers\Customer\DomainController as CustomerDomainController;
 use App\Http\Controllers\Customer\EmailController as CustomerEmailController;
+use App\Http\Controllers\Customer\FasthotelApiController;
 use App\Http\Controllers\Customer\HostingController as CustomerHostingController;
 use App\Http\Controllers\Customer\OrderController as CustomerOrderController;
 use App\Http\Controllers\Customer\RenewServiceController;
@@ -165,6 +167,11 @@ Route::middleware(['auth', 'profile.updated'])->group(function () {
             Route::get('{id}', [App\Http\Controllers\Admin\BusinessController::class, 'view'])->name('detail');
             Route::post('delete', [App\Http\Controllers\Admin\BusinessController::class, 'delete'])->name('delete');
         });
+
+        Route::prefix('token-hotel')->name('token.')->group(function () {
+            Route::get('', [ApiTokenController::class, 'index'])->name('list');
+            Route::post('{id}/regenerate-token', [ApiTokenController::class, 'regenerateToken'])->name('regenerate');
+        });
     });
 
     Route::prefix('customer')->name('customer.')->group(function () {
@@ -219,6 +226,13 @@ Route::middleware(['auth', 'profile.updated'])->group(function () {
             Route::post('cart', [CustomerDomainController::class, 'addToCart'])->name('addTo.cart');
             Route::post('delete-cart', [CustomerDomainController::class, 'deleteToCart'])->name('deleteTo.cart');
             Route::post('remove/{id}', [CustomerDomainController::class, 'delete']);
+        });
+
+        Route::prefix('fasthotelApi')->name('fasthotelApi.')->group(function () {
+
+            Route::get('', [FasthotelApiController::class, 'index'])->name('api');
+
+            Route::post('{id}/regenerate-token', [FasthotelApiController::class, 'regenerateToken'])->name('token.regenerate');
         });
     });
 

@@ -50,12 +50,12 @@ class HotelController extends Controller
                 'message' => 'Token không hợp lệ.'
             ], 401);
         }
-        Log::info(1);
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Yêu cầu thanh toán đã gửi đến POS',
-            'token' => $checkdomain->token
+            'message' => 'Yêu cầu thanh toán.',
+            'token' => $checkdomain->token,
+            'invoice_code' => $validated['invoice_code']
         ]);
     }
 
@@ -70,12 +70,25 @@ class HotelController extends Controller
             return response()->json(['message' => 'Bạn không có quyền truy cập domain này'], 403);
         }
 
+        $response = Http::post('http://127.0.0.1:1000/api/pos/print', [
+            'invoice_code' => $invoice_code,
+            'domain' => $domain,
+        ]);
+
+        Log::info($response->json());
+
+        if ($response->successful()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Yêu cầu thanh toán đã gửi đến POS',
+                'pdf_url' => $response->json()['pdf_url']
+            ]);
+        }
 
         return response()->json([
             'success' => true,
             'message' => 'Token hợp lệ và có quyền truy cập domain',
             'client' => $client,
-            '$domain' => $domain,
             '$invoice_code' => $invoice_code
 
         ]);

@@ -40,9 +40,7 @@ class HotelController extends Controller
             ], 403);
         }
 
-        $accessToken = Service::where('domain', $validated['domain'])->where('token', $checkdomain->token)->get();
-
-        if (!$accessToken) {
+        if (!$checkdomain->token) {
             Log::info('token');
 
             return response()->json([

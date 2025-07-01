@@ -620,7 +620,7 @@ document.addEventListener("DOMContentLoaded", function () {
 function toggleMenu(id) {
     var menu = document.getElementById("menu-" + id);
 
-    document.querySelectorAll(".dropdown-menu").forEach(function (m) {
+    document.querySelectorAll(".dropdown-menu-service").forEach(function (m) {
         if (m !== menu) {
             m.style.display = "none";
         }
@@ -634,7 +634,7 @@ document.addEventListener("click", function (event) {
 
     if (isToggleButton) return;
 
-    document.querySelectorAll(".dropdown-menu").forEach(function (menu) {
+    document.querySelectorAll(".dropdown-menu-service").forEach(function (menu) {
         menu.style.display = "none";
     });
 });

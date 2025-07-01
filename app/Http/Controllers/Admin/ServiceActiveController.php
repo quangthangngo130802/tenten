@@ -105,7 +105,7 @@ class ServiceActiveController extends Controller
                         </span>
 
                         <!-- Menu Dropdown -->
-                        <div id="menu-' . $row->id . '" class="dropdown-menu">
+                        <div id="menu-' . $row->id . '" class="dropdown-menu-service">
                             <ul>
                                 <li><a href="#" onclick="openModal(' . $row->id . ')">Nội dung</a></li>
 
@@ -217,7 +217,7 @@ class ServiceActiveController extends Controller
                         </span>
 
                         <!-- Menu Dropdown -->
-                        <div id="menu-' . $row->id . '" class="dropdown-menu">
+                        <div id="menu-' . $row->id . '" class="dropdown-menu-service">
                             <ul>
                                 <li><a href="#" onclick="openModal(' . $row->id . ')">Nội dung</a></li>
 
@@ -323,7 +323,7 @@ class ServiceActiveController extends Controller
                             </span>
 
                             <!-- Menu Dropdown -->
-                            <div id="menu-' . $row->id . '" class="dropdown-menu">
+                            <div id="menu-' . $row->id . '" class="dropdown-menu-service">
                                 <ul>
                                     <li><a href="#" onclick="openModal(' . $row->id . ')">Nội dung</a></li>
 
@@ -455,7 +455,7 @@ class ServiceActiveController extends Controller
                             </span>
 
                             <!-- Menu Dropdown -->
-                            <div id="menu-' . $row->id . '" class="dropdown-menu">
+                            <div id="menu-' . $row->id . '" class="dropdown-menu-service">
                                 <ul>
                                     <li><a href="#" onclick="openModalEdit(' . $row->id . ')">Chỉnh sửa</a></li>
                                     <li><a href="#" onclick="openModalGiaHan(' . $row->id . ')">Gia hạn</a></li>

@@ -7,6 +7,7 @@ use App\Models\Service;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class ServiceController extends Controller
 {
@@ -26,7 +27,8 @@ class ServiceController extends Controller
                 'status' =>  $request->status,
                 'domain_extension' => '.fasthotel.vn',
                 'price' => 0,
-                'hotel_homestay' => $request->hotel_homestay
+                'hotel_homestay' => $request->hotel_homestay,
+                'token' => Str::random(60)
             ]);
 
             return response()->json([

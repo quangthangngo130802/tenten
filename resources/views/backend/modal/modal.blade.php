@@ -29,18 +29,18 @@
                 <form id="giaHanForm">
                     <div class="row mb-2">
 
-                        <input type="hidden" id="service_id" class="form-control form-control-sm"
-                        value="" disabled>
+                        <input type="hidden" id="service_id" class="form-control form-control-sm" value=""
+                            disabled>
 
                         <div class="col-6">
                             <label class="form-label small">Bắt đầu</label>
-                            <input type="date" id="startDate" class="form-control form-control-sm"
-                                value="" disabled>
+                            <input type="date" id="startDate" class="form-control form-control-sm" value=""
+                                disabled>
                         </div>
                         <div class="col-6">
                             <label class="form-label small">Kết thúc</label>
-                            <input type="date" id="endDate" class="form-control form-control-sm"
-                                value="" disabled>
+                            <input type="date" id="endDate" class="form-control form-control-sm" value=""
+                                disabled>
                         </div>
                     </div>
                     <div class="mb-2">
@@ -82,7 +82,7 @@
                     <div class="row mb-2">
 
                         <input type="hidden" id="service_edit_id" class="form-control form-control-sm"
-                        value="" disabled>
+                            value="" disabled>
 
                         <div class="col-6">
                             <label class="form-label small">Bắt đầu</label>
@@ -102,6 +102,54 @@
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Hủy</button>
                 <button type="submit" form="editForm" class="btn btn-success btn-sm">Lưu</button>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Đặt lại mật khẩu -->
+<div class="modal fade" id="modalResetPassword" tabindex="-1" aria-labelledby="modalResetPassword"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <form id="resetPassword">
+                <div class="modal-header py-2">
+                    <h5 class="modal-title" id="resetPasswordLabel">Đặt lại mật khẩu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row mb-2">
+
+                        <input type="hidden" name="user_id" id="reset_user_id">
+
+                        <div class="mb-3">
+                            <label for="new_password" class="form-label">Mật khẩu mới</label>
+                            <div class="position-relative">
+                                <input type="password" class="form-control" id="new_password" name="password">
+                                <i class="fa fa-eye toggle-password" toggle="#new_password" style="position:absolute; top:50%; right:10px; transform:translateY(-50%); cursor:pointer;"></i>
+                            </div>
+                            <div class="text-danger small" id="error-password"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="confirm_password" class="form-label">Xác nhận mật khẩu</label>
+                            <div class="position-relative">
+                                <input type="password" class="form-control" id="confirm_password" name="password_confirmation">
+                                <i class="fa fa-eye toggle-password" toggle="#confirm_password" style="position:absolute; top:50%; right:10px; transform:translateY(-50%); cursor:pointer;"></i>
+                            </div>
+                            <div class="text-danger small" id="error-confirm"></div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+                <div class="modal-footer py-1">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary btn-sm">Cập nhật mật khẩu</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

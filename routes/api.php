@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\CustomerController;
+use App\Http\Controllers\Api\HotelController;
 use App\Http\Controllers\Api\ServiceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,5 +25,11 @@ Route::middleware('checkToken')->group(function () {
 
     Route::post('/service/create', [ServiceController::class, 'store']);
 });
+
+Route::post('/invoice/quota', [HotelController::class, 'getDetailBill']);
+Route::post('/bill/send', [HotelController::class, 'sendToInvoiceSystem']);
+
+Route::middleware('auth.api_token')->get('/invoices', [HotelController::class, 'getData']);
+
 
 

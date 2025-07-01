@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'check.admin' => \App\Http\Middleware\CheckAdmin::class,
         'profile.updated' => \App\Http\Middleware\CheckProfileUpdated::class,
         'checkToken' => \App\Http\Middleware\CheckTokenMiddleware::class,
+        'auth.api_token' => \App\Http\Middleware\AuthApiToken::class,
     ];
 }

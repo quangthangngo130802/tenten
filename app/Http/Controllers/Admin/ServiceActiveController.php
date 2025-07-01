@@ -399,9 +399,15 @@ class ServiceActiveController extends Controller
                 })
 
                 ->addColumn('link', function ($row) {
-                    $fullLink = $row->domain . $row->domain_extension;
-                    return '<a href="https://' . $fullLink . '" target="_blank" style="color: #007bff; text-decoration: underline;">' . $fullLink . '</a>';
+                    $subdomain = $row->domain; // ví dụ: 'hungtran'
+                    $link = "http://{$subdomain}.fasthotels.vn/api/login-by-subdomain/{$subdomain}";
+
+                    return '<a href="' . $link . '" target="_blank"
+                             style="color:#007bff; text-decoration:underline">'
+                         . e($subdomain . '.fasthotel.vn') .
+                         '</a>';
                 })
+
 
 
                 ->addColumn('time_info', function ($row) {
@@ -441,9 +447,9 @@ class ServiceActiveController extends Controller
                 })->rawColumns(['giahan'])
                 ->addColumn('action', function ($row) {
                     return '
-                    <div >
+                    <div>
                         <div class="dropdown">
-                            <!-- Icon hiển thị modal -->
+                            <!-- Nút mở menu -->
                             <span style="font-size:26px; cursor:pointer; margin-right:15px" class="action" onclick="toggleMenu(\'' . $row->id . '\')">
                                 <i class="fas fa-cog"></i>
                             </span>
@@ -451,21 +457,19 @@ class ServiceActiveController extends Controller
                             <!-- Menu Dropdown -->
                             <div id="menu-' . $row->id . '" class="dropdown-menu">
                                 <ul>
-                                    <li><a href="#" onclick="openModalGiaHan(' . $row->id . ')">Gia hạn</a></li>
-
                                     <li><a href="#" onclick="openModalEdit(' . $row->id . ')">Chỉnh sửa</a></li>
-
+                                    <li><a href="#" onclick="openModalGiaHan(' . $row->id . ')">Gia hạn</a></li>
+                                    <li><a href="#" onclick="openModalPass(' . $row->id . ')">Cập nhật mật khẩu</a></li>
                                     <li><a href="#" onclick="confirmDeleteSweet(' . $row->id . ')">Xóa</a></li>
                                     <li>
-                                        <div class="toggle-container " style="margin-left:10px">
-                                        Trạng thái
+                                        <div class="toggle-container" style="margin-left:10px">
+                                            Trạng thái
                                             <label class="switch">
                                                 <input type="checkbox" class="toggleStatus" data-id="' . $row->id . '"' . ($row->status == 'active' ? ' checked' : '') . '>
                                                 <span class="slider"></span>
                                             </label>
                                         </div>
                                     </li>
-
                                 </ul>
                             </div>
                         </div>
@@ -736,5 +740,36 @@ class ServiceActiveController extends Controller
         ]);
     }
 
+    public function resetPass(Request $request)
+    {
+        // dd($request->all());
+        $item = Service::find($request->id);
 
+        if (!$item) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không tìm thấy mục .'
+            ], 404);
+        }
+
+        $client = new \GuzzleHttp\Client([
+            'base_uri' => 'http://127.0.0.1:9000',
+            'cookies' => false,
+        ]);
+
+        try {
+            $response = $client->post('/api/user/resetPassword', [
+                'form_params' => [
+                    'email' => $item->email,
+                    'password' => $request->password,
+                ],
+            ]);
+        } catch (RequestException $e) {
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Cập nhật mật khẩu thành công.',
+        ]);
+    }
 }

@@ -75,17 +75,6 @@
                         data: 'time_info',
                         name: 'time_info'
                     },
-                    // {
-                    //     data: 'enddate',
-                    //     name: 'number'
-
-                    // },
-                    // {
-                    //     data: 'active',
-                    //     name: 'status',
-                    //     orderable: false,
-
-                    // },
                     {
                         data: 'action',
                         name: 'action',

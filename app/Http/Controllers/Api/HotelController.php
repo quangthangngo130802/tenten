@@ -75,7 +75,8 @@ class HotelController extends Controller
             'success' => true,
             'message' => 'Token hợp lệ và có quyền truy cập domain',
             'client' => $client,
-            '$domain' => $domain
+            '$domain' => $domain,
+            '$invoice_code' => $invoice_code
 
         ]);
     }

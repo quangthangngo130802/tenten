@@ -216,6 +216,12 @@
                                 </ul>
                             </div>
                         </li>
+                        <li class="nav-item {{ request()->routeIs('token.list') ? 'active' : '' }}">
+                            <a href="{{ route('token.list') }}">
+                                <i class="fa-solid fa-puzzle-piece"></i>
+                                <p>Api Fasthotel</p>
+                            </a>
+                        </li>
                         <li class="nav-item ">
                             <a href="{{ route('business.index') }}">
                                 <i class="fas fa-file-contract"></i>

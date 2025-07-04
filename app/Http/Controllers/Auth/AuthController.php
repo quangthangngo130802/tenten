@@ -106,7 +106,7 @@ class AuthController extends Controller
             'activationUrl' => $activationUrl,
         ];
 
-        $emailAdmin = EmailAdmin::fist();
+        $emailAdmin = EmailAdmin::first();
         Mail::to($credentials['email'])->send(new AccountActivation($data));
         if($emailAdmin){
             Mail::to($emailAdmin->email)->send(new UserRegistered($data));

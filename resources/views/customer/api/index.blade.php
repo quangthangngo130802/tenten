@@ -41,7 +41,7 @@
                     <table class="table table-bordered table-sm">
                         <thead><tr><th>Tham số</th><th>Kiểu</th><th>Bắt buộc</th><th>Mô tả</th></tr></thead>
                         <tr><td><code>domain</code></td><td>string</td><td>✔</td><td>Subdomain khách sạn</td></tr>
-                        <tr><td><code>invoice_code</code></td><td>string</td><td>✔</td><td>Mã hóa đơn</td></tr>
+                        {{-- <tr><td><code>invoice_code</code></td><td>string</td><td>✔</td><td>Mã hóa đơn</td></tr> --}}
                     </table>
 
                     <p><strong>Response thành công:</strong></p>

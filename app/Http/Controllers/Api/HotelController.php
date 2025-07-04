@@ -13,15 +13,17 @@ class HotelController extends Controller
 
     public function getDataOrder(Request $request)
     {
-        $client = $request->get('api_client');
-        $domain = $request->query('domain');
-        $invoice_code = $request->query('invoice_code');
+        // $client = $request->get('api_client');
+        // $domain = $request->query('domain');
+        // $invoice_code = $request->query('invoice_code');
 
-        if (!$domain || $client->domain != $domain) {
-            return response()->json(['message' => 'Bạn không có quyền truy cập domain này'], 403);
-        }
+        // if (!$domain || $client->domain != $domain) {
+        //     return response()->json(['message' => 'Bạn không có quyền truy cập domain này'], 403);
+        // }
 
-        $response = Http::get("https://app.fasthotel.vn/api/get-payment/{$invoice_code}");
+        // $response = Http::get("https://app.fasthotel.vn/api/get-payment/{$invoice_code}");
+
+        $data = $this->getDetail();
 
         Log::info($response->json());
 
@@ -127,11 +129,38 @@ class HotelController extends Controller
     {
         $data = $request->all();
         Log::info('📥 Nhận dữ liệu từ lễ tân:', $data);
-        $orderId = $request->invoice_code;
-        file_put_contents(storage_path("app/order_detail_{$orderId}.json"), json_encode($data));
+        $domain = $request->domain;
+        file_put_contents(storage_path("app/order_detail_{$domain}.json"), json_encode($data));
     }
 
-    public function apiTest($data){
-        echo $data;
+    public function apiOrderDetal(Request $request)
+    {
+        $client = $request->get('api_client');
+        $domain = $request->query('domain');
+
+        if (!$domain || $client->domain !== $domain) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Bạn không có quyền truy cập domain này',
+            ], 403);
+        }
+
+        $filePath = storage_path("app/order_detail_{$domain}.json");
+
+        if (!file_exists($filePath)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Không tìm thấy hóa đơn',
+            ], 404);
+        }
+
+        $orderData = json_decode(file_get_contents($filePath), true);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Thông tin đơn hàng',
+            'data' => $orderData,
+        ]);
     }
+
 }

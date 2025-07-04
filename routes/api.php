@@ -40,4 +40,6 @@ Route::get('/order-status/{orderId}', [HotelController::class, 'orderStatus']);
 
 Route::post('/detail-order', [HotelController::class, 'getDetail']);
 
+Route::middleware('auth.api_token')->post('/invoices', [HotelController::class, 'apiOrderDetal']);
+
 // Route::get('/test', [HotelController::class, 'apiTest']);

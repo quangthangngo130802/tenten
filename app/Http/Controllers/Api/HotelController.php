@@ -125,7 +125,7 @@ class HotelController extends Controller
 
     public function getDetail(Request $request)
     {
-        $data = $request->only(['invoice_code', 'doamin', 'amount']);
+        $data = $request->only(['invoice_code', 'domain', 'amount']);
 
         Log::info('📥 Nhận dữ liệu từ lễ tân:', $data);
 

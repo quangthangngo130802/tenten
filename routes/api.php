@@ -36,3 +36,6 @@ Route::middleware('auth.api_token')->post('/invoices', [HotelController::class, 
 Route::middleware('auth.api_token')->post('/check-order-status', [HotelController::class, 'checkStatus']);
 
 Route::get('/order-status/{orderId}', [HotelController::class, 'orderStatus']);
+
+
+Route::post('/detail-order', [HotelController::class, 'getDetail']);

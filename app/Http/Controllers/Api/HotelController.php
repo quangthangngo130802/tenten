@@ -121,4 +121,18 @@ class HotelController extends Controller
             'status' => $status,
         ]);
     }
+
+
+    public function getDetail(Request $request)
+    {
+        $data = $request->only(['invoice_code', 'doamin', 'amount']);
+
+        Log::info('📥 Nhận dữ liệu từ lễ tân:', $data);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Đã nhận dữ liệu thành công',
+            'received' => $data
+        ]);
+    }
 }

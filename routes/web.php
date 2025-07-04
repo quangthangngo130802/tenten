@@ -159,7 +159,9 @@ Route::middleware(['auth', 'profile.updated'])->group(function () {
         Route::prefix('smtp')->name('smtp.')->group(function () {
             Route::get('email', [SmtpController::class, 'email'])->name('email');
             Route::post('email', [SmtpController::class, 'emailSubmit'])->name('email.save');
-            Route::get('template', [SmtpController::class, 'template'])->name('template');
+            Route::get('email-admin', [SmtpController::class, 'template'])->name('template');
+
+            Route::post('email-admin', [SmtpController::class, 'emailAdmin'])->name('email.admin');
         });
 
         Route::prefix('business')->name('business.')->group(function () {

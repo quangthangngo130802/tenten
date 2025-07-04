@@ -3,10 +3,10 @@
 @section('content')
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <a class="nav-link active fw-bold" id="info-tab" href="">Email</a>
+            <a class="nav-link active fw-bold" id="info-tab" href="">SMTP</a>
         </li>
         <li class="nav-item" role="presentation">
-            <a class="nav-link  fw-bold" id="seo-tab" href="{{ route('smtp.template') }}">Template</a>
+            <a class="nav-link  fw-bold" id="seo-tab" href="{{ route('smtp.template') }}">Email nhận thông báo</a>
         </li>
 
     </ul>
@@ -19,7 +19,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="text-center">
-                            <h5 class="card-title">Cấu hình email</h5>
+                            <h5 class="card-title">Cấu hình SMTP</h5>
                         </div>
 
                         <form id="postForm" enctype="multipart/form-data" method="POST" action="{{ route('smtp.email.save') }}">

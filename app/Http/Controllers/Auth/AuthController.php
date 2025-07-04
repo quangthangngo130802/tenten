@@ -19,6 +19,8 @@ use App\Http\Requests\Auth\LoginUserRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\UserRequest;
 use App\Mail\AccountActivation;
+use App\Mail\UserRegistered;
+use App\Models\EmailAdmin;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -100,10 +102,15 @@ class AuthController extends Controller
         $data = [
             'name' => $credentials['full_name'],
             'username' => $credentials['username'],
+            'email' => $credentials['email'],
             'activationUrl' => $activationUrl,
         ];
 
+        $emailAdmin = EmailAdmin::fist();
         Mail::to($credentials['email'])->send(new AccountActivation($data));
+        if($emailAdmin){
+            Mail::to($emailAdmin->email)->send(new UserRegistered($data));
+        }
 
         // Thông báo thành công
         // toastr()->success('Đăng ký thành công. Vui lòng kiểm tra email để kích hoạt tài khoản.');

@@ -3,16 +3,19 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\EmailAdmin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
 
 class SmtpController extends Controller
 {
-    public function email(){
+    public function email()
+    {
         return view('backend.smtp.email');
     }
-    public function emailSubmit(Request $request){
+    public function emailSubmit(Request $request)
+    {
 
         // dd($request->all());
 
@@ -54,7 +57,27 @@ class SmtpController extends Controller
         file_put_contents($envPath, $envContent);
     }
 
-    public function template(){
-        return view('backend.smtp.template');
+    public function template()
+    {
+        $email = EmailAdmin::first();
+        return view('backend.smtp.template', compact('email'));
+    }
+
+
+    public function emailAdmin(Request $request)
+    {
+
+        $data = $request->only(['email',]);
+
+        $email = EmailAdmin::first();
+
+        if ($email) {
+            $email->update($data);
+        } else {
+            EmailAdmin::create($data);
+        }
+
+        toastr()->success('Cập nhật thành công.');
+        return redirect()->back();
     }
 }

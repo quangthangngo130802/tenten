@@ -50,9 +50,9 @@
     "status": "success",
     "message": "Thông tin đơn hàng",
     "data": {
-        "id": 390,
-        "payment_id": "HDBFIQI6CSG7",
-        ...
+        "invoice_code": "NP137ZM4TAA7",
+        "amount": 10000,
+        "domain": "smilehome"
     }
 }
 </code></pre>

@@ -27,7 +27,7 @@ class AuthApiToken
         $client = Service::where('token', $token)->first();
 
         if (!$client) {
-            return response()->json(['message' => 'Invalid token'], 401);
+            return response()->json([ "status"=> "error",'message' => 'Invalid token'], 401);
         }
 
         $request->merge(['api_client' => $client]);

@@ -6,7 +6,7 @@
             <form id="qrForm" action="{{ route('qrcode.save') }}" method="POST">
                 @csrf
                 <input type="hidden" name="qr_id" id="qr_id" value="">
-                <h5 class="section-title" id="form-title">Tạo QR Code</h5>
+                <h5 class="section-title" id="form-title">Tạo QR Code 1</h5>
 
                 <div class="row">
                     <div class="col-md-6">
@@ -29,9 +29,40 @@
                         </div>
 
                         <div class="form-group">
-                            <button type="submit" class="btn btn-success" id="submit-btn">
+                            <button type="submit" class="btn btn-success btn-sm" id="submit-btn">
                                 Save
                             </button>
+
+                            <!-- Nút mở popup -->
+                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#uploadModal">
+                                Upload File
+                            </button>
+
+                            <!-- Modal chọn file -->
+                            <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <form id="uploadForm">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="uploadModalLabel">Chọn file để tải lên</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Đóng"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <input type="file" name="file" id="fileInput"
+                                                    accept="image/*,.pdf,.doc,.docx" class="form-control">
+                                                <div id="file-name" class="mt-2 text-muted"></div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">Tải lên</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 

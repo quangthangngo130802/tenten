@@ -259,7 +259,7 @@
                                    value="{{ old('username') }}" placeholder="Nhập tên đăng nhập">
                             <i class="fas fa-user input-icon"></i>
                         </div>
-                        <div id="username-error" class="text-danger mt-2"></div>
+                        {{-- <div id="username-error" class="text-danger mt-2"></div> --}}
                         @error('username')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -308,7 +308,7 @@
                                    value="{{ old('phone_number') }}" placeholder="Nhập số điện thoại">
                             <i class="fas fa-phone input-icon"></i>
                         </div>
-                        <div id="phone-error" class="text-danger mt-2"></div>
+                        {{-- <div id="phone-error" class="text-danger mt-2"></div> --}}
                         @error('phone_number')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -417,64 +417,64 @@
         });
 
         // Validation logic (keeping your original validation)
-        const usernameInput = document.getElementById('username');
-        const phoneInput = document.getElementById('phone_number');
-        const submitButton = document.getElementById('submit-button');
-        const usernameError = document.getElementById('username-error');
-        const phoneError = document.getElementById('phone-error');
+        // const usernameInput = document.getElementById('username');
+        // const phoneInput = document.getElementById('phone_number');
+        // const submitButton = document.getElementById('submit-button');
+        // const usernameError = document.getElementById('username-error');
+        // const phoneError = document.getElementById('phone-error');
 
-        function validateUsername(username) {
-            return /^\S+$/.test(username);
-        }
+        // function validateUsername(username) {
+        //     return /^\S+$/.test(username);
+        // }
 
-        function validatePhone(phone) {
-            return /^\d{10}$/.test(phone);
-        }
+        // function validatePhone(phone) {
+        //     return /^\d{10}$/.test(phone);
+        // }
 
-        function validateField(input, errorElement, validateFunc, errorMessage) {
-            if (!input.value.trim()) {
-                errorElement.textContent = 'Trường này không được để trống.';
-                input.classList.add('is-invalid');
-                return false;
-            }
-            if (!validateFunc(input.value)) {
-                errorElement.textContent = errorMessage;
-                input.classList.add('is-invalid');
-                return false;
-            } else {
-                errorElement.textContent = '';
-                input.classList.remove('is-invalid');
-                return true;
-            }
-        }
+        // function validateField(input, errorElement, validateFunc, errorMessage) {
+        //     if (!input.value.trim()) {
+        //         errorElement.textContent = 'Trường này không được để trống.';
+        //         input.classList.add('is-invalid');
+        //         return false;
+        //     }
+        //     if (!validateFunc(input.value)) {
+        //         errorElement.textContent = errorMessage;
+        //         input.classList.add('is-invalid');
+        //         return false;
+        //     } else {
+        //         errorElement.textContent = '';
+        //         input.classList.remove('is-invalid');
+        //         return true;
+        //     }
+        // }
 
-        usernameInput.addEventListener('input', function () {
-            validateField(usernameInput, usernameError, validateUsername, 'Tên đăng nhập không được chứa khoảng trắng.');
-            checkSubmitButton();
-        });
+        // usernameInput.addEventListener('input', function () {
+        //     validateField(usernameInput, usernameError, validateUsername, 'Tên đăng nhập không được chứa khoảng trắng.');
+        //     checkSubmitButton();
+        // });
 
-        phoneInput.addEventListener('input', function () {
-            validateField(phoneInput, phoneError, validatePhone, 'Số điện thoại phải có 10 chữ số và không có chữ.');
-            checkSubmitButton();
-        });
+        // phoneInput.addEventListener('input', function () {
+        //     validateField(phoneInput, phoneError, validatePhone, 'Số điện thoại phải có 10 chữ số và không có chữ.');
+        //     checkSubmitButton();
+        // });
 
-        function checkSubmitButton() {
-            const isUsernameValid = usernameInput.value.trim() && validateUsername(usernameInput.value);
-            const isPhoneValid = phoneInput.value.trim() && validatePhone(phoneInput.value);
-            const isFullNameValid = document.getElementById('full_name').value.trim();
-            const isEmailValid = document.getElementById('email').value.trim();
-            const isPasswordValid = document.getElementById('password').value.trim();
+        // function checkSubmitButton() {
+        //     const isUsernameValid = usernameInput.value.trim() && validateUsername(usernameInput.value);
+        //     const isPhoneValid = phoneInput.value.trim() && validatePhone(phoneInput.value);
+        //     const isFullNameValid = document.getElementById('full_name').value.trim();
+        //     const isEmailValid = document.getElementById('email').value.trim();
+        //     const isPasswordValid = document.getElementById('password').value.trim();
 
-            submitButton.disabled = !(isUsernameValid && isPhoneValid && isFullNameValid && isEmailValid && isPasswordValid);
-        }
+        //     submitButton.disabled = !(isUsernameValid && isPhoneValid && isFullNameValid && isEmailValid && isPasswordValid);
+        // }
 
-        // Check submit button on all required fields
-        document.getElementById('full_name').addEventListener('input', checkSubmitButton);
-        document.getElementById('email').addEventListener('input', checkSubmitButton);
-        document.getElementById('password').addEventListener('input', checkSubmitButton);
+        // // Check submit button on all required fields
+        // document.getElementById('full_name').addEventListener('input', checkSubmitButton);
+        // document.getElementById('email').addEventListener('input', checkSubmitButton);
+        // document.getElementById('password').addEventListener('input', checkSubmitButton);
 
-        // Initial check
-        checkSubmitButton();
+        // // Initial check
+        // checkSubmitButton();
     </script>
 </body>
 </html>

@@ -11,35 +11,35 @@ use Illuminate\Support\Facades\Log;
 class HotelController extends Controller
 {
 
-    public function getDataOrder(Request $request)
-    {
-        // $client = $request->get('api_client');
-        // $domain = $request->query('domain');
-        // $invoice_code = $request->query('invoice_code');
+    // public function getDataOrder(Request $request)
+    // {
+    //     $client = $request->get('api_client');
+    //     $domain = $request->query('domain');
+    //     $invoice_code = $request->query('invoice_code');
 
-        // if (!$domain || $client->domain != $domain) {
-        //     return response()->json(['message' => 'Bạn không có quyền truy cập domain này'], 403);
-        // }
+    //     if (!$domain || $client->domain != $domain) {
+    //         return response()->json(['message' => 'Bạn không có quyền truy cập domain này'], 403);
+    //     }
 
-        // $response = Http::get("https://app.fasthotel.vn/api/get-payment/{$invoice_code}");
+    //     $response = Http::get("https://app.fasthotel.vn/api/get-payment/{$invoice_code}");
 
-        $data = $this->getDetail();
+    //     $data = $this->getDetail();
 
-        Log::info($response->json());
+    //     Log::info($response->json());
 
-        if ($response->successful()) {
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Thông tin đơn hàng',
-                'data' => $response->json()['data']
-            ]);
-        }
+    //     if ($response->successful()) {
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'message' => 'Thông tin đơn hàng',
+    //             'data' => $response->json()['data']
+    //         ]);
+    //     }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Mã đơn hàng không tồn tại.',
-        ]);
-    }
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Mã đơn hàng không tồn tại.',
+    //     ]);
+    // }
 
 
     public function checkStatus(Request $request)
@@ -93,8 +93,6 @@ class HotelController extends Controller
             'message' => 'Đã ghi trạng thái thanh toán.',
         ]);
     }
-
-
 
     public function orderStatus($orderId)
     {

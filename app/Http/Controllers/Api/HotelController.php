@@ -129,7 +129,7 @@ class HotelController extends Controller
 
         Log::info('📥 Nhận dữ liệu từ lễ tân:', $data);
 
-        $this->apiTest($data);
+        echo $data;
 
     }
 

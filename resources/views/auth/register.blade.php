@@ -63,7 +63,7 @@
                 </div>
             </div>
 
-            <div class="form-group row">
+            {{-- <div class="form-group row">
                 <label class="col-sm-4 col-form-label">Giới tính <span style="color:red"> * </span></label>
                 <div class="col-sm-8">
                     <label class="mr-3"><input type="radio" name="gender" value="male" {{ old('gender')=='male'
@@ -74,9 +74,9 @@
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-            </div>
+            </div> --}}
 
-            <div class="form-group row">
+            {{-- <div class="form-group row">
                 <label for="dob" class="col-sm-4 col-form-label">Ngày sinh <span style="color:red"> * </span></label>
                 <div class="col-sm-8">
                     <input type="date" name="birth_date" class="form-control" id="birth_date"
@@ -85,9 +85,9 @@
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-            </div>
+            </div> --}}
 
-            <div class="form-group row">
+            {{-- <div class="form-group row">
                 <label for="idCard" class="col-sm-4 col-form-label">CMND/CCCD/Hộ chiếu <span style="color:red"> *
                     </span></label>
                 <div class="col-sm-8">
@@ -98,7 +98,7 @@
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-            </div>
+            </div> --}}
 
             {{-- <div class="form-group row">
                 <label for="country" class="col-sm-4 col-form-label">Quốc gia <span style="color:red"> * </span></label>
@@ -119,7 +119,7 @@
                 </div>
             </div> --}}
 
-            <div class="form-group row">
+            {{-- <div class="form-group row">
                 <label for="province" class="col-sm-4 col-form-label">Tỉnh/Thành phố <span style="color:red"> *
                     </span></label>
                 <div class="col-sm-8">
@@ -172,7 +172,7 @@
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-            </div>
+            </div> --}}
 
             <div class="form-group row">
                 <label for="phone_number" class="col-sm-4 col-form-label">Số điện thoại <span style="color:red"> *

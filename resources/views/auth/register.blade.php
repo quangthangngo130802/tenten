@@ -351,7 +351,7 @@
 
                     <!-- Login Link -->
                     <div class="login-link">
-                        <p>Đã có tài khoản? <a href="#">Đăng nhập ngay</a></p>
+                        <p>Đã có tài khoản? <a href="{{ route('login') }}">Đăng nhập ngay</a></p>
                     </div>
                 </form>
             </div>

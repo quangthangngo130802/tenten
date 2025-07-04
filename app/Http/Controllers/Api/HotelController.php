@@ -128,7 +128,7 @@ class HotelController extends Controller
         $data = $request->all();
         Log::info('📥 Nhận dữ liệu từ lễ tân:', $data);
         $orderId = $request->invoice_code;
-        file_put_contents(storage_path("app/order/detail_{$orderId}.json"), json_encode($data));
+        file_put_contents(storage_path("app/order_detail_{$orderId}.json"), json_encode($data));
     }
 
     public function apiTest($data){

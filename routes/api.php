@@ -39,3 +39,5 @@ Route::get('/order-status/{orderId}', [HotelController::class, 'orderStatus']);
 
 
 Route::post('/detail-order', [HotelController::class, 'getDetail']);
+
+Route::get('/test', [HotelController::class, 'apiTest']);

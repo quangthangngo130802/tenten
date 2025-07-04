@@ -129,10 +129,11 @@ class HotelController extends Controller
 
         Log::info('📥 Nhận dữ liệu từ lễ tân:', $data);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Đã nhận dữ liệu thành công',
-            'received' => $data
-        ]);
+        $this->apiTest($data);
+
+    }
+
+    public function apiTest($data){
+        echo $data;
     }
 }

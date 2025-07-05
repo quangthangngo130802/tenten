@@ -21,7 +21,7 @@ class HostingController extends Controller
                 ->addColumn('action', function ($row) {
                     return '<div>
                                 <a  data-id = '.$row->id.' data-type = "hosting" class="btn btn-primary btn-sm edit buy-now-btn">
-                                    Mua ngay
+                                    Mua
                                 </a>
                             </div>';
                 })->rawColumns(['action'])

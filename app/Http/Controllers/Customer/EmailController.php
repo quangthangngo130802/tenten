@@ -25,7 +25,7 @@ class EmailController extends Controller
                 ->addColumn('action', function ($row) {
                     return '<div >
                     <a data-id="' . $row->id . '" data-type="cloud" class="btn btn-primary btn-sm edit" href="' . route('customer.email.viemail', ['id' => $row->id]) . '">
-                        Mua ngay
+                        Mua
                     </a>
                 </div>';
                 })->rawColumns(['action'])
@@ -105,6 +105,8 @@ class EmailController extends Controller
             ['email_id', '=', $request->product_key],
             ['email_config_id', '=', $request->package_type],
         ])->first();
+
+            // dd($package_price);
 
         return response()->json(['success' =>true , 'data' => $package_price, 'email' => $email  ]);
     }

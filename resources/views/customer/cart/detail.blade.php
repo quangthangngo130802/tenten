@@ -87,13 +87,18 @@
                 <tbody>
                     <tr>
                         <td>Giá gốc</td>
-                        <td class="text-end total">{{ number_format($cart->total_price, 0, ',', '.') }} đ</td>
+                        <td class="text-end" id="price"> {{ number_format($cart->total_price, 0, ',', '.') }} đ</td>
+                    </tr>
+
+                    <tr>
+                        <td>VAT:{{ vat_rate() }}%</td>
+                        <td class="text-end " id="vat">{{ number_format(vat_amount($cart->total_price), 0, ',', '.') }}</td>
                     </tr>
 
                     <tr>
                         <td class="total-payment text-danger"><strong>Tổng tiền thanh toán</strong></td>
-                        <td class="text-end total-payment text-danger total"><strong>{{
-                                number_format($cart->total_price, 0, ',', '.') }} đ</strong></td>
+                        <td class="text-end total-payment text-danger " id="price_vat"><strong>{{
+                                number_format(price_with_vat($cart->total_price), 0, ',', '.') }} đ</strong></td>
                     </tr>
                 </tbody>
             </table>
@@ -288,9 +293,10 @@
             success: function(response) {
                 console.log(response.price);
                 console.log(response.message);
-                $('.total').text(response.total_price);
+                $('#price').text(response.total_price);
+                $('#price_vat').text(response.total_price_vat);
                 pricePerItem.text(response.price)
-                // alert('Cập nhật số lượng thành công!');
+                $('#vat').text(response.vat);
             },
             error: function(xhr, status, error) {
 

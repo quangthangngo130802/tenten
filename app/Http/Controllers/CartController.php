@@ -55,6 +55,7 @@ class CartController extends Controller
             );
 
             $cart->total_price += $product->price;
+            $cart->vat = vat_rate();
             $cart->save();
 
             $detailCart = DetailCart::where('cart_id', $cart->id)
@@ -195,7 +196,7 @@ class CartController extends Controller
         // dd($request->toArray());
         $details = DetailCart::find($request->id);
         // dd($details);
-        if($details->type == 'hosting'){
+        if($details->type != 'cloud'){
             $details->price = $details->price  / $details->number * $request->quantity ;
         }else{
             if($details->backup == '0'){
@@ -212,6 +213,7 @@ class CartController extends Controller
         // $details->price = $request->price * ;
         $details->save();
         $cart = Cart::find($details->cart_id);
+        $cart->vat = vat_rate();
         $cart->total_price = $cart->details->sum(function ($detail) {
             return $detail->price;
         });
@@ -221,6 +223,8 @@ class CartController extends Controller
             'message' => 'Cập nhật số lượng thành công!',
             'price' => number_format($details->price, 0, ',', '.') . ' đ',
             'total_price' => number_format($cart->total_price, 0, ',', '.') . ' đ',
+            'total_price_vat' => number_format(price_with_vat($cart->total_price), 0, ',', '.') . ' đ',
+            'vat' => number_format(vat_amount($cart->total_price), 0, ',', '.') . ' đ',
         ]);
     }
 

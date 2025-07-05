@@ -84,8 +84,7 @@
                                                     ty</span></span></a>
                                     </li>
                                     <li class="{{ request()->routeIs('user.index') ? 'active' : '' }}">
-                                        <a href="{{ route('user.index') }}"><span class="sub-item"><span>Tài khoản nhân
-                                                    sự</span></span></a>
+                                        <a href="{{ route('user.index') }}"><span class="sub-item"><span>Tài khoản nhânsự</span></span></a>
                                     </li>
                                     <li class="{{ request()->routeIs('smtp.email', 'smtp.template') ? 'active' : '' }}">
                                         <a href="{{ route('smtp.email') }}"><span
@@ -108,7 +107,7 @@
                             class="nav-item {{ request()->routeIs('domain.price', 'hosting.index', 'email.index', 'cloud.index') ? 'active' : '' }}">
                             <a data-bs-toggle="collapse" href="#service">
                                 <i class="fas fa-server"></i>
-                                <p>Quản lý dịch vụ</p>
+                                <p>Bảng giá dịch vụ</p>
                                 <span class="caret"></span>
                             </a>
                             <div class="collapse {{ request()->routeIs('domain.price', 'hosting.index', 'email.index', 'cloud.index') ? 'show' : '' }}"
@@ -242,7 +241,7 @@
                         class="nav-item {{ request()->routeIs('customer.domain.index', 'customer.hosting.index', 'customer.email.index', 'customer.cloud.index') ? 'active' : '' }}">
                         <a data-bs-toggle="collapse" href="#service_dk">
                             <i class="fas fa-plus-square"></i>
-                            <p>Đăng ký dịch vụ</p>
+                            <p>Bảng giá dịch vụ</p>
                             <span class="caret"></span>
                         </a>
                         <div class="collapse {{ request()->routeIs('customer.domain.index', 'customer.hosting.index', 'customer.email.index', 'customer.cloud.index') ? 'show' : '' }}"

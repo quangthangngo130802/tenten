@@ -102,7 +102,7 @@
                             {{-- <span class="cl4" id="OsNameUpdate">{{ $os[0]->name }}</span> --}}
                         </div>
                         <div class="rate" id="productPriceUpdate">
-                            {{ number_format($price_email->price , 0, ',', '.') }} đ
+                            {{ number_format($price_email->price, 0, ',', '.') }} đ
                         </div>
                         <div class="py-2" id="backup" style="display: flex; justify-content: space-between">
 
@@ -111,14 +111,14 @@
                     <div class="cart-total">
                         <p>
                             <strong class="tg_fl">Tổng tiền chưa VAT: </strong>
-                            <strong class="tg_fr"
-                                id="tong_price">{{ number_format($price_email->price , 0, ',', '.') }}
+                            <strong class="tg_fr" id="tong_price">{{ number_format($price_email->price, 0, ',', '.') }}
                                 đ</strong>
                         </p>
-                        {{-- <p>
-                        <strong class="tg_fl">Tổng tiền VAT: </strong>
-                        <strong class="tg_fr" id="vat">600.000 đ</strong>
-                    </p> --}}
+                        <p>
+                            <strong class="tg_fl">Tổng tiền VAT: </strong>
+                            <strong class="tg_fr"
+                                id="vat">{{ number_format(vat_amount($price_email->price), 0, ',', '.') }}</strong>
+                        </p>
                         <p>
                             <strong class="tg_fl">Tổng cộng: </strong>
                             <strong class="tg_fr"><span id="tong_cong"
@@ -133,11 +133,11 @@
     <div class="text-center mt-4">
         <form action="{{ route('customer.email.addtocart') }}" method="post">
             @csrf
-            <input type="hidden" name="product_id" id="product_id" value="{{ $email->id }}">
-            <input type="hidden" name="numbertg" id="numbertg" value="12">
-            <input type="hidden" name="time_type" id="time_type" value="month">
-            <input type="hidden" name="domain" id="domain_new">
-            <input type="hidden" name="totalprice" id="totalprice" value="{{ $price_email->price }}">
+            <input type="text" name="product_id" id="product_id" value="{{ $email->id }}">
+            <input type="text" name="numbertg" id="numbertg" value="12">
+            <input type="text" name="time_type" id="time_type" value="month">
+            <input type="text" name="domain" id="domain_new">
+            <input type="text" name="totalprice" id="totalprice" value="{{ $price_email->price }}">
             <button class="btn btn-primary btn-lg">Tiếp tục</button>
         </form>
     </div>
@@ -261,7 +261,7 @@
 
                         let durations = [12, 24, 36, 48, 60];
                         durations.forEach(function(months) {
-                            let totalPrice = price_package * months/12 ;
+                            let totalPrice = price_package * months / 12;
                             let formattedPrice = Number(totalPrice).toLocaleString('vi-VN');
                             let option =
                                 `<option value="${months}" data-price="${totalPrice}">
@@ -301,13 +301,17 @@
                 return Number(number).toLocaleString('vi-VN');
             }
 
-            function valueText(value) {
-                // alert(formatPrice(value));
-                $('#productPriceUpdate').text(formatPrice(value)+ ' đ');
-                $('#tong_price').text(formatPrice(value) + ' đ');
-                $('#tong_cong').text(formatPrice(value) + ' đ');
-                $('#totalprice').val(value);
+            const vatRate = {{ vat_rate() }}; // Ví dụ: 10 (10%)
 
+            function valueText(value) {
+                const vat = Math.round(value * vatRate / 100);
+                const total = parseInt(value) + parseInt(vat);
+
+                $('#productPriceUpdate').text(formatPrice(value) + ' đ');
+                $('#tong_price').text(formatPrice(value) + ' đ');
+                $('#vat').text(formatPrice(vat) + ' đ');
+                $('#tong_cong').text(formatPrice(total) + ' đ');
+                $('#totalprice').val(value); // tổng cộng để submit
             }
         });
     </script>

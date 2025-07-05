@@ -105,10 +105,10 @@
                         <strong class="tg_fr" id="tong_price">{{number_format($cloud->price * 12, 0, ',', '.') }}
                             đ</strong>
                     </p>
-                    {{-- <p>
+                    <p>
                         <strong class="tg_fl">Tổng tiền VAT: </strong>
-                        <strong class="tg_fr" id="vat">600.000 đ</strong>
-                    </p> --}}
+                        <strong class="tg_fr" id="vat">{{number_format(vat_amount($cloud->price*12), 0, ',', '.') }}</strong>
+                    </p>
                     <p>
                         <strong class="tg_fl">Tổng cộng: </strong>
                         <strong class="tg_fr"><span id="tong_cong" style="color: red">{{number_format($cloud->price * 12, 0,

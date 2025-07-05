@@ -29,7 +29,7 @@ class CloudController extends Controller
                 ->addColumn('action', function ($row) {
                     return '<div >
                                 <a data-id="' . $row->id . '" data-type="cloud" class="btn btn-primary btn-sm edit" href="' . route('customer.cloud.vicloud', ['id' => $row->id]) . '">
-                                    Mua ngay
+                                    Mua
                                 </a>
                             </div>';
                 })->rawColumns(['action'])

@@ -16,4 +16,20 @@ class Order extends Model
     {
         return $this->hasMany(OrderDetail::class);
     }
+
+    protected static function booted()
+    {
+        static::creating(function ($order) {
+            $order->code = self::generateOrderCode();
+        });
+    }
+
+    private static function generateOrderCode()
+    {
+        do {
+            $code = '#' . rand(100, 999999);
+        } while (self::where('code', $code)->exists());
+
+        return $code;
+    }
 }

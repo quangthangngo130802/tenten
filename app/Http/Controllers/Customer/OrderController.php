@@ -32,7 +32,7 @@ class OrderController extends Controller
                     return '<a href="' . route('customer.order.show', $row->id) . '" class=" text-primary "> ' . $row->code . '</a>';
                 })
                 ->editColumn('created_at', function ($row) {
-                    return Carbon::parse($row->created_at)->format('Y-m-d H:i:s');
+                    return Carbon::parse($row->created_at)->format('d-m-Y');
                 })
                 ->editColumn('status', function ($row) {
                     return $row->status == 'payment'
@@ -129,7 +129,8 @@ class OrderController extends Controller
                 'amount' => $cart->total_price,
                 'status' => 'nopayment',
                 'payment' => 0,
-                'order_type' => 1
+                'order_type' => 1,
+                'vat' => vat_rate()
             ]);
 
 
@@ -173,15 +174,18 @@ class OrderController extends Controller
         $price = $request->input('price');
         $order = Order::find($request->id);
         // Giả sử số dư ví lưu trong trường `wallet_balance`
-        if ($user->wallet >= $price) {
+        $vat = vat_amount($price);
+        $price_pay =$price + $vat;
+        if ($user->wallet >= $price_pay) {
             $amount = $order->amount;
             $order->status = 'payment';
+            $order->vat = vat_rate();
             $order->save();
             $user->update([
-                'wallet' => $user->wallet - $price,
+                'wallet' => $user->wallet - $price_pay,
             ]);
             TransactionHistory::create([
-                'code' => Str::random(10),
+                // 'code' => Str::random(10),
                 'user_id' => $user->id,
                 'amount' => $amount,
                 'status' => 1,
@@ -191,7 +195,7 @@ class OrderController extends Controller
             if ($request->invoice == 'yes') {
                 $thongtin = $request->thongtin;
                 // Tạo PDF từ view
-                $pdf = PDF::loadView('pdf.receipt', compact('order', 'user', 'price', 'thongtin'));
+                $pdf = PDF::loadView('pdf.receipt', compact('order', 'user', 'price', 'thongtin', 'vat'));
 
                 // Thiết lập các tùy chọn
                 $pdf->setOption('encoding', 'UTF-8');
@@ -224,6 +228,8 @@ class OrderController extends Controller
         // Kiểm tra số tiền
         $order_new = Order::find($id);
         $amount = $order_new->amount;
+        $vat = vat_amount($amount);
+        $amount_pay = $amount + $vat;
         // Còn lại xử lý yêu cầu tạo thanh toán như hiện tại
         $clientId = env('PAYOS_CLIENT_ID');
         $apiKey = env('PAYOS_API_KEY');
@@ -232,7 +238,7 @@ class OrderController extends Controller
 
         $data = [
             "orderCode" => intval($orderCode),
-            "amount" => intval($amount),
+            "amount" => intval($amount_pay),
             "description" => "VQRIO123",
             "cancelUrl" => route('customer.order.payment'),
             "returnUrl" => route('customer.order.return', ['id' => $id, 'xsd' => $xsd]),

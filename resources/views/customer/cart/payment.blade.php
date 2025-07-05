@@ -55,14 +55,14 @@
             @endforelse
 
             <hr>
-            {{-- <div class="d-flex justify-content-between">
-                <span>VAT:</span>
-                <span>172,800 đ</span>
-            </div> --}}
+            <div class="d-flex justify-content-between">
+                <span>VAT:{{ vat_rate() }}%</span>
+                <span>{{ number_format(vat_amount($order_new->amount), 0, ',', '.') }}</span>
+            </div>
             <div class="d-flex justify-content-between total mt-3">
                 <span>Tổng thanh toán:</span>
-                <span data-id="{{ $order_new->id }}" data-price="{{ $order_new->amount }}">{{
-                    number_format($order_new->amount, 0, ',', '.') }}
+                <span data-id="{{ $order_new->id }}" data-price="{{ price_with_vat($order_new->amount) }}">{{
+                    number_format(price_with_vat($order_new->amount), 0, ',', '.') }}
                     đ</span>
             </div>
         </div>

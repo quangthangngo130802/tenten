@@ -36,7 +36,7 @@ class TransactionHistoryController extends Controller
                     return Carbon::parse($row->created_at)->format('Y-m-d H:i:s');
                 })
                 ->editColumn('user_id', function ($row) {
-                    $user = User::where('email', $row->email)->first();
+                    $user = User::find($row->user_id);
                     return $user && !empty($user->full_name) && !empty($user->phone_number)
                         ? $user->full_name . '<br>(' . $user->phone_number . ')'
                         : ($user && !empty($user->full_name) ? $user->full_name : '');

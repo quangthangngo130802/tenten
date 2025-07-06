@@ -152,11 +152,11 @@
                                 <span class="vat_vn_doamin">VAT <p style="display: none;">Đối với dịch vụ tên miền “.VN
                                         sẽ gồm phí, lệ phí nộp ngân sách và dịch tài khoản quản trị tên miền của TENTEN.
                                         VAT sẽ được tính trên dịch vụ tài khoản quản trị tên miền</p></span>
-                                <p>0 đ</p>
+                                <p>{{ number_format(vat_amount($order->amount)) }} đ</p>
                             </li>
                             <li>
                                 <span class="vat_vn_doamin">Tổng tiền </span>
-                                <p>{{ number_format($order->amount) }} đ</p>
+                                <p>{{ number_format(price_with_vat($order->amount)) }} đ</p>
                             </li>
                         </ul>
                     </div>

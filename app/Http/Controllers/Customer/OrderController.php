@@ -170,24 +170,22 @@ class OrderController extends Controller
         /**
          * @var User $user
          */
-        // dd($request->all());
+
         $price = $request->input('price');
         $order = Order::find($request->id);
-        // Giả sử số dư ví lưu trong trường `wallet_balance`
-        $vat = vat_amount($price);
-        $price_pay =$price + $vat;
-        if ($user->wallet >= $price_pay) {
+
+        if ($user->wallet >= $price) {
             $amount = $order->amount;
             $order->status = 'payment';
             $order->vat = vat_rate();
             $order->save();
             $user->update([
-                'wallet' => $user->wallet - $price_pay,
+                'wallet' => $user->wallet - $price,
             ]);
             TransactionHistory::create([
                 // 'code' => Str::random(10),
                 'user_id' => $user->id,
-                'amount' => $amount,
+                'amount' =>  $price,
                 'status' => 1,
                 'type' => 2,
                 'description' => 'Thanh toán đơn hàng ' . $order->code,

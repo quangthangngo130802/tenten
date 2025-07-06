@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ConfigBank;
 use App\Models\TransactionHistory;
 use App\Models\User;
+use App\Models\WalletTransaction;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class PaymentController extends Controller
@@ -43,7 +46,7 @@ class PaymentController extends Controller
 
         $data = [
             "orderCode" => intval($orderCode),
-            "amount" => intval( $amount),
+            "amount" => intval($amount),
             "description" => "VQRIO123",
             "cancelUrl" => route('payment.recharge.cancel'),
             "returnUrl" => route('payment.recharge.return', ['amount' => $amount]),
@@ -91,11 +94,13 @@ class PaymentController extends Controller
         return $signature;
     }
 
-    public function cancelUrl(){
+    public function cancelUrl()
+    {
         toastr()->error('Đã hủy giao dịch.');
         return redirect()->route('payment.recharge');
     }
-    public function returnUrl($amount){
+    public function returnUrl($amount)
+    {
         $user = Auth::user();
         /**
          * @var User $user
@@ -114,5 +119,78 @@ class PaymentController extends Controller
         ]);
         toastr()->success('Giao dịch thành công.');
         return redirect()->route('payment.recharge');
+    }
+
+    public function qrCode(Request $request)
+    {
+
+        $superAdmin = ConfigBank::first();
+        $amount = $request->input('amount');
+        //Account cá nhân
+        $bank_id = $superAdmin->bank->shortName;
+        $bank_account = $superAdmin->bank_account;
+        //Account công ty
+
+        $description = $request->input('description');
+        $account_name = $superAdmin->name;
+        // Tạo URL cho QR code
+        $template = 'compact2';
+        $qrCodeUrl = '';
+        $qrCodeUrl = "https://img.vietqr.io/image/" . $bank_id . "-" . $bank_account . "-" . $template . ".png?amount=" . $amount . "&addInfo=" . urlencode($description) . "&accountName=" . urlencode($account_name);
+
+        //    dd($qrCodeUrl);
+        return $qrCodeUrl;
+    }
+
+
+
+    public function submitRecharge(Request $request)
+    {
+        // 1. Xác thực dữ liệu
+        $validator = Validator::make($request->all(), [
+            'amount' => 'required|numeric|min:100000|max:20000000000',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Dữ liệu không hợp lệ',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $amount = $request->input('amount');
+        $user = Auth::user();
+
+        try {
+            // 2. Ghi lịch sử giao dịch
+            // TransactionHistory::create([
+            //     'user_id'     => $user->id,
+            //     'amount'      => $amount,
+            //     'status'      => 1, // đã nạp
+            //     'type'        => 2, // nạp tiền
+            //     'description' => 'Nạp tiền vào tài khoản',
+            // ]);
+
+
+            WalletTransaction::create([
+                'user_id'     => $user->id,
+                'amount'      => $amount,
+                'type'        => 'deposit', // nạp tiền
+                'approved_at' => now(),
+                'description' => 'Nạp tiền',
+            ]);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Nạp tiền thành công!',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Đã xảy ra lỗi. Vui lòng thử lại.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

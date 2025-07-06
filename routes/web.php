@@ -27,6 +27,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QrCodeController;
+use App\Http\Controllers\WalletTransactionController;
+use App\Models\WalletTransaction;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
@@ -62,6 +64,9 @@ Route::middleware(['auth', 'profile.updated'])->group(function () {
         Route::post('', [PaymentController::class, 'createPayment'])->name('recharge.add');
         Route::get('cancel', [PaymentController::class, 'cancelUrl'])->name('recharge.cancel');
         Route::get('return/{amount}', [PaymentController::class, 'returnUrl'])->name('recharge.return');
+
+        Route::get('qr-code', [PaymentController::class, 'qrCode'])->name('qrCode');
+        Route::post('recharge', [PaymentController::class, 'submitRecharge'])->name('submit.recharge');
     });
 
 
@@ -266,6 +271,12 @@ Route::post('/checkout', [CartController::class, 'checkout'])->name('checkout.it
 Route::prefix('history')->name('history.')->group(function () {
     Route::get('{status?}', [TransactionHistoryController::class, 'index'])->name('index');
     Route::get('{id}/show', [TransactionHistoryController::class, 'show'])->name('show');
+});
+
+Route::prefix('transaction')->name('transaction.')->group(function () {
+    Route::get('', [WalletTransactionController::class, 'index'])->name('index');
+    Route::get('{id}/show', [WalletTransactionController::class, 'show'])->name('show');
+    Route::post('/approve/{id}', [WalletTransactionController::class, 'approve'])->name('transaction.approve');
 });
 
 Route::prefix('qrcode')->name('qrcode.')->group(function () {

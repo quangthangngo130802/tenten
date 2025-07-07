@@ -364,11 +364,29 @@
 
                 <!-- Lịch sử giao dịch -->
                 @if (Auth::user()->role_id != 3)
-                    <li class="nav-item {{ request()->routeIs('history.index') ? 'active' : '' }}">
-                        <a href="{{ route('history.index') }}">
+                    <li
+                        class="nav-item {{ request()->routeIs('history.index', 'transaction.index') ? 'active' : '' }}">
+                        <a data-bs-toggle="collapse" href="#history">
                             <i class="fa fa-history"></i>
-                            <p>Lịch sử giao dịch</p>
+                            <p>Lịch sử</p>
+                            <span class="caret"></span>
                         </a>
+                        <div class="collapse {{ request()->routeIs('history.index', 'transaction.index') ? 'show' : '' }}"
+                            id="history">
+                            <ul class="nav nav-collapse">
+                                <li class="{{ request()->routeIs('history.index') ? 'active' : '' }}">
+                                    <a href="{{ route('history.index') }}"><span class="sub-item">
+                                            <span>Thanh toán</span></span></a>
+                                </li>
+                                <li class="{{ request()->routeIs('transaction.index') ? 'active' : '' }}">
+                                    <a href="{{ route('transaction.index') }}"><span
+                                            class="sub-item"><span>Nạp tiền</span></span></a>
+                                </li>
+
+
+                                
+                            </ul>
+                        </div>
                     </li>
 
                     <li class="nav-item {{ request()->routeIs('check.domai') ? 'active' : '' }}">

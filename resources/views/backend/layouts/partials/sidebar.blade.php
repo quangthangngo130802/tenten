@@ -433,12 +433,24 @@
                 @endif
 
                 @if (Auth::user()->role_id == 1)
-                    <li class="nav-item {{ request()->routeIs('partners.index') ? 'active' : '' }}">
-                        <a href="{{ route('partners.index') }}">
-                            <i class="fa-solid fa-users"></i>
-                            <p>Danh sách khách hàng</p>
-                        </a>
-                    </li>
+
+                    <li  class="nav-item {{ request()->routeIs('partners.index', 'partners.create') ? 'active' : '' }}">
+                    <a data-bs-toggle="collapse" href="#partners">
+                        <i class="fa-solid fa-headset"></i>
+                        <p>Chăm sóc khách hàng</p>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="collapse {{ request()->routeIs('partners.index', 'partners.create') ? 'show' : '' }}"
+                        id="partners">
+                        <ul class="nav nav-collapse">
+                            <li class="{{ request()->routeIs('partners.index') ? 'active' : '' }}">
+                                <a href="{{ route('partners.index') }}"><span class="sub-item">
+                                        <span>Danh sách khách hàng</span></span></a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
                 @endif
 
 

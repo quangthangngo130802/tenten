@@ -13,7 +13,7 @@
               @method('PUT')
           @endif
 
-          <h5 class="section-title">Thông tin đối tác</h5>
+          <h5 class="section-title">Thông tin khách hàng</h5>
           <div class="row">
               <div class="col-md-6">
 

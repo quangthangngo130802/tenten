@@ -28,6 +28,16 @@
                   </div>
 
                   <div class="form-group row">
+                    <label for="company" class="form-label">Tên công ty</label>
+                    <input type="text" class="form-control @error('company') is-invalid @enderror"
+                           id="company" name="company" placeholder="Nhập họ tên"
+                           value="{{ old('company', $partner->company ?? '') }}">
+                    @error('company')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                  <div class="form-group row">
                       <label for="company_phone" class="form-label">SĐT công ty</label>
                       <input type="text" class="form-control @error('company_phone') is-invalid @enderror"
                              id="company_phone" name="company_phone" placeholder="Nhập số điện thoại"

@@ -23,6 +23,7 @@ class PartnerRequest extends FormRequest
     {
         return [
             'full_name'     => 'required|string|max:100',
+            'company'       => 'required|string|max:20',
             'company_phone' => 'required|string|max:20',
             'industry'      => 'required|string|max:100',
             'position'      => 'required|string|max:100',
@@ -41,6 +42,7 @@ class PartnerRequest extends FormRequest
     {
         return [
             'full_name'     => 'Họ tên',
+            'company'       => 'Công ty',
             'company_phone' => 'Số điện thoại công ty',
             'industry'      => 'Ngành nghề',
             'position'      => 'Chức vụ',

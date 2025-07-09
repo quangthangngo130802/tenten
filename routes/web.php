@@ -8,10 +8,12 @@ use App\Http\Controllers\Admin\DomainController;
 use App\Http\Controllers\Admin\EmailController;
 use App\Http\Controllers\Admin\HostingController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Controllers\Admin\ServiceActiveController;
 use App\Http\Controllers\Admin\SmtpController;
 use App\Http\Controllers\Admin\TransactionHistoryController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ZaloOaController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\Customer\BusinessController;
@@ -179,6 +181,19 @@ Route::middleware(['auth', 'profile.updated'])->group(function () {
             Route::get('', [ApiTokenController::class, 'index'])->name('list');
             Route::post('{id}/regenerate-token', [ApiTokenController::class, 'regenerateToken'])->name('regenerate');
         });
+
+        Route::prefix('zalo')->name('zalo.')->group(function () {
+            Route::get('/dashboard', [ZaloOaController::class, 'dashboard'])->name('dashboard');
+            Route::get('/dashboard/filter', [ZaloOaController::class, 'filterDashboard'])->name('dashboard.filter');
+            Route::get('/oa', [ZaloOaController::class, 'oaIndex'])->name('oa');
+            Route::get('/user', [ZaloOaController::class, 'userIndex'])->name('user');
+            Route::get('/messages', [ZaloOaController::class, 'messagesIndex'])->name('messages');
+            Route::get('/transaction', [ZaloOaController::class, 'transactionIndex'])->name('transaction');
+            Route::post('/update-status', [ZaloOaController::class, 'updateStatus'])->name('update.status');
+
+        });
+
+        Route::resource('partners', PartnerController::class);
     });
 
     Route::prefix('customer')->name('customer.')->group(function () {

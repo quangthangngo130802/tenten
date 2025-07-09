@@ -84,7 +84,8 @@
                                                     ty</span></span></a>
                                     </li>
                                     <li class="{{ request()->routeIs('user.index') ? 'active' : '' }}">
-                                        <a href="{{ route('user.index') }}"><span class="sub-item"><span>Tài khoản nhânsự</span></span></a>
+                                        <a href="{{ route('user.index') }}"><span class="sub-item"><span>Tài khoản
+                                                    nhânsự</span></span></a>
                                     </li>
                                     <li class="{{ request()->routeIs('smtp.email', 'smtp.template') ? 'active' : '' }}">
                                         <a href="{{ route('smtp.email') }}"><span
@@ -215,6 +216,41 @@
                                 </ul>
                             </div>
                         </li>
+
+                        {{-- <li
+                            class="nav-item {{ request()->routeIs('zalo.dashboard', 'zalo.user', 'zalo.oa', 'zalo.messages') ? 'active' : '' }}">
+                            <a data-bs-toggle="collapse" href="#zalo">
+                                <i class="fas fa-server"></i>
+                                <p>Zalo</p>
+                                <span class="caret"></span>
+                            </a>
+                            <div class="collapse {{ request()->routeIs('zalo.dashboard', 'zalo.user', 'zalo.oa', 'zalo.messages') ? 'show' : '' }}"
+                                id="zalo">
+                                <ul class="nav nav-collapse">
+
+                                    <li class="{{ request()->routeIs('zalo.user') ? 'active' : '' }}">
+                                        <a href="{{ route('zalo.user') }}"><span class="sub-item"><span>Khách
+                                                    hàng</span></span></a>
+                                    </li>
+                                    <li class="{{ request()->routeIs('zalo.oa') ? 'active' : '' }}">
+                                        <a href="{{ route('zalo.oa') }}"><span class="sub-item">
+                                                <span>Oa</span></span></a>
+                                    </li>
+
+                                    <li class="{{ request()->routeIs('zalo.messages') ? 'active' : '' }}">
+                                        <a href="{{ route('zalo.messages') }}"><span class="sub-item">
+                                                <span>Tin nhắn</span></span></a>
+                                    </li>
+
+                                    <li class="{{ request()->routeIs('zalo.transaction') ? 'active' : '' }}">
+                                        <a href="{{ route('zalo.transaction') }}"><span class="sub-item">
+                                                <span>Lịch sử nạp tiền</span></span></a>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </li> --}}
+
                         <li class="nav-item {{ request()->routeIs('token.list') ? 'active' : '' }}">
                             <a href="{{ route('token.list') }}">
                                 <i class="fa-solid fa-puzzle-piece"></i>
@@ -273,8 +309,7 @@
                     </li>
 
                     <!-- Dịch vụ được đăng ký -->
-                    <li
-                        class="nav-item {{ request()->routeIs('customer.service.list.service', ) ? 'active' : '' }}">
+                    <li class="nav-item {{ request()->routeIs('customer.service.list.service') ? 'active' : '' }}">
                         <a data-bs-toggle="collapse" href="#service_active">
                             <i class="fas fa-check-circle"></i>
                             <p>Dịch vụ được đăng ký</p>
@@ -379,12 +414,12 @@
                                             <span>Thanh toán</span></span></a>
                                 </li>
                                 <li class="{{ request()->routeIs('transaction.index') ? 'active' : '' }}">
-                                    <a href="{{ route('transaction.index') }}"><span
-                                            class="sub-item"><span>Nạp tiền</span></span></a>
+                                    <a href="{{ route('transaction.index') }}"><span class="sub-item"><span>Nạp
+                                                tiền</span></span></a>
                                 </li>
 
 
-                                
+
                             </ul>
                         </div>
                     </li>
@@ -393,6 +428,15 @@
                         <a href="{{ route('check.domain') }}">
                             <i class="fa-solid fa-search"></i>
                             <p>Kiểm tra tên miền</p>
+                        </a>
+                    </li>
+                @endif
+
+                @if (Auth::user()->role_id == 1)
+                    <li class="nav-item {{ request()->routeIs('partners.index') ? 'active' : '' }}">
+                        <a href="{{ route('partners.index') }}">
+                            <i class="fa-solid fa-users"></i>
+                            <p>Danh sách khách hàng</p>
                         </a>
                     </li>
                 @endif

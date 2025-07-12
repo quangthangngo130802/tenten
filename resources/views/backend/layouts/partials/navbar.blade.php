@@ -30,7 +30,7 @@
                 <li>
                     <a href="{{ route('qrcode.index') }}" class="dropdown-title d-flex justify-content-between align-items-center" style="border-bottom: none !important;">
                         <span>
-                            <i class="fas fa-qrcode"></i>
+                            Qr Code<i class="fas fa-qrcode " style="margin-left: 10px"></i>
                         </span>
                     </a>
                 </li>
@@ -38,6 +38,7 @@
                 <li class="nav-item topbar-icon dropdown hidden-caret">
                     <a class="nav-link dropdown-toggle" href="#" id="walletDropdown" role="button"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
                         <i class="fas fa-wallet"></i>
 
                     </a>

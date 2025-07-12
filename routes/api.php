@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\HotelController;
 use App\Http\Controllers\Api\ServiceController;
+use App\Http\Controllers\Api\ZaloController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -43,3 +44,11 @@ Route::post('/detail-order', [HotelController::class, 'getDetail']);
 Route::middleware('auth.api_token')->post('/invoices', [HotelController::class, 'apiOrderDetal']);
 
 // Route::get('/test', [HotelController::class, 'apiTest']);
+
+/// zalo Zns
+Route::post('/add-zalo-message', [ZaloController::class, 'addZaloMessage']);
+
+Route::post('add-zalo-oa', [ZaloController::class, 'addZaloOa']);
+
+
+Route::post('add-transaction-idsgo', [ZaloController::class, 'addTransaction']);

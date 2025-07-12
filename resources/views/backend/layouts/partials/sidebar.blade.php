@@ -217,14 +217,14 @@
                             </div>
                         </li>
 
-                        {{-- <li
-                            class="nav-item {{ request()->routeIs('zalo.dashboard', 'zalo.user', 'zalo.oa', 'zalo.messages') ? 'active' : '' }}">
-                            <a data-bs-toggle="collapse" href="#zalo">
+                        <li
+                            class="nav-item {{ request()->routeIs('zalo.dashboard', 'zalo.user', 'zalo.oa', 'zalo.messages', 'zalo.transaction') ? 'active' : '' }}">
+                            <a  href="{{ route('zalo.dashboard') }}">
                                 <i class="fas fa-server"></i>
                                 <p>Zalo</p>
                                 <span class="caret"></span>
                             </a>
-                            <div class="collapse {{ request()->routeIs('zalo.dashboard', 'zalo.user', 'zalo.oa', 'zalo.messages') ? 'show' : '' }}"
+                            <div class="collapse {{ request()->routeIs('zalo.dashboard', 'zalo.user', 'zalo.oa', 'zalo.messages', 'zalo.transaction') ? 'show' : '' }}"
                                 id="zalo">
                                 <ul class="nav nav-collapse">
 
@@ -249,7 +249,7 @@
 
                                 </ul>
                             </div>
-                        </li> --}}
+                        </li>
 
                         <li class="nav-item {{ request()->routeIs('token.list') ? 'active' : '' }}">
                             <a href="{{ route('token.list') }}">

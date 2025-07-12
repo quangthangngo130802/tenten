@@ -187,9 +187,14 @@ Route::middleware(['auth', 'profile.updated'])->group(function () {
             Route::get('/dashboard/filter', [ZaloOaController::class, 'filterDashboard'])->name('dashboard.filter');
             Route::get('/oa', [ZaloOaController::class, 'oaIndex'])->name('oa');
             Route::get('/user', [ZaloOaController::class, 'userIndex'])->name('user');
+            Route::post('/user/add', [ZaloOaController::class, 'userAdd'])->name('user.add');
+            Route::post('/user/update', [ZaloOaController::class, 'userUpdate'])->name('user.update');
             Route::get('/messages', [ZaloOaController::class, 'messagesIndex'])->name('messages');
             Route::get('/transaction', [ZaloOaController::class, 'transactionIndex'])->name('transaction');
             Route::post('/update-status', [ZaloOaController::class, 'updateStatus'])->name('update.status');
+            Route::post('/user/delete', [ZaloOaController::class, 'userDelete'])->name('user.delete');
+
+
 
         });
 

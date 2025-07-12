@@ -31,4 +31,8 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'zalo' => [
+        'base_url' => env('ZALO_API', 'http://127.0.0.1:8001'),
+    ],
+
 ];

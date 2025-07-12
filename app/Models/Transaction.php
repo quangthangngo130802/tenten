@@ -10,7 +10,7 @@ class Transaction extends Model
     use HasFactory;
     // protected $table = 'transactions';
 
-    protected $table = 'sgo_transactions';
+    protected $table = 'transactions';
     protected $guarded = [];
 
     public static function totalSuccessAmount()

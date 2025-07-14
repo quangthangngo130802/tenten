@@ -19,7 +19,17 @@ class ZaloController extends Controller
     {
         Log::info('Receiving data from Admin ', $request->all());
         try {
-            ZnsMessage::create($request->all());
+            $zns = ZnsMessage::create($request->all());
+            if($request->status == 1){
+                $user = UserZalo::find($request->user_id);
+                if ($user) {
+                    $user->sub_wallet += $zns->template->price;
+                    $user->save();
+                } else {
+                    Log::error('User not found for ID: ' . $request->user_id);
+                    return response()->json(['error' => 'User not found'], 404);
+                }
+            }
             Log::info('Message added to SuperAdmin Successfully');
             return response()->json(['success' => 'Thêm Zalo Super Admin thành công']);
         } catch (Exception $e) {

@@ -313,7 +313,7 @@ Route::prefix('qrcode')->name('qrcode.')->group(function () {
 
 Route::get('redirect-url/{url}', function($url){
     $decodedUrl = base64_decode($url);
-    Log::info('qr code');
+    Log::info($url);
     return redirect()->to($decodedUrl);
 })->name('redirect-url');
 

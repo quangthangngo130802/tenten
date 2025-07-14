@@ -23,7 +23,7 @@ class ZaloController extends Controller
             if($request->status == 1){
                 $user = UserZalo::find($request->user_id);
                 if ($user) {
-                    $user->sub_wallet += $zns->template->price;
+                    $user->swallet -= $zns->template->price;
                     $user->save();
                 } else {
                     Log::error('User not found for ID: ' . $request->user_id);

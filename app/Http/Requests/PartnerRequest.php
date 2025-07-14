@@ -30,6 +30,8 @@ class PartnerRequest extends FormRequest
             'email'         => 'required|email|max:100',
             'tax_code'      => 'required|string|max:50',
             'source'        => 'required|string|max:100',
+            'phone'        => 'nullable|string|max:100',
+            'address'        => 'nullable|string|max:100',
             'note'          => 'nullable|string',
         ];
     }

@@ -86,6 +86,7 @@
                         <th class="text-center">Tên Qr Code</th>
                         <th class="text-center">Link</th>
                         <th class="text-center">Ảnh</th>
+                        <th class="text-center">Lượt truy cập</th>
                         <th class="text-center">Action</th>
                     </tr>
                 </thead>
@@ -153,6 +154,12 @@
                     {
                         data: 'image',
                         name: 'image',
+                        orderable: false,
+                        searchable: false,
+                    },
+                    {
+                        data: 'scan_count',
+                        name: 'scan_count',
                         orderable: false,
                         searchable: false,
                     },

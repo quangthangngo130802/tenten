@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\OaTemplate;
 use App\Models\Transaction;
 use App\Models\UserZalo;
 use App\Models\ZaloOa;
@@ -20,7 +21,7 @@ class ZaloController extends Controller
         Log::info('Receiving data from Admin ', $request->all());
         try {
             $zns = ZnsMessage::create($request->all());
-            if($request->status == 1){
+            if ($request->status == 1) {
                 $user = UserZalo::find($request->user_id);
                 if ($user) {
                     $user->wallet -= $zns->template->price;
@@ -104,6 +105,41 @@ class ZaloController extends Controller
         } catch (Exception $e) {
             Log::error('Failed to add zalo to Super Admin: ' . $e->getMessage());
             return response()->json(['error' => 'Thêm Zalo Super Admin thất bại']);
+        }
+    }
+
+    public function addTemplate(Request $request)
+    {
+        $validated = $request->validate([
+            'oa_id'         => 'required|integer',
+            'template_id'   => 'required|string',
+            'template_name' => 'required|string',
+            'price'         => 'nullable|numeric',
+        ]);
+
+        try {
+            $template = OaTemplate::updateOrCreate(
+                [
+                    'oa_id' => $validated['oa_id'],
+                    'template_id' => $validated['template_id'],
+                ],
+                [
+                    'template_name' => $validated['template_name'],
+                    'price' => $validated['price'] ?? null,
+                ]
+            );
+
+            return response()->json([
+                'message' => 'Thêm/cập nhật template thành công',
+                'data' => $template
+            ], 200);
+        } catch (\Throwable $e) {
+            \Log::error('Lỗi khi thêm/cập nhật template: ' . $e->getMessage());
+
+            return response()->json([
+                'message' => 'Có lỗi xảy ra khi xử lý',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 }

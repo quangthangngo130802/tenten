@@ -6,7 +6,7 @@
     <title>{{ isset($title) ? $title : 'Dashboard' }}</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
-
+    <meta name="zalo-platform-site-verification" content="MiwQ0wRY7m1OxBe-XC8UOLx6hZooi7vZDJGr" />
     @include('backend.layouts.partials.styles')
 
     <style>

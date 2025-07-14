@@ -52,3 +52,5 @@ Route::post('add-zalo-oa', [ZaloController::class, 'addZaloOa']);
 
 
 Route::post('add-transaction-idsgo', [ZaloController::class, 'addTransaction']);
+
+Route::post('add-template-idsgo', [ZaloController::class, 'addTemplate']);

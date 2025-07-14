@@ -31,6 +31,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\WalletTransactionController;
 use App\Models\WalletTransaction;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Profiler\Profile;
@@ -313,7 +314,14 @@ Route::prefix('qrcode')->name('qrcode.')->group(function () {
 
 Route::get('redirect-url/{url}', function($url){
     $decodedUrl = base64_decode($url);
-    Log::info($decodedUrl);
+
+    $qrCode = DB::table('qr_codes')->where('qr_link', $decodedUrl)->first();
+
+    if (!$qrCode) {
+        abort(404, 'QR code not found');
+    }
+    // Tăng lượt quét
+    DB::table('qr_codes')->where('id', $qrCode->id)->increment('scan_count');
     return redirect()->to($decodedUrl);
 })->name('redirect-url');
 

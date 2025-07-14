@@ -86,7 +86,7 @@
                         <th class="text-center">Tên Qr Code</th>
                         <th class="text-center">Link</th>
                         <th class="text-center">Ảnh</th>
-                        <th class="text-center">Lượt truy cập</th>
+                        <th class="text-center" style="width: 300px;">Lượt quét</th>
                         <th class="text-center">Action</th>
                     </tr>
                 </thead>

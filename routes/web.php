@@ -30,6 +30,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\WalletTransactionController;
+use App\Http\Controllers\ZaloWebhookController;
 use App\Models\WalletTransaction;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -352,3 +353,6 @@ Route::post('/transfer-domain', [DomainController::class, 'transfer'])->name('tr
 
 Route::post('/transfer-service', [ServiceActiveController::class, 'transferService'])->name('transfer.service');
 
+
+// routes/web.php
+Route::post('/webhook/zalo', [ZaloWebhookController::class, 'handle']);

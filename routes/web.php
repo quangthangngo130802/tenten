@@ -31,6 +31,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\WalletTransactionController;
 use App\Models\WalletTransaction;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
@@ -310,8 +311,9 @@ Route::prefix('qrcode')->name('qrcode.')->group(function () {
 });
 
 
-route::get('redirect-url/{url}', function($url){
+Route::get('redirect-url/{url}', function($url){
     $decodedUrl = base64_decode($url);
+    Log::info('qr code');
     return redirect()->to($decodedUrl);
 })->name('redirect-url');
 

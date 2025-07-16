@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PartnerRequest;
+use App\Models\Area;
 use App\Models\Partner;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -45,7 +46,8 @@ class PartnerController extends Controller
 
     public function create()
     {
-        return view('backend.partner.save');
+        $areas = Area::get();
+        return view('backend.partner.save', compact('areas'));
     }
 
     public function store(PartnerRequest $request)
@@ -57,7 +59,8 @@ class PartnerController extends Controller
 
     public function edit(Partner $partner)
     {
-        return view('backend.partner.save', compact('partner'));
+        $areas = Area::get();
+        return view('backend.partner.save', compact('partner', 'areas'));
     }
 
     public function update(PartnerRequest $request, Partner $partner)

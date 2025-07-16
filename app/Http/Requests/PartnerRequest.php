@@ -27,13 +27,14 @@ class PartnerRequest extends FormRequest
             'company_phone' => 'nullable|string|max:20',
             'industry'      => 'nullable|string|max:100',
             'position'      => 'nullable|string|max:100',
-            'email'         => 'required|email|max:100',
+            'email'         => 'nullable|email|max:100',
             'tax_code'      => 'nullable|string|max:50',
             'source'        => 'nullable|string|max:100',
             'phone'         => 'required|string|max:100',
             'address'       => 'nullable|string|max:100',
             'note'          => 'nullable|string',
-            'status'         => 'nullable|string',
+            'status'        => 'nullable|string',
+            'area_id'       => 'nullable',
         ];
     }
 
@@ -53,6 +54,8 @@ class PartnerRequest extends FormRequest
             'tax_code'      => 'Mã số thuế',
             'source'        => 'Nguồn',
             'note'          => 'Ghi chú',
+            'area_id'        => 'Khu vực',
+            'phone'         => 'Điện thoại',
         ];
     }
 }

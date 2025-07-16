@@ -67,6 +67,21 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+
+                        <div class="form-group row">
+                            <label for="status" class="form-label">Đã sử dụng dịch vụ?</label>
+                            <select class="form-control @error('status') is-invalid @enderror" id="status"
+                                name="status">
+                                <option value="0"
+                                    {{ old('status', $partner->status ?? '') === 0 || old('status', $partner->status ?? '') === '0' ? 'selected' : '' }}>
+                                    Chưa sử dụng</option>
+                                <option value="1" {{ old('status', $partner->status ?? '') == 1 ? 'selected' : '' }}>
+                                    Đã sử dụng</option>
+                            </select>
+                            @error('status')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
                     </div>
 
                     <div class="col-md-6">
@@ -119,13 +134,13 @@
                             <select class="form-control @error('area_id') is-invalid @enderror" id="area_id"
                                 name="area_id">
                                 <option value="">-- Chọn khu vực --</option>
-                               @forelse($areas as $key => $value)
+                                @forelse($areas as $key => $value)
                                     <option value="{{ $value->id }}"
-                                        {{ old('area_id', $partner->area_id ?? '') == $value->id ? 'selected' : '' }}> {{ $value->name }}
+                                        {{ old('area_id', $partner->area_id ?? '') == $value->id ? 'selected' : '' }}>
+                                        {{ $value->name }}
                                     </option>
-                               @empty
-
-                               @endforelse
+                                @empty
+                                @endforelse
 
                             </select>
                             @error('area_id')

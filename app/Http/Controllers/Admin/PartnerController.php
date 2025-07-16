@@ -15,12 +15,20 @@ class PartnerController extends Controller
     {
         if ($request->ajax()) {
             $partners = Partner::select([
-                'id', 'full_name', 'company_phone', 'industry','phone',
+                'id', 'full_name', 'company_phone', 'industry','phone', 'area_id',
                 'position', 'email', 'tax_code', 'source', 'note'
-            ]);
+            ])->orderBy('id', 'desc');
 
             return DataTables::of($partners)
                 ->addIndexColumn()
+                ->addColumn('area_name', function ($row) {
+                    return optional($row->area)->name;
+                })
+                ->filterColumn('area_name', function($query, $keyword) {
+                    $query->whereHas('area', function($q) use ($keyword) {
+                        $q->where('name', 'like', "%{$keyword}%");
+                    });
+                })
                 ->addColumn('action', function ($row) {
                     $editUrl = route('partners.edit', $row->id);
                     $deleteUrl = route('partners.destroy', $row->id);
@@ -37,7 +45,7 @@ class PartnerController extends Controller
                         </form>
                     ';
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action', 'area_name'])
                 ->make(true);
         }
 

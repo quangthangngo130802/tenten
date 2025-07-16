@@ -16,9 +16,7 @@
                             <th>Điện thoại</th>
                             <th>Email</th>
                             <th>Ngành nghề</th>
-                            <th>Chức vụ</th>
-                            <th>MST</th>
-                            <th>Nguồn</th>
+                            <th>Khu vực</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -46,10 +44,7 @@
                 { data: 'phone', name: 'phone', orderable: false },
                 { data: 'email', name: 'email', orderable: false },
                 { data: 'industry', name: 'industry', orderable: false },
-                { data: 'position', name: 'position', orderable: false },
-
-                { data: 'tax_code', name: 'tax_code', orderable: false },
-                { data: 'source', name: 'source', orderable: false },
+                { data: 'area_name', name: 'area_name', orderable: false },
                 { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
         });

@@ -43,7 +43,7 @@
             columns: [
                 { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
                 { data: 'full_name', name: 'full_name', orderable: false },
-                { data: 'company_phone', name: 'company_phone', orderable: false },
+                { data: 'phone', name: 'phone', orderable: false },
                 { data: 'email', name: 'email', orderable: false },
                 { data: 'industry', name: 'industry', orderable: false },
                 { data: 'position', name: 'position', orderable: false },

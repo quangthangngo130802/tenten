@@ -23,15 +23,15 @@ class PartnerRequest extends FormRequest
     {
         return [
             'full_name'     => 'required|string|max:100',
-            'company'       => 'required|string',
-            'company_phone' => 'required|string|max:20',
-            'industry'      => 'required|string|max:100',
-            'position'      => 'required|string|max:100',
+            'company'       => 'nullable|string',
+            'company_phone' => 'nullable|string|max:20',
+            'industry'      => 'nullable|string|max:100',
+            'position'      => 'nullable|string|max:100',
             'email'         => 'required|email|max:100',
-            'tax_code'      => 'required|string|max:50',
-            'source'        => 'required|string|max:100',
-            'phone'        => 'nullable|string|max:100',
-            'address'        => 'nullable|string|max:100',
+            'tax_code'      => 'nullable|string|max:50',
+            'source'        => 'nullable|string|max:100',
+            'phone'         => 'required|string|max:100',
+            'address'       => 'nullable|string|max:100',
             'note'          => 'nullable|string',
         ];
     }

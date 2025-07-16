@@ -33,6 +33,7 @@ class PartnerRequest extends FormRequest
             'phone'         => 'required|string|max:100',
             'address'       => 'nullable|string|max:100',
             'note'          => 'nullable|string',
+            'status'         => 'nullable|string',
         ];
     }
 

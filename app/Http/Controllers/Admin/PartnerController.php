@@ -14,7 +14,7 @@ class PartnerController extends Controller
     {
         if ($request->ajax()) {
             $partners = Partner::select([
-                'id', 'full_name', 'company_phone', 'industry',
+                'id', 'full_name', 'company_phone', 'industry','phone',
                 'position', 'email', 'tax_code', 'source', 'note'
             ]);
 

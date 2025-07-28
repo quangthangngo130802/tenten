@@ -498,7 +498,7 @@ class ServiceActiveController extends Controller
                 ->addIndexColumn()
                 ->addColumn('link', function ($row) {
                     $subdomain = $row->domain; // ví dụ: 'hungtran'
-                    $link = "http://{$subdomain}.crm360.dev/api/login-by-subdomain/{$subdomain}";
+                    $link = "http://{$subdomain}.crm360.dev";
 
                     return '<a href="' . $link . '" target="_blank"
                              style="color:#007bff; text-decoration:underline">'

@@ -157,6 +157,10 @@ Route::middleware(['auth', 'profile.updated'])->group(function () {
                 Route::get('{date?}', [ServiceActiveController::class, 'listEmail'])->name('list.email');
             });
 
+            Route::prefix('list-crm')->name('crm.')->group(function () {
+                Route::get('{date?}', [ServiceActiveController::class, 'listcrm'])->name('list.crm');
+            });
+
             Route::get('add-service-{type}', [ServiceActiveController::class, 'addForm'])->name('add');
             Route::post('add-service-{type}', [ServiceActiveController::class, 'addSubmit'])->name('add.submit');
         });

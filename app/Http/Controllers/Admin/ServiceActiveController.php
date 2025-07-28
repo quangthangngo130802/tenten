@@ -482,6 +482,67 @@ class ServiceActiveController extends Controller
         return view('backend.service.listhotel', compact('title', 'page', 'date'));
     }
 
+    public function listcrm(Request $request, $date = null)
+    {
+        $title = "Quản lý dịch vụ CRM";
+        if ($request->ajax()) {
+            $data = Service::where('type', 'crm')
+                ->orderBy('service.created_at', 'desc');
+
+
+            return DataTables::of($data)
+
+                ->filterColumn('link', function ($query, $keyword) {
+                    $query->whereRaw("CONCAT(domain, domain_extension) LIKE ?", ["%{$keyword}%"]);
+                })
+                ->addIndexColumn()
+                ->addColumn('link', function ($row) {
+                    $subdomain = $row->domain; // ví dụ: 'hungtran'
+                    $link = "http://{$subdomain}.fasthotels.vn/api/login-by-subdomain/{$subdomain}";
+
+                    return '<a href="' . $link . '" target="_blank"
+                             style="color:#007bff; text-decoration:underline">'
+                         . e($subdomain . '.fasthotel.vn') .
+                         '</a>';
+                })
+
+                ->addColumn('action', function ($row) {
+                    return '
+                    <div>
+                        <div class="dropdown">
+                            <!-- Nút mở menu -->
+                            <span style="font-size:26px; cursor:pointer; margin-right:15px" class="action" onclick="toggleMenu(\'' . $row->id . '\')">
+                                <i class="fas fa-cog"></i>
+                            </span>
+
+                            <!-- Menu Dropdown -->
+                            <div id="menu-' . $row->id . '" class="dropdown-menu-service">
+                                <ul>
+                                    <li><a href="#" onclick="openModalEdit(' . $row->id . ')">Chỉnh sửa</a></li>
+                                    <li><a href="#" onclick="openModalGiaHan(' . $row->id . ')">Gia hạn</a></li>
+                                    <li><a href="#" onclick="openModalPass(' . $row->id . ')">Cập nhật mật khẩu</a></li>
+                                    <li><a href="#" onclick="confirmDeleteSweet(' . $row->id . ')">Xóa</a></li>
+                                    <li>
+                                        <div class="toggle-container" style="margin-left:10px">
+                                            Trạng thái
+                                            <label class="switch">
+                                                <input type="checkbox" class="toggleStatus" data-id="' . $row->id . '"' . ($row->status == 'active' ? ' checked' : '') . '>
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    ';
+                })->rawColumns(['action','link'])
+                ->make(true);
+        }
+        $page = 'Quản lý dịch vụ khách sạn';
+        return view('backend.service.listcrm', compact('title', 'page', 'date'));
+    }
+
     public function getContentService($id)
     {
 

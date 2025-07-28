@@ -137,13 +137,13 @@
 
                     <!-- Quản lý dịch vụ được đăng ky -->
                     <li
-                        class="nav-item {{ request()->routeIs('domain.index', 'service.hosting.list.hosting', 'service.cloud.list.cloud', 'service.hotel.list.hotel', 'qrcode.index', 'service.email.list.email') ? 'active' : '' }}">
+                        class="nav-item {{ request()->routeIs('domain.index', 'service.hosting.list.hosting', 'service.cloud.list.cloud', 'service.hotel.list.hotel', 'qrcode.index', 'service.email.list.email','service.crm.list.crm') ? 'active' : '' }}">
                         <a data-bs-toggle="collapse" href="#service_active">
                             <i class="fas fa-check-circle"></i>
                             <p>Dịch vụ được đăng ký</p>
                             <span class="caret"></span>
                         </a>
-                        <div class="collapse {{ request()->routeIs('domain.index', 'service.hosting.list.hosting', 'service.cloud.list.cloud', 'service.hotel.list.hotel', 'qrcode.index', 'service.email.list.email') ? ' show' : '' }}"
+                        <div class="collapse {{ request()->routeIs('domain.index', 'service.hosting.list.hosting', 'service.cloud.list.cloud', 'service.hotel.list.hotel', 'qrcode.index', 'service.email.list.email', 'service.crm.list.crm') ? ' show' : '' }}"
                             id="service_active">
                             <ul class="nav nav-collapse">
                                 @if (Auth::user()->role_id == 1)
@@ -166,6 +166,11 @@
                                     <li class="{{ request()->routeIs('service.cloud.list.cloud') ? 'active' : '' }}">
                                         <a href="{{ route('service.cloud.list.cloud') }}">
                                             <span class="sub-item"><span>Cloud</span></span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ request()->routeIs('service.crm.list.crm') ? 'active' : '' }}">
+                                        <a href="{{ route('service.crm.list.crm') }}">
+                                            <span class="sub-item"><span>CRM</span></span>
                                         </a>
                                     </li>
                                 @endif

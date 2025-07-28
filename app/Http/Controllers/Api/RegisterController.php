@@ -15,7 +15,7 @@ class RegisterController extends Controller
         $data = $request->validate([
             'name'     => 'required',
             'email'    => 'required',
-            'domain'   => 'required',
+            'subdomain'   => 'required',
         ]);
 
         $user = Service::create([

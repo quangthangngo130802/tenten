@@ -23,7 +23,7 @@ class RegisterController extends Controller
             'email'    => $data['email'],
             'type'     =>  'crm',
             'domain'   =>  $data['subdomain'],
-            'domain_extension' => 'crm360.dev',
+            'domain_extension' => '.crm360.dev',
             'price' => 0,
         ]);
 

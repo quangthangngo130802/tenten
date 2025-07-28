@@ -110,6 +110,7 @@ class ZaloController extends Controller
 
     public function addTemplate(Request $request)
     {
+        Log::info($request->all());
         $validated = $request->validate([
             'oa_id'         => 'required|integer',
             'template_id'   => 'required|string',
@@ -134,7 +135,7 @@ class ZaloController extends Controller
                 'data' => $template
             ], 200);
         } catch (\Throwable $e) {
-            \Log::error('Lỗi khi thêm/cập nhật template: ' . $e->getMessage());
+            Log::error('Lỗi khi thêm/cập nhật template: ' . $e->getMessage());
 
             return response()->json([
                 'message' => 'Có lỗi xảy ra khi xử lý',

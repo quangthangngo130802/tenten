@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\HotelController;
+use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\ZaloController;
 use Illuminate\Http\Request;
@@ -54,3 +55,5 @@ Route::post('add-zalo-oa', [ZaloController::class, 'addZaloOa']);
 Route::post('add-transaction-idsgo', [ZaloController::class, 'addTransaction']);
 
 Route::post('add-template-idsgo', [ZaloController::class, 'addTemplate']);
+
+Route::post('/register-crm', [RegisterController::class, 'register']);
